@@ -51,6 +51,7 @@ export default class GenericMultiProcessor{
         await Promise.all( this._list.map ( ( it, index) => it.cb ? it.cb (data[index]) : data[index] ) );
 
         this._list = [];
+
         return data;
 
 

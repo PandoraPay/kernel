@@ -89,7 +89,7 @@ export default class RadixTree extends DBSchema {
         return newRoot;
     }
     
-    async loadTree(){
+    loadTree(){
         return this.root.DFS(true);
     }
 

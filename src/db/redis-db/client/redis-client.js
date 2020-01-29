@@ -9,6 +9,7 @@ import RedisMultiProcessor from "./redis-multi-processor"
 import RedisCommands from "./redis-commands"
 import Events from "src/helpers/events/events"
 import GenericClient from "../../db-generic/client/generic-client";
+import Exception from "src/helpers/exception";
 
 export default class RedisClient extends GenericClient{
 
@@ -37,7 +38,6 @@ export default class RedisClient extends GenericClient{
             return this._client[ fct +"Async"]( ...arguments );
 
         }.bind(this) );
-
 
         this.multi = () => new RedisMultiProcessor( this._scope, this._client );
 

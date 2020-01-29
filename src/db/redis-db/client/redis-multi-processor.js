@@ -3,7 +3,8 @@ import GenericMultiProcessor from "./../../db-generic/client/generic-multi-proce
 
 export default class RedisMultiProcessor extends GenericMultiProcessor {
 
-    get _commands(){
+
+    get _commands() {
         return RedisCommands
     }
 
@@ -15,4 +16,3 @@ export default class RedisMultiProcessor extends GenericMultiProcessor {
     }
 
 }
-

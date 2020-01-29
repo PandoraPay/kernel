@@ -192,10 +192,11 @@ export default class DBSchema extends Marshal{
             const promises = [];
 
             const objects = this.savingAdditional();
+
             for (const object of objects)
                 promises.push(  object.delete( `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, undefined, undefined, db ) );
 
-            await Promise.all(promises);
+            const out = await Promise.all(promises);
 
         }
 

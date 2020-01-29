@@ -385,7 +385,9 @@ export default class RadixTreeNode extends DBSchema {
         if (loadChildren)
             await this.loadChildren();
 
-        const promises = this.children.filter ( child => child.leaves(loadChildren) );
+        const promises = [];
+        for (const child of this.children)
+            promises.push( child.leaves(loadChildren) );
         const out = await Promise.all(promises);
 
         let leaves = [];
@@ -407,7 +409,9 @@ export default class RadixTreeNode extends DBSchema {
         if (loadChildren)
             await this.loadChildren();
 
-        const promises = this.children.filter ( child => child.DFS(loadChildren) );
+        const promises = [];
+        for (const child of this.children)
+            promises.push ( child.DFS(loadChildren) );
         const out = await Promise.all(promises);
 
         let dfs = [];
@@ -431,10 +435,12 @@ export default class RadixTreeNode extends DBSchema {
         if (loadChildren)
             await this.loadChildren();
 
-        let promises = this.children.filter ( child => child.BFS(loadChildren) );
-        promises = await Promise.all(promises);
+        const promises = [];
+        for (const child of this.children)
+            promises.push( child.BFS(loadChildren) );
+        const out = await Promise.all(promises);
 
-        for (const child of promises)
+        for (const child of out)
             bfs = bfs.concat( child );
 
         return bfs;
