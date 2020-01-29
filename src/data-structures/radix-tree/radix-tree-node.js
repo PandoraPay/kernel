@@ -385,11 +385,11 @@ export default class RadixTreeNode extends DBSchema {
         if (loadChildren)
             await this.loadChildren();
 
-        let promises = this.children.filter ( child => child.leaves(loadChildren) );
-        promises = await Promise.all(promises);
+        const promises = this.children.filter ( child => child.leaves(loadChildren) );
+        const out = await Promise.all(promises);
 
         let leaves = [];
-        for (const child of promises)
+        for (const child of out )
             leaves =  leaves.concat( child );
 
         return leaves;
@@ -404,15 +404,14 @@ export default class RadixTreeNode extends DBSchema {
 
         if (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF) return [this];
 
-        let dfs = [];
-
         if (loadChildren)
             await this.loadChildren();
 
-        let promises = this.children.filter ( child => child.DFS(loadChildren) );
-        promises = await Promise.all(promises);
+        const promises = this.children.filter ( child => child.DFS(loadChildren) );
+        const out = await Promise.all(promises);
 
-        for (const child of promises)
+        let dfs = [];
+        for (const child of out)
             dfs = dfs.concat( child );
 
         dfs.push(this);
