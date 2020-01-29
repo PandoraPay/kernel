@@ -62,7 +62,7 @@ export default class RadixTree extends DBSchema {
     }
 
     async saveTree(){
-        return this.save();
+        return this.root.save();
     }
 
     async clearTree(){
@@ -179,8 +179,7 @@ export default class RadixTree extends DBSchema {
 
             if (data instanceof Marshal) data.parent = found.node;
 
-            found.node.parent.childrenHashes[found.node.parentIndex].buffer = found.node.hash();
-
+            await found.node.propagateHashChange();
             await this._saveNode(found.node);
 
             return found.node;

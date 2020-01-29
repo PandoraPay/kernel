@@ -93,8 +93,6 @@ export default class RadixTreeVirtual extends RadixTree{
 
         for (const key in saveMap){
 
-            if (!saveMap[key]) continue;
-
             const element = saveMap[key];
 
             if (element.type === "deleted")
@@ -137,7 +135,11 @@ export default class RadixTreeVirtual extends RadixTree{
     }
 
     //will empty only the local changes
-    clearTree(){
+    async clearTree(){
+
+        for (const key in this._maps)
+            if (this._maps[key].type === "deleted")
+                await this._maps[key].node.delete();
 
         this._maps = {};
         return super.clearTree();

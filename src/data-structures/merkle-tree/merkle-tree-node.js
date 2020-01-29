@@ -193,10 +193,7 @@ export default class MerkleTreeNode extends DBSchema {
     addChild(child){
 
         child._scope.parent = this;
-
-        const childrenNew = this.__data.children.slice();
-        childrenNew.push(child);
-        this.children = childrenNew;
+        this.children = [...this.__data.children, child];
 
     }
 
