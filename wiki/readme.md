@@ -78,19 +78,19 @@ cd ~/zero/blockchain/Cryptography ;
 npm link ;
 npm link sticky-session ;
 npm link webpack-config ;
-npm link protocol ;
+npm link kernel ;
 
 cd ~/zero/blockchain/Networking ;
 npm link ;
 npm link sticky-session ;
 npm link webpack-config ;
-npm link protocol
+npm link kernel
 
 cd ~/zero/blockchain/Blockchain ;
 npm link ;
 npm link sticky-session ;
 npm link webpack-config ;
-npm link protocol ;
+npm link kernel ;
 npm link networking ;
 npm link cryptography ;
 
