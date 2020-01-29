@@ -194,6 +194,7 @@ export default class RadixTree extends DBSchema {
             //update label
             const remainingLabel = node.__data.label.substr( found.match );
 
+            const nodePrevParentIndex = node.parentIndex;
             const nodePrevLabel = node.__data.label;
             const nodeData = node.__data.data;
             const nodeType = node.__data.type;
@@ -223,7 +224,7 @@ export default class RadixTree extends DBSchema {
             }, "object", 0,  {skipProcessingConstructionValues: true} );
 
             newNode.children = node.children;
-            for (let i=0; i < newNode.children.length-1; i++)
+            for (let i=0; i < newNode.children.length; i++)
                 if (newNode.children[i])
                     newNode.children[i].parent = newNode;
 
@@ -232,10 +233,7 @@ export default class RadixTree extends DBSchema {
             node.addChild(remainingLabel, newNode, true);
 
             //update parent to common
-            for (let i=0; i < node.parent.childrenLabels.length; i++)
-                if (node.parent.childrenLabels[ i ].string === nodePrevLabel )
-                    node.parent.childrenLabels[ i ].string = common;
-
+            node.parent.childrenLabels[ nodePrevParentIndex ].string = common;
             node.parent.__changes["childrenLabels"] = true;
 
         } else {
@@ -263,6 +261,8 @@ export default class RadixTree extends DBSchema {
             await this._saveNode(toSave);
 
         }
+
+        this.root.rootLoaded = true;
 
         return child;
     }
@@ -368,6 +368,14 @@ export default class RadixTree extends DBSchema {
 
     }
 
+    async _loadRoot(){
+        if ( !this.root.rootLoaded )
+        try{
+            await this.root.load(  );
+        } catch (err) {
+
+        }
+    }
 
     async findRadix( label, prevFind ){
 
@@ -382,12 +390,7 @@ export default class RadixTree extends DBSchema {
 
         } else {
 
-            if ( !this.root.rootLoaded )
-                try{
-                    await this.root.load(  );
-                } catch (err) {
-
-                }
+            await this._loadRoot();
 
             queue = [this.root];
 

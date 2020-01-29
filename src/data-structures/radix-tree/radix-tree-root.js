@@ -69,6 +69,7 @@ export default class RadixTreeRoot extends RadixTreeNode {
         if (!this.rootLoaded)
             try{
                 await this.load();
+                this.rootLoaded = true;
             }catch(err){
                 return [];
             }

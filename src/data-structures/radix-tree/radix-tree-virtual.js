@@ -57,7 +57,6 @@ export default class RadixTreeVirtual extends RadixTree{
         return this._saveMap("saved", node);
     }
 
-
     /**
      * Find Radix should not be changed !!!
      * It will load the matching node. The memory nodes are updated
