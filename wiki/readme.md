@@ -68,7 +68,7 @@ cd ~/zero/blockchain/sticky-session ;
 npm link ;
 npm link async-events ;
 
-cd ~/zero/blockchain/protocol ;
+cd ~/zero/blockchain/kernel ;
 npm link ;
 npm link async-events ;
 npm link sticky-session ;
