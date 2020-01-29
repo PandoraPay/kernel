@@ -1,0 +1,77 @@
+{
+  "name": "kernel",
+  "version": "0.0.1",
+  "description": "PandoraPay Kernel",
+  "homepage": "https://github.com/PandoraPay",
+  "author": "Alexandru Ionut Budisteanu",
+  "license": "MIT",
+  "contributors": [
+    "Alexandru Ionut Budisteanu(http://budisteanu.net)"
+  ],
+  "keywords": [
+    "socket",
+    "anonymity",
+    "express"
+  ],
+  "main": "src/main-export.js",
+  "scripts": {
+    "build": "webpack --config bin/webpack/webpack-config-node.js --mode development",
+    "build-bundle-analyzer": "webpack --config bin/webpack/webpack-config-node.js --mode development --analyzer",
+    "build-release": "webpack --config bin/webpack/webpack-config-node.js --mode production",
+    "open": "node start-node.js",
+    "start": "npm run build && npm run open",
+    "debug": "npm run build -- --debug --mode development && node start-node.js --inspect=0.0.0.0:9229",
+    "test": "npm run build -- --tests && npm run open -- --tests:enabled",
+    "build-browser": "webpack --config bin/webpack/webpack-config-browser.js --es6 true --mode development ",
+    "build-browser-bundle-analyzer": "webpack --config bin/webpack/webpack-config-browser.js --es6 true --mode development --analyzer",
+    "build-browser-release": "npm run build --es5 --uglify --mode production",
+    "test-browser": "npm run build-browser -- --tests",
+    "prepublishOnly": "npm run build",
+    "ssl-generator": "node scripts/SSL/generate-ssl-node.js"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "bluebird": "^3.5.2",
+    "bn.js": "^5.0.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "is-array-buffer": "^1.0.1",
+    "js-sha3": "^0.8.0",
+    "path": "^0.12.7",
+    "pouchdb": "^7.1.1",
+    "pouchdb-find": "^7.0.0",
+    "randombytes": "^2.1.0",
+    "redis": "^2.8.0",
+    "sha256": "^0.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-instanceof": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/plugin-transform-spread": "^7.2.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.5",
+    "babel-polyfill": "^6.26.0",
+    "raw-loader": "^0.5.1",
+    "webpack": "^4.20.2",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.1.2"
+  },
+  "engines": {
+    "node": "10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PandoraPay"
+  },
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "browser": {
+    "./lib/util/btoa.js": "./lib/util/btoa.web.js"
+  }
+}

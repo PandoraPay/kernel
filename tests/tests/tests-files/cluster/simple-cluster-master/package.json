@@ -1,0 +1,21 @@
+{
+  "name": "Simple_Cluster_Master",
+  "version": "0.0.1",
+  "description": "Just a simple Cluster Test for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node simple-master-cluster.js",
+    "start2": "node advanced-master-cluster.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.13.3",
+    "socket.io": "2.1.1",
+    "socket.io-client": "2.1.1",
+    "sticky-session": "^1.1.2"
+  },
+  "engines": {
+    "node": "8.0.0"
+  }
+}
