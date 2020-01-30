@@ -14,7 +14,7 @@ import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual"
 
 export default async function run () {
 
-    const radixTestDemo = [ "romane", "romanus", "romulus", "rubens", "ruber","rubicon","rubicundus", "rubicundo", "rubicundua" ];
+    const radixTestDemo = [ "romane", "romanus", "romulus", "rubens", "ruber","rubicon","rubicundus", "rubicundo", "rubicundua"];
     let radixTest = radixTestDemo.slice(0);
     radixTest = radixTest.map( it => Buffer.from(it, "ascii") );
     radixTest = radixTest.map( it => Buffer.concat( [ it, Buffer.alloc(20 - it.length) ] ).toString("hex") );
@@ -29,10 +29,10 @@ export default async function run () {
     describe("Redis Test", {
 
         "Radix Delete all prev data": async function (){
-            
+
             const tree = new RadixTree(this._scope);
             await tree.clearTree( );
-            
+
         },
 
         'RadixTree wikipedia': async function () {
@@ -76,7 +76,7 @@ export default async function run () {
 
         'RadixTree wikipedia delete specific order': async function () {
 
-            const deletes = [ "romulus", "romanus", "romane", "rubens", "ruber", "rubicon", "rubicundus", "rubicundo", "rubicundua" ];
+            const deletes = [ "romulus", "romanus", "romane", "rubens", "ruber", "rubicon", "rubicundus", "rubicundo", "rubicundua"];
             const deleteOrder = deletes.map( it => radixTestDemo.indexOf( it ) );
 
             for (let i=0; i < deleteOrder.length; i++){
@@ -269,9 +269,10 @@ export default async function run () {
 
     });
 
-    const randomCount = 4000;
+    const randomCount = 3000;
 
     const randomLabels = TestsHelper.randomBuffers( 20, randomCount ).map( it => it.toString("hex") );
+
     const randomData = [];
     for (let i=0; i < randomCount; i++)
         randomData.push( MarshalData.marshalNumber(i) );
@@ -285,9 +286,9 @@ export default async function run () {
 
     let randomDataDeleted = {};
 
-    describe("Redis Test Random " + randomCount, {
+    describe("Redis Test Random "+ randomCount, {
 
-        'Radix Tree random add one by one 1/30 of nodes': async function () {
+        'Radix Tree random add one by one 1/20 of nodes': async function () {
 
             let tree = new RadixTree(this._scope);
 
@@ -304,6 +305,7 @@ export default async function run () {
             await tree.clearTree();
 
             for (const it of randomDatum) {
+
                 await tree.addRadix(it.label, it.data);
 
                 let find = await tree.findRadix( it.label );

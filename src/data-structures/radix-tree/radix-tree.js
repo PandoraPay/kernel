@@ -20,8 +20,8 @@ export default class RadixTree extends DBSchema {
                 },
 
                 id:{
-                    default: "default",
-                    fixedBytes: 7,
+                    default: "radixTree",
+                    fixedBytes: 9,
                     position: 100,
                 },
 

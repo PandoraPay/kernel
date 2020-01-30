@@ -198,6 +198,7 @@ export default class RadixTreeNode extends DBSchema {
         this.children = [];
 
         this.nodeClass = RadixTreeNode;
+        this.nodeClassData = undefined; //data is buffer
         this.nodeClassDataEmpty = Buffer.alloc(0);
         
     }

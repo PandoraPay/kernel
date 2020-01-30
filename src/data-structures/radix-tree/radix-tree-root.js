@@ -50,8 +50,6 @@ export default class RadixTreeRoot extends RadixTreeNode {
 
         }, schema, false), data, type, creationOptions);
 
-        this.nodeClass = RadixTreeNode;
-
         this.rootLoaded = false;
 
     }
