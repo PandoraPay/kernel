@@ -12,6 +12,14 @@ export default class RadixTreeVirtual extends RadixTree{
 
         this._maps = {};
 
+        //falbacks allow to virtualize and virtualTree
+        this._fallback = undefined;
+
+    }
+
+    _getFallback(method){
+        if (this._fallback) return this._fallback[method];
+        return super[method].bind(this);
     }
 
     async _saveMap(type = "deleted", node){
@@ -45,6 +53,7 @@ export default class RadixTreeVirtual extends RadixTree{
                 if (current.children[j])
                     queue.push( current.children[j] );
         }
+
         return node;
 
     }
@@ -65,7 +74,7 @@ export default class RadixTreeVirtual extends RadixTree{
      */
     async findRadix(label){
 
-        return super.findRadix(label);
+        return this._getFallback('findRadix')(label);
 
     }
 
@@ -81,7 +90,7 @@ export default class RadixTreeVirtual extends RadixTree{
 
         }
 
-        return super.findRadixLeaf(label);
+        return this._getFallback('findRadixLeaf')(label);
     }
 
     async saveVirtualRadix(resetVirtualRadix){
@@ -122,7 +131,7 @@ export default class RadixTreeVirtual extends RadixTree{
 
         }
 
-        const child = await super.loadNodeChild(label, position, parent);
+        const child = await this._getFallback('loadNodeChild')(label, position, parent);
 
         if (child)
             this._maps[labelComplete] = {
@@ -141,13 +150,13 @@ export default class RadixTreeVirtual extends RadixTree{
                 await this._maps[key].node.delete();
 
         this._maps = {};
-        return super.clearTree();
+        return this._getFallback('clearTree')();
 
     }
 
     resetTree(){
         this._maps = {};
-        return super.resetTree();
+        return this._getFallback('resetTree')();
     }
 
     async saveTree(){

@@ -9,6 +9,13 @@ export default class HashVirtualMap extends HashMap {
         super(scope, schema, data, type, creationOptions);
         this._virtual = {};
 
+        this._fallback = undefined;
+
+    }
+
+    _getFallback(method){
+        if (this._fallback) return this._fallback[method];
+        return super[method].bind(this);
     }
 
     resetHashMap(){
@@ -18,7 +25,7 @@ export default class HashVirtualMap extends HashMap {
     clearHashMap( ){
 
         this.resetHashMap();
-        return super.clearHashMap.call(this);
+        return this._getFallback('clearHashMap')();
 
     }
 
@@ -90,7 +97,7 @@ export default class HashVirtualMap extends HashMap {
 
         }
 
-        return super.getMap.call(this, id);
+        return this._getFallback('getMap')(id);
 
     }
 
@@ -131,7 +138,7 @@ export default class HashVirtualMap extends HashMap {
             if (type === "add")
                 promises.push( element.save() );
             else if (type === "del")
-                promises.push( element ? element.delete() : super.deleteMap(id) );
+                promises.push( element ? element.delete() : this._getFallback('deleteMap')(id) );
             else if (type === "view") continue;
 
 
