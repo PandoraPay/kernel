@@ -62,17 +62,39 @@ export default class RadixTreeRoot extends RadixTreeNode {
         this.tree = this._scope.parent;
     }
 
-    async DFS(loadChildren){
+    async leaves(loadChildren = true){
+        if (await this._checkRootLoaded() === false )
+            return [];
 
+        return super.leaves.call(this, loadChildren);
+    }
+
+    async BFS(loadChildren = true){
+        if (await this._checkRootLoaded() === false )
+            return [];
+
+        return super.BFS.call(this, loadChildren);
+    }
+
+    async DFS(loadChildren = true){
+
+        if (await this._checkRootLoaded() === false )
+            return [];
+
+        return super.DFS.call(this, loadChildren);
+
+    }
+
+
+    async _checkRootLoaded(){
         if (!this.rootLoaded)
             try{
                 await this.load();
                 this.rootLoaded = true;
+                return true;
             }catch(err){
-                return [];
-            }
 
-        return super.DFS.call(this, loadChildren);
+            }
 
     }
 

@@ -150,6 +150,7 @@ export default class RadixTreeVirtual extends RadixTree{
                 await this._maps[key].node.delete();
 
         this._maps = {};
+
         return this._getFallback('clearTree')();
 
     }
