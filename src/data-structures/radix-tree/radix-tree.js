@@ -187,6 +187,8 @@ export default class RadixTree extends DBSchema {
 
         let node = found.node;
 
+        const toSaves = [];
+
         if (found.match > 0  ){
 
             const common = node.__data.label.substr(0, found.match );
@@ -236,8 +238,10 @@ export default class RadixTree extends DBSchema {
             node.parent.childrenLabels[ nodePrevParentIndex ].string = common;
             node.parent.__changes["childrenLabels"] = true;
 
+            toSaves.push(node, newNode );
         } else {
             node.type = RadixTreeNodeTypeEnum.RADIX_TREE_NODE;
+            toSaves.push(node);
         }
 
         const newLabel = label.substr( found.labelOffset );
@@ -252,13 +256,15 @@ export default class RadixTree extends DBSchema {
 
         node.addChild(newLabel, child);
 
+        toSaves.push( child );
+
         //calculate new hash
         if (save){
 
-            let toSave = child;
+            await child.propagateHashChange();
 
-            await toSave.propagateHashChange();
-            await this._saveNode(toSave);
+            for (const node of toSaves)
+                await this._saveNode(node);
 
         }
 

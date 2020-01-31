@@ -113,12 +113,15 @@ export default async function run () {
 
                 await tree.addRadix(label, data );
 
+                tree.validateVirtualMap();
+
                 const find = await tree.findRadix( label );
                 this.expect(find.result, true);
 
                 let find2 = await tree.findRadixLeaf(label);
                 this.expect( !!find2, true);
             }
+            tree.validateVirtualMap();
 
             await tree.saveTree();
 
@@ -131,6 +134,7 @@ export default async function run () {
                 let find2 = await tree.findRadixLeaf(label);
                 this.expect( !!find2, true);
             }
+            tree.validateVirtualMap();
 
             tree = new RadixTree(this._scope);
             for (const label of radixTest){
@@ -317,6 +321,8 @@ export default async function run () {
                 this.expect( find.data, it.data );
             }
 
+            tree.validateVirtualMap();
+
             await tree.saveTree();
 
         },
@@ -360,6 +366,8 @@ export default async function run () {
                 let find = await tree.findRadixLeaf( randomLabels[i] );
                 this.expect( find, undefined );
             }
+
+            tree.validateVirtualMap();
 
             await tree.saveTree();
 
@@ -415,6 +423,8 @@ export default async function run () {
             for (const it of randomDatum)
                 await tree.addRadix( it.label, it.data );
 
+            tree.validateVirtualMap();
+
             await tree.saveTree();
 
         },
@@ -443,6 +453,8 @@ export default async function run () {
                 this.expect( !!find22, false );
 
             }
+
+            tree.validateVirtualMap();
 
             await tree.saveTree();
 

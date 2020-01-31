@@ -1,4 +1,5 @@
 import RadixTree from "./radix-tree";
+import Exception from "src/helpers/exception";
 
 /**
  * IT IS NOT WORKING
@@ -33,18 +34,10 @@ export default class RadixTreeVirtual extends RadixTree{
 
             const label = current.labelCompleteFast();
 
-            if ( this._maps[label] ){
-
-                this._maps[label].type = type;
-
-            } else {
-
-                this._maps[ label ] = {
-                    type,
-                    node: current,
-                };
-
-            }
+            this._maps[ label ] = {
+                type,
+                node: current,
+            };
 
             if (type === "delete")
                 await current.loadChildren();
@@ -78,17 +71,29 @@ export default class RadixTreeVirtual extends RadixTree{
 
     }
 
+    _getNode(label){
+
+        let out;
+
+        const element = this._maps[label];
+
+        if (element){
+
+            if (element.type === "deleted") out = {out: undefined};
+            else if (element.type === "saved" || element.type === "view") out = {out: element.node};
+
+        }
+
+
+        return out;
+    }
+
     async findRadixLeaf(label) {
 
         label = this.processLeafLabel(label);
 
-        const element = this._maps[label];
-        if (element){
-
-            if (element.type === "deleted") return undefined;
-            else if (element.type === "saved" || element.type === "view") return element.node;
-
-        }
+        const found = this._getNode(label);
+        if (found) return found.out;
 
         return this._getFallback('findRadixLeaf')(label);
     }
@@ -111,7 +116,6 @@ export default class RadixTreeVirtual extends RadixTree{
             else
                 if (element.type === "view") continue; //nothing for view
 
-
         }
 
         if (resetVirtualRadix)
@@ -121,15 +125,11 @@ export default class RadixTreeVirtual extends RadixTree{
 
     async loadNodeChild(label, position, parent){
 
-        const labelComplete = parent.labelCompleteFast()+label;
+        const labelComplete = parent.labelCompleteFast() + label;
 
-        const element = this._maps[labelComplete];
-        if (element){
 
-            if (element.type === "deleted") return undefined;
-            else if (element.type === "saved" || element.type === "view") return element.node;
-
-        }
+        const found = this._getNode(labelComplete);
+        if (found) return found.out;
 
         const child = await this._getFallback('loadNodeChild')(label, position, parent);
 
@@ -151,7 +151,9 @@ export default class RadixTreeVirtual extends RadixTree{
 
         this._maps = {};
 
-        return this._getFallback('clearTree')();
+        await this._getFallback('clearTree')();
+
+        this._maps = {};
 
     }
 
@@ -162,6 +164,19 @@ export default class RadixTreeVirtual extends RadixTree{
 
     async saveTree(){
         await this.saveVirtualRadix();
+    }
+
+    validateVirtualMap(){
+
+        for (const key in this._maps)
+            if (key.length === 40){
+                const node = this._maps[key].node;
+                if (node && node.childrenCount > 0){
+                    throw new Exception(this, "validateVirtualMap raised an error", {key, node});
+                }
+            }
+
+
     }
 
 }
