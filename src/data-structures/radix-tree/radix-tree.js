@@ -196,7 +196,6 @@ export default class RadixTree extends DBSchema {
             //update label
             const remainingLabel = node.__data.label.substr( found.match );
 
-            const nodePrevParentIndex = node.parentIndex;
             const nodePrevLabel = node.__data.label;
             const nodeData = node.__data.data;
             const nodeType = node.__data.type;
@@ -212,7 +211,7 @@ export default class RadixTree extends DBSchema {
 
             node.data = node.nodeClassDataEmpty;
 
-            node.__data.childreCount = 0;
+            node.__data.childrenCount = 0;
             node.__data.childrenLabels = [];
             node.__data.childrenHashes = [];
 
@@ -227,15 +226,17 @@ export default class RadixTree extends DBSchema {
 
             newNode.children = node.children;
             for (let i=0; i < newNode.children.length; i++)
-                if (newNode.children[i])
+                if (newNode.children[i]) {
                     newNode.children[i].parent = newNode;
+                    newNode.children[i].parentIndex = i;
+                }
 
             node.children = [];
 
             node.addChild(remainingLabel, newNode, true);
 
             //update parent to common
-            node.parent.childrenLabels[ nodePrevParentIndex ].string = common;
+            node.parent.childrenLabels[ node.parentIndex ].string = common;
             node.parent.__changes["childrenLabels"] = true;
 
             toSaves.push(node, newNode );

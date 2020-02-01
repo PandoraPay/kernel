@@ -1,5 +1,7 @@
 import RadixTree from "./radix-tree";
 import Exception from "src/helpers/exception";
+import RadixTreeNode from "./radix-tree-node";
+import RadixTreeRoot from "./radix-tree-root";
 
 /**
  * IT IS NOT WORKING
@@ -168,14 +170,29 @@ export default class RadixTreeVirtual extends RadixTree{
 
     validateVirtualMap(){
 
-        for (const key in this._maps)
-            if (key.length === 40){
-                const node = this._maps[key].node;
-                if (node && node.childrenCount > 0){
-                    throw new Exception(this, "validateVirtualMap raised an error", {key, node});
-                }
+        for (const key in this._maps) {
+
+            const node = this._maps[key].node;
+
+            if (node) {
+                if (key.length === 40)
+                    if (node && (node.childrenCount > 0 || node.data === null ))
+                        throw new Exception(this, "validateVirtualMap raised an error", {key, node});
+
+
+                if (node.id.indexOf(key) < 0)
+                    throw new Exception(this, "validateVirtualMap raised an error2", {key, node});
+
+                if ( this._maps[key].type !== "deleted" && (node instanceof RadixTreeRoot === false ) && node.parent instanceof RadixTreeNode   )
+                    if (node.parent.childrenLabels[ node.parentIndex ].string !== node.label)
+                        throw new Exception(this, "validateVirtualMap raised an error3", {key, node})
+
+
             }
 
+        }
+
+        return true;
 
     }
 

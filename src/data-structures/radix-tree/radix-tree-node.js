@@ -222,13 +222,13 @@ export default class RadixTreeNode extends DBSchema {
         while ( i < this.childrenLabels.length && label >= this.childrenLabels[i].string )
             i++;
 
-        this.childrenCount = this.childrenLabels.length + 1;
+        this.childrenCount = this.childrenCount + 1;
 
         this.pushArray("childrenLabels", { string: label }, "object", undefined, i);
         this.pushArray("childrenHashes", { buffer: child.hash() }, "object", undefined, i);
 
-        if (!this.children[i]) this.children[i] = child;
-        else this.children.splice( i, 0, child );
+        if ( i < this.children.length ) this.children.splice( i, 0, child );
+        else this.children[i] = child;
 
         child.parent = this;
 
@@ -245,7 +245,7 @@ export default class RadixTreeNode extends DBSchema {
 
         const i = child.parentIndex;
 
-        this.childrenCount = this.childrenLabels.length - 1;
+        this.childrenCount = this.childrenCount - 1;
 
         const newLabels = this.childrenLabels.slice();
         newLabels.splice(i, 1);

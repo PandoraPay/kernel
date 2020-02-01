@@ -357,17 +357,24 @@ export default async function run () {
 
                 await tree.deleteRadix( randomLabels[del] );
 
+                try{
+                    tree.validateVirtualMap();
+                }catch(err){
+                    console.log("i", i);
+                    throw err;
+                }
+
                 let find = await tree.findRadixLeaf( randomLabels[del] );
                 this.expect( find, undefined );
 
             }
 
+            tree.validateVirtualMap();
+
             for (let i=0; i < randomData.length; i++){
                 let find = await tree.findRadixLeaf( randomLabels[i] );
                 this.expect( find, undefined );
             }
-
-            tree.validateVirtualMap();
 
             await tree.saveTree();
 
