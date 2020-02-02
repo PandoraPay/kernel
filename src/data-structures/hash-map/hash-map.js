@@ -36,10 +36,10 @@ export default class HashMap extends DBSchema {
 
     // it will load and return all elements
     // not useful as it requires a lot of computation
-    async findAll(){
+    async findAllHashMap(){
         try{
 
-            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true} );
+            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.findAllSiblings(  );
 
         }catch(err){
@@ -51,7 +51,7 @@ export default class HashMap extends DBSchema {
 
         try{
 
-            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true} );
+            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.deleteAllSiblings(  );
 
         }catch(err){
@@ -67,7 +67,7 @@ export default class HashMap extends DBSchema {
             element = this._createSchemaObject({
                 id: id,
                 data: data,
-            }, "object", "element" );
+            }, "object", "element" ); //data provided
 
         await element.save();
 
@@ -83,7 +83,7 @@ export default class HashMap extends DBSchema {
             if (id instanceof HashMapElement === false)
                 element = this._createSchemaObject({
                     id: id,
-                }, "object", "element" );
+                }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
             await element.delete();
 
@@ -103,7 +103,7 @@ export default class HashMap extends DBSchema {
 
             const element = this._createSchemaObject({
                 id: id,
-            }, "object", "element" );
+            }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
             await element.load();
 

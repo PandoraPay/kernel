@@ -185,7 +185,7 @@ export default class App{
 
         await this.events.emit("start/init-processed", this._scope );
 
-        this._scope.logger.info(`Status`, `Protocol has been started`);
+        this._scope.logger.info(`Status`, `Kernel has been started`);
 
         this._scope.argv.processCommandLine(this._scope.argvBrowser);
 

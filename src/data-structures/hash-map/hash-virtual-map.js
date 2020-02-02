@@ -33,8 +33,7 @@ export default class HashVirtualMap extends HashMap {
     async loadAllInVirtualMap(){
         try{
 
-            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true} );
-            const siblings = await element.findAllSiblings(  );
+            const siblings = await this.findAllHashMap(  );
 
             for (let i=0; i < siblings.length; i++)
                 this._virtual[ siblings[i].id ] = {
@@ -61,7 +60,7 @@ export default class HashVirtualMap extends HashMap {
             element = this._createSchemaObject({
                 id: id,
                 data: data,
-            }, "object", "element" );
+            }, "object", "element"); //data is provided
 
         this._virtual[id] = {
             type: "add",
@@ -116,7 +115,7 @@ export default class HashVirtualMap extends HashMap {
             element = this._createSchemaObject({
                 id: id,
                 data: data,
-            }, "object", "element" );
+            }, "object", "element",  ); //data is provided
 
         this._virtual[id] = {
             type: "add",
