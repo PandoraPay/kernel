@@ -94,6 +94,15 @@ npm link kernel ;
 npm link networking ;
 npm link cryptography ;
 
+cd ~/zero/blockchain/Encrypted-Chat-Server ;
+npm link ;
+npm link sticky-session ;
+npm link webpack-config ;
+npm link kernel ;
+npm link networking ;
+npm link cryptography ;
+
+
 cd ~/X/Consensus ;
 npm link ;
 npm link async-events ;

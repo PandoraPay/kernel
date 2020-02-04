@@ -50,18 +50,18 @@ export default class RedisDB extends GenericDatabase{
      * @param table
      * @returns {Promise<void>}
      */
-    async count ( modelClass, infix, table){
+    async count ( modelClass, infix='', table){
 
         let obj = new modelClass( { ...this._scope, db: this  } );
-        return this.client.redis.hlen( `id:info:${infix}${table||obj.table}`)
+        return this.client.redis.hget( `id:info:index`, `${infix}${table||obj.table}`)
 
     }
 
     async _scanMiddleware(obj, infix, table, index, count, multi){
 
         if (obj._schema.saving.indexable){
-            const out = await this.client.redis.zrange(`id:orders:${infix}${table || this.table}`, index*count, (index+1) * count );
-            return out[0];
+            const out = await this.client.redis.zrange(`id:orders:${infix}${table || obj.table}`, index*count, (index+1) * count );
+            return out;
         }
         else {
 
@@ -69,7 +69,7 @@ export default class RedisDB extends GenericDatabase{
 
             do{
 
-                const sscan = await this.client.redis.sscan(`id:list:${infix}${table || this.table}`, newIndex );
+                const sscan = await this.client.redis.sscan(`id:list:${infix}${table || obj.table}`, newIndex );
                 out = out.concat( sscan[1] );
 
                 newIndex = Number.parseInt(sscan[0]);

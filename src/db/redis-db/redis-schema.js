@@ -153,7 +153,7 @@ export default class RedisSchema extends DBSchema{
             multi.hget(`id:info:${infix}${this.table}:${this.id}`, '_id', (index) =>  this._schema.saving.index = parseInt(index) );
 
 
-        let data;
+        let data, isEmpty = true;
         if (type === "buffer" || type === "hex" || type === "json") {
             
             multi.get( `data:${infix}${this.table}:${this.id}`, (element)=>{
@@ -162,32 +162,39 @@ export default class RedisSchema extends DBSchema{
                     throw new Exception(this, "Data was not fetched", {key: `data:${infix}${this.table}:${this.id}` } );
 
                 data = element;
+                isEmpty = false;
 
             });
 
         } else if (type === "object") {
 
             data = {};
-            
+
             const fields = this._schema.options.returnOnlyField ? [this._schema.options.returnOnlyField] : this._schema.fieldsSorted;
 
             for (const field of fields) {
                 
                 if ( this.checkProperty( "skipSaving", field )) continue;
 
-                let key = this._schema.fields[field].keyRename ? this._schema.fields[field].keyRename : field;
+                const key = this._schema.fields[field].keyRename ? this._schema.fields[field].keyRename : field;
 
                 multi.hget( `data:${infix}${this.table}:${this.id}`, key, (value)=>{
 
-                    data[field] = value;
+                    if (value !== null && value !== undefined) {
+                        data[field] = value;
+                        isEmpty = false;
+                    }
 
                 });
+
             }
 
         }
 
         await multi.execAsync();
-        
+
+        if (isEmpty) data = undefined;
+
         return data;
     }
 

@@ -173,7 +173,7 @@ export default class GenericDatabase{
 
     }
 
-    async count ( modelClass, infix, table ){
+    async count ( modelClass, infix = '', table ){
         if (!this._started) await this.connectDB();
     }
 

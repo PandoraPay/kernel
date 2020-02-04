@@ -42,6 +42,7 @@ export default class HashVirtualMap extends HashMap {
                 };
 
             return true;
+
         }catch(err){
 
         }

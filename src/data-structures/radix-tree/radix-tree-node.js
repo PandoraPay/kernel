@@ -188,6 +188,7 @@ export default class RadixTreeNode extends DBSchema {
 
                 saveInfixParentTable: false,
                 indexableById: false,
+
                 /**
                  * scan is not supported because of disabling indexable by id
                  */

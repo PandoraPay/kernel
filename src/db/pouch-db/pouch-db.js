@@ -42,7 +42,7 @@ class PouchDB extends GenericDatabase{
      * @param table
      * @returns {Promise<void>}
      */
-    async count ( modelClass, infix, table ){
+    async count ( modelClass, infix = '', table ){
         
     }
 
