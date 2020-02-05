@@ -6,6 +6,7 @@ const child_process = require('child_process');
 const path = require('path');
 
 import Helper from "src/helpers/helper"
+import BufferHelper from "src/helpers/buffers/buffer-helper"
 
 /**
     Scope
@@ -90,7 +91,7 @@ export default class Logger{
 
                 if (data instanceof ExtendableError){
 
-                    log.message += "  "+JSON.stringify(data.data);
+                    log.message += "  "+JSON.stringify( this._snipFragileData( BufferHelper.convertAllBuffersToHex( data.data ) ) );
                     log.data = data.stack;
 
                 }else
@@ -98,7 +99,7 @@ export default class Logger{
                     log.data = data.stack;
                 else
                 if (typeof data === "object")
-                    log.data = JSON.stringify(this._snipFragileData(data));
+                    log.data = JSON.stringify( this._snipFragileData( BufferHelper.convertAllBuffersToHex( data ) ) );
                 else
                 log.data = data;
 

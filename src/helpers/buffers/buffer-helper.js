@@ -21,19 +21,6 @@ class BufferHelper{
 
     }
 
-    convertAllBuffersToHex(obj){
-
-        if ( Buffer.isBuffer(obj) )
-            return obj.toString("hex");
-
-        if (obj && typeof obj === "object")
-            for (const key in obj)
-                obj[key] = this.convertAllBuffersToHex(obj[key]);
-
-        return obj
-
-    }
-
     generateEmptyBuffer(length){
         return Buffer.alloc(length);
     }
@@ -47,15 +34,19 @@ class BufferHelper{
         return b;
     }
 
-    convertBuffersToStrings(object){
+    convertAllBuffersToHex(obj){
 
-        for (let key in object)
-            if ( Buffer.isBuffer(object[key]) ) object[key] = object[key].toString("hex");
-            else
-            if (typeof object[key] === "object")
-                this.convertBuffersToStrings(object[key]);
+        if ( Buffer.isBuffer(obj) )
+            return obj.toString("hex");
 
-        return object;
+        if (obj && typeof obj === "object")
+            for (let key in obj)
+                if ( Buffer.isBuffer(obj[key]) ) obj[key] = obj[key].toString("hex");
+                else
+                if (typeof obj[key] === "object")
+                    this.convertAllBuffersToHex(obj[key]);
+
+        return obj;
     }
 
     convertNumberToBuffer(number){

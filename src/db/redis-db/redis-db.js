@@ -52,8 +52,10 @@ export default class RedisDB extends GenericDatabase{
      */
     async count ( modelClass, infix='', table){
 
-        let obj = new modelClass( { ...this._scope, db: this  } );
-        return this.client.redis.hget( `id:info:index`, `${infix}${table||obj.table}`)
+        const obj = new modelClass( { ...this._scope, db: this  } );
+        const count = await this.client.redis.hget( `id:info:index`, `${infix}${table||obj.table}`)
+
+        return count ? Number.parseInt(count) : 0;
 
     }
 
