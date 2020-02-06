@@ -150,7 +150,12 @@ export default class RedisSchema extends DBSchema{
 
         //read index
         if (this._schema.saving.indexableById && this._schema.saving.indexable)
-            multi.hget(`id:info:${infix}${this.table}:${this.id}`, '_id', (index) =>  this._schema.saving.index = parseInt(index) );
+            multi.hget(`id:info:${infix}${this.table}:${this.id}`, '_id', index =>  {
+
+                if (index !== undefined && index !== null)
+                    this._schema.saving.index = parseInt(index)
+
+            } );
 
 
         let data, isEmpty = true;
