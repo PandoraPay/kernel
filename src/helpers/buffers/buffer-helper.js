@@ -1,3 +1,5 @@
+import StringHelper from "../string-helper";
+
 var randomBytes = require('randombytes');
 import isArrayBuffer from 'is-array-buffer';
 
@@ -39,12 +41,15 @@ class BufferHelper{
         if ( Buffer.isBuffer(obj) )
             return obj.toString("hex");
 
-        if (obj && typeof obj === "object")
-            for (let key in obj)
-                if ( Buffer.isBuffer(obj[key]) ) obj[key] = obj[key].toString("hex");
-                else
-                if (typeof obj[key] === "object")
+        if (obj && typeof obj === "object") {
+
+
+            for (const key in obj)
+                if (Buffer.isBuffer(obj[key]))
+                    obj[key] = obj[key].toString("hex");
+                else if (typeof obj[key] === "object")
                     this.convertAllBuffersToHex(obj[key]);
+        }
 
         return obj;
     }

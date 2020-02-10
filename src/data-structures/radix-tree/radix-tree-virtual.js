@@ -21,7 +21,7 @@ export default class RadixTreeVirtual extends RadixTree{
     }
 
     _getFallback(method){
-        if (this._fallback) return this._fallback[method];
+        if (this._fallback) return this._fallback[method].bind(this._fallback);
         return super[method].bind(this);
     }
 
