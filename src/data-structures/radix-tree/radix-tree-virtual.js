@@ -32,7 +32,7 @@ export default class RadixTreeVirtual extends RadixTree{
 
             let current = queue[i];
 
-            if ( (type === "save" || type === "view") && !current.isChanged() ) continue;
+            if ( (type === "saved" || type === "view") && !current.isChanged() ) continue;
 
             const label = current.labelCompleteFast();
 
@@ -41,7 +41,7 @@ export default class RadixTreeVirtual extends RadixTree{
                 node: current,
             };
 
-            if (type === "delete")
+            if (type === "deleted")
                 await current.loadChildren();
 
             for (let j=0; j < current.__data.childrenCount; j++)
@@ -75,19 +75,16 @@ export default class RadixTreeVirtual extends RadixTree{
 
     _getNode(label){
 
-        let out;
-
         const element = this._maps[label];
 
         if (element){
 
-            if (element.type === "deleted") out = {out: undefined};
-            else if (element.type === "saved" || element.type === "view") out = {out: element.node};
+            if (element.type === "deleted") return {out: undefined};
+            else if (element.type === "saved" || element.type === "view") return {out: element.node};
 
         }
 
 
-        return out;
     }
 
     async findRadixLeaf(label) {
@@ -106,29 +103,33 @@ export default class RadixTreeVirtual extends RadixTree{
         for (const key in this._maps )
             saveMap[key] = this._maps[key];
 
+        const promises = [];
         for (const key in saveMap){
 
             const element = saveMap[key];
 
             if (element.type === "deleted")
-                await element.node.delete();
+                promises.push( element.node.delete() );
             else
             if (element.type === "saved")
-                await element.node.save();
+                promises.push( element.node.save() );
             else
                 if (element.type === "view") continue; //nothing for view
 
         }
 
+        await Promise.all(promises);
+
         if (resetVirtualRadix)
             this._maps = {};
+        else
+            return this._saveMap("view", this.root);
 
     }
 
     async loadNodeChild(label, position, parent){
 
         const labelComplete = parent.labelCompleteFast() + label;
-
 
         const found = this._getNode(labelComplete);
         if (found) return found.out;
@@ -147,15 +148,17 @@ export default class RadixTreeVirtual extends RadixTree{
     //will empty only the local changes
     async clearTree(){
 
+        const promises = [];
+
         for (const key in this._maps)
             if (this._maps[key].type === "deleted")
-                await this._maps[key].node.delete();
+                promises.push( this._maps[key].node.delete() );
+
+        await Promise.all(promises);
 
         this._maps = {};
 
         await this._getFallback('clearTree')();
-
-        this._maps = {};
 
     }
 
@@ -168,6 +171,7 @@ export default class RadixTreeVirtual extends RadixTree{
         await this.saveVirtualRadix();
     }
 
+    //used for testing
     validateVirtualMap(){
 
         for (const key in this._maps) {
