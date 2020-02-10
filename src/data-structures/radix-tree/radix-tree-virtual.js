@@ -109,10 +109,12 @@ export default class RadixTreeVirtual extends RadixTree{
             const element = saveMap[key];
 
             if (element.type === "deleted")
-                promises.push( element.node.delete() );
+                await element.node.delete();
+                //promises.push( element.node.delete() );
             else
             if (element.type === "saved")
-                promises.push( element.node.save() );
+                await element.node.save();
+                //promises.push( element.node.save() );
             else
                 if (element.type === "view") continue; //nothing for view
 
@@ -152,7 +154,8 @@ export default class RadixTreeVirtual extends RadixTree{
 
         for (const key in this._maps)
             if (this._maps[key].type === "deleted")
-                promises.push( this._maps[key].node.delete() );
+                await this._maps[key].node.delete();
+                //promises.push( this._maps[key].node.delete() );
 
         await Promise.all(promises);
 
@@ -179,6 +182,22 @@ export default class RadixTreeVirtual extends RadixTree{
             const node = this._maps[key].node;
 
             if (node) {
+
+                if (node.parent.childrenLabels && this._maps[key].type !== "deleted") {
+
+                    let parentIndex = -1;
+                    const parent = node.parent;
+                    for (let i = 0; i < parent.children.length; i++)
+                        if (parent.children[i] === node) {
+                            if (parentIndex !== -1) throw new Exception(this, "children found twice");
+                            parentIndex = i;
+                        }
+
+                    if (parentIndex !== node.parentIndex) throw new Exception(this, "children parentIndex is not matching");
+                    if (node.label !== node.parent.childrenLabels[parentIndex].string) throw new Exception(this, "children label is not matching")
+
+                }
+
                 if (key.length === 40)
                     if (node && (node.childrenCount > 0 || node.data === null ))
                         throw new Exception(this, "validateVirtualMap raised an error", {key, node});

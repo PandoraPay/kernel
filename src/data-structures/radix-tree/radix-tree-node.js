@@ -337,7 +337,11 @@ export default class RadixTreeNode extends DBSchema {
 
         const child = await this.tree.loadNodeChild(label, position, this );
 
+        if (!child)
+            throw new Exception(this, "Child was not loaded");
+
         this.children[position] = child;
+        child.parentIndex = position;
 
         return child;
     }
@@ -345,7 +349,7 @@ export default class RadixTreeNode extends DBSchema {
     async loadChildren() {
 
         const promises = [];
-        for (let i = 0; i < this.childrenLabels.length; i++)
+        for (let i = 0; i < this.__data.childrenCount; i++)
             if (!this.children[i])
                 promises.push(this.loadChild(this.childrenLabels[i].string, i));
 

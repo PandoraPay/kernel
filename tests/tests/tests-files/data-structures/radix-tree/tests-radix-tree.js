@@ -355,9 +355,9 @@ export default async function run () {
 
                 randomDataDeleted[del] = true;
 
-                await tree.deleteRadix( randomLabels[del] );
-
                 try{
+                    await tree.deleteRadix( randomLabels[del] );
+
                     tree.validateVirtualMap();
                 }catch(err){
                     console.log("i", i);

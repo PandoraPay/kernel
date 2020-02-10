@@ -8,6 +8,8 @@ export default{
      */
     db: 0,
 
+    differentDatabase: false,
+
     /**
      * Credentials. BE AWARE TO FIREWALL YOUR REDIS DATABASE. BLOCK ANY INCOMING CONNECTIONS TO YOUR REDIS DATABASE.
      */

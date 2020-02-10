@@ -44,7 +44,13 @@ export default class RedisClient extends GenericClient{
 
         this._client.on("connect", async ()=>{
 
-            const db = this._scope.argv.db.redisDB.db;
+            const workerId = typeof process.env.SLAVE_INDEX !== "undefined" ? Number.parseInt( process.env.SLAVE_INDEX)+1 : 0;
+
+            let db = this._scope.argv.db.redisDB.db;
+
+            if (this._scope.argv.db.redisDB.differentDatabase)
+                db = db + workerId;
+
             if ( db && db > 0)
                 await this._client.selectAsync(db);
 

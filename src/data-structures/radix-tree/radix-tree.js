@@ -317,10 +317,12 @@ export default class RadixTree extends DBSchema {
             for (let i=0; i < newParent.__data.childrenCount; i++){
 
                 newParent.__data.childrenLabels[i].parent = newParent;
+
                 newParent.__data.childrenHashes[i].parent = newParent;
 
                 if (newParent.children[i])
                     newParent.children[i].parent = newParent;
+
             }
 
             const oldLabel = grandParent.__data.childrenLabels[ toDeleteParent.parentIndex ].string;
@@ -328,6 +330,9 @@ export default class RadixTree extends DBSchema {
             grandParent.__changes["childrenLabels"] = true;
 
             toDeleteParent.children = []; //make sure it will not delete its children
+            toDeleteParent.__data.childrenCount = 0; //make sure it will not delete its children
+            toDeleteParent.__data.childrenLabels = []; //make sure it will not delete its children
+            toDeleteParent.__data.childrenHashes = []; //make sure it will not delete its children
 
             toSave = newParent;
 

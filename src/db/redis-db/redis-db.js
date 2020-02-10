@@ -28,6 +28,10 @@ export default class RedisDB extends GenericDatabase{
         return this.client.connect();
     }
 
+    get isSynchronized(){
+        return this._scope.argv.db.redisDB.differentDatabase === false;
+    }
+
     async deleteAll( modelClass, infix='', table, creationOptions = {} ){
 
         creationOptions.skipValidation = true;
