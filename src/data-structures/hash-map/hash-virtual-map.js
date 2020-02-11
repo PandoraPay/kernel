@@ -1,3 +1,4 @@
+import DBSchema from "src/db/db-generic/db-schema"
 import HashMap from "./hash-map"
 import Exception from "src/helpers/exception";
 import HashMapElement from "./hash-map-element";
@@ -97,7 +98,22 @@ export default class HashVirtualMap extends HashMap {
 
         }
 
-        return this._getFallback('getMap')(id);
+        const out = await this._getFallback('getMap')(id);
+
+        if (out){
+
+            const element = this._createSchemaObject({
+                id: id,
+                data: out.data,
+            }, "object", "element"); //data is provided
+
+            this._virtual[id] = {
+                type: "view",
+                element,
+            };
+
+            return element;
+        }
 
     }
 
