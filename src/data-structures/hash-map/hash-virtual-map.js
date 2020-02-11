@@ -146,6 +146,17 @@ export default class HashVirtualMap extends HashMap {
 
         await Promise.all(promises);
 
+        for (const id in this._virtual){
+
+            const {type} = this._virtual[id];
+
+            if (type === "add")
+                this._virtual[id].type = "view";
+            else if (type === "del")
+                delete this._virtual[id];
+            else if (type === "view") continue;
+        }
+
         if (resetVirtualMap)
             this.resetHashMap();
 

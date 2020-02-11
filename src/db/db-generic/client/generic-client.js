@@ -1,4 +1,5 @@
 import GenericLock from "./generic-lock";
+import GenericLockUnsync from "./generic-lock-unsync"
 
 export default class GenericClient{
 
@@ -14,7 +15,11 @@ export default class GenericClient{
     }
 
     get lockClass(){
-        return GenericLock;
+
+        if (this._scope.db.isSynchronized)
+            return GenericLock;
+        else
+            return GenericLockUnsync;
     }
 
     connect(){

@@ -18,7 +18,7 @@ class PouchDB extends GenericDatabase{
             schema: PouchSchema
         });
 
-        this.client = new PouchClient({ ...this._scope, parent: this });
+        this.client = new PouchClient({ ...this._scope, db: this, parent: this });
         this.defaultStoringType = "object";
         this.defaultStoringText = true;
         this.name = "pouch";

@@ -16,7 +16,7 @@ export default class RedisDB extends GenericDatabase{
 
         });
 
-        this.client =  new RedisClient({ ...this._scope, parent: this });
+        this.client =  new RedisClient({ ...this._scope, db: this, parent: this });
         this.defaultStoringType = "object";
         this.defaultStoringText = true;
         
