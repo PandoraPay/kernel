@@ -11,7 +11,7 @@ class GenericLock {
 
     }
 
-    async _check(lockName, timeout){
+    _check(lockName, timeout){
 
         if (this._locks[lockName])
             return false;
@@ -38,14 +38,14 @@ class GenericLock {
         const retry = () => setTimeout( check.bind(this), retryDelay);
 
 
-        const check = async () => {
+        const check = () => {
 
             const lockTimeoutTime = Date.now() + timeout + 1;
 
             try {
 
 
-                if ( await this._check(lockName, timeout) )
+                if ( this._check(lockName, timeout) )
                     return resolve(lockTimeoutTime);
 
 
