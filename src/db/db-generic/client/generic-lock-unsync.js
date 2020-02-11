@@ -17,12 +17,10 @@ class GenericLock {
             return false;
         else {
 
-            const timeoutId = setTimeout( ()=> {
-                delete this._locks[lockName];
-            }, timeout);
 
             this._locks[lockName] = {
-                timeoutId,
+                time: timeout,
+                timeout: timeout ? setTimeout( ()=> delete this._locks[lockName], timeout) : undefined,
             };
 
             return true;
@@ -70,7 +68,7 @@ class GenericLock {
     async _delete(lockName){
 
         if (this._locks[lockName]){
-            clearTimeout( this._locks[lockName].timeoutId );
+            clearTimeout( this._locks[lockName].timeout );
             delete this._locks[lockName];
             return true;
         }

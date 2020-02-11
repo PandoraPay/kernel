@@ -210,7 +210,7 @@ export default class MasterCluster extends AsyncEvents {
 
             this.locks[lockName] = {
                 time: lockTime,
-                timeout: setTimeout( ()=> delete this.locks[lockName], lockTime),
+                timeout: lockTime ? setTimeout( ()=> delete this.locks[lockName], lockTime) : undefined,
             };
 
             return { result : true};
@@ -226,7 +226,7 @@ export default class MasterCluster extends AsyncEvents {
 
         if (this.locks[lockName]){
 
-            clearTimeout( this.locks[ lockName ]);
+            clearTimeout( this.locks[ lockName ].timeout );
             delete this.locks[ lockName ];
 
             return {result: true};
