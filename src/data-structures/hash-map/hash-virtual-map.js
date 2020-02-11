@@ -61,7 +61,7 @@ export default class HashVirtualMap extends HashMap {
         if (data instanceof HashMapElement === false)
             element = this._createSchemaObject({
                 id: id,
-                data: data,
+                data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element"); //data is provided
 
         this._virtual[id] = {
@@ -104,7 +104,7 @@ export default class HashVirtualMap extends HashMap {
 
             const element = this._createSchemaObject({
                 id: id,
-                data: out.data,
+                data: out.data instanceof DBSchema ? out.data.toBuffer() : out.data,
             }, "object", "element"); //data is provided
 
             this._virtual[id] = {
@@ -131,7 +131,7 @@ export default class HashVirtualMap extends HashMap {
         if (data instanceof HashMapElement === false)
             element = this._createSchemaObject({
                 id: id,
-                data: data,
+                data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element",  ); //data is provided
 
         this._virtual[id] = {
@@ -165,7 +165,6 @@ export default class HashVirtualMap extends HashMap {
         if (resetVirtualMap)
             this.resetHashMap();
         else {
-
 
 
             for (const id in this._virtual){

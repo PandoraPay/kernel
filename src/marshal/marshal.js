@@ -542,7 +542,7 @@ export default class Marshal extends MarshalBase {
     isChanged(){
 
         for (const key in this.__changes)
-            if (this.__changes[key] === true)
+            if (this.__changes[key])
                 return true;
 
         return false;
