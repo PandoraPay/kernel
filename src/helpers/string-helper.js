@@ -1,15 +1,17 @@
-export default class StringHelper {
+import sanitizeHtml from "sanitize-html";
+
+class StringHelper {
 
     /**
      * Triming string
      * @param str
      * @returns {string | *}
      */
-    static removeWhitespaces(str){
+    removeWhitespaces(str){
         return str.trim ? str.trim() : str.replace(/^\s+|\s+$/gm,'');
     }
 
-    static getNextLine(string){
+    getNextLine(string){
 
         let i;
         for (i=0; i < string.length; i++){
@@ -25,28 +27,28 @@ export default class StringHelper {
         }
     }
 
-    static splitWords(str ){
+    splitWords(str ){
 
         str = StringHelper.removeWhitespaces(str);
         return str.split(/[, .;:'"!@#^*()?\-+{}]+/);
 
     }
 
-    static splitCommaSeparatedWords(str ){
+    splitCommaSeparatedWords(str ){
 
         str = StringHelper.removeWhitespaces(str);
         return str.split(/[,.;:]+/);
 
     }
 
-    static isHex( str ){
+    isHex( str ){
 
         return /[0-9A-Fa-f]+$/.test(str)
 
     }
 
 
-    static formatMiliseconds(millisec){
+    formatMiliseconds(millisec){
 
         const seconds = (millisec / 1000).toFixed(1);
         const minutes = (millisec / (1000 * 60)).toFixed(1);
@@ -65,7 +67,7 @@ export default class StringHelper {
      * @param len
      * @returns {string}
      */
-    static generateRandomHex(len){
+    generateRandomHex(len){
 
         const text = [];
         const possible = "ABCDEF0123456789";
@@ -81,7 +83,7 @@ export default class StringHelper {
      * @param len
      * @returns {string}
      */
-    static generateRandomId(len){
+    generateRandomId(len){
 
         const text = [];
         const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -92,10 +94,16 @@ export default class StringHelper {
         return text.join('');
     }
 
-    static isStringNumber(str) {
+    isStringNumber(str) {
         return /^\d+(\.\d+)?/.exec(str);
+    }
+
+    sanitizeText(string){
+        return sanitizeHtml( this.removeWhitespaces(string ) );
     }
 
 
 }
 
+
+export default new StringHelper();

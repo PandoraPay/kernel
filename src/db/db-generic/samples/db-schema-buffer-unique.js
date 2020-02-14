@@ -8,6 +8,12 @@ export default class DBSchemaBufferUnique extends DBSchemaBuffer {
         super(scope, Helper.merge( {
 
                 fields: {
+
+                    id: {
+                        fixedBytes: 32,
+                        unique: true,
+                    },
+
                     buffer: {
 
                         preprocessor(buffer){
@@ -17,23 +23,9 @@ export default class DBSchemaBufferUnique extends DBSchemaBuffer {
 
                     },
 
-                    id: {
-                        fixedBytes: 32,
-                        unique: true,
-                    },
-
                 },
 
-                options: {
-                    returnOnlyField: "buffer",
-
-                    hashing: {
-                        enabled: true,
-                        parentHashingPropagation: true,
-
-                        fct: (a) => a,
-                    }
-                },
+                //options inherited
 
             },
             schema, false),  data, type, creationOptions);

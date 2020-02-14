@@ -43,6 +43,7 @@
     "pouchdb-find": "^7.0.0",
     "randombytes": "^2.1.0",
     "redis": "^2.8.0",
+    "sanitize-html": "^1.21.1",
     "sha256": "^0.2.0"
   },
   "devDependencies": {
