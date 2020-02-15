@@ -58,6 +58,9 @@ npm run build -- --tests
 
 To share local modules between packages, use npm-link as follows
 
+cd ~/zero/blockchain/captcha ;
+npm link ;
+
 cd ~/zero/blockchain/async-events ;
 npm link ;
 
@@ -101,6 +104,7 @@ npm link webpack-config ;
 npm link kernel ;
 npm link networking ;
 npm link cryptography ;
+npm link captcha ;
 
 
 cd ~/X/Consensus ;

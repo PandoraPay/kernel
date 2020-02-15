@@ -1,39 +1,35 @@
 import Exception from "../helpers/exception";
+import Helper from "src/helpers/helper"
 
 const intervals = {};
 let intervalsCount = 0;
 
 export function setAsyncInterval(cb, timeout, id  = ++intervalsCount){
 
-    intervals[id] = {
-        promise: undefined,
-        done: false,
-        timeout: setTimeout( _asyncInterval.bind(undefined, cb, timeout, id), 1)
-    };
+    intervals[id] = true;
+
+    _asyncInterval(id, cb, timeout);
 
     return id;
 }
 
-async function _asyncInterval(cb, timeout, id){
+async function _asyncInterval(id, cb, timeout){
 
-    if (!intervals[id]) return;
-    if (intervals[id].done) return;
+    while (intervals[id]){
 
-    let resolver;
-    intervals[id].promise = new Promise( resolve => resolver = resolve );
+        await Helper.sleep(timeout);
 
-    try{
+        if ( !intervals[id]) return;
 
-        const out = await cb();
-        resolver( out )
+        try{
 
-    }catch(err){
-        console.error("async interval raised an error", err)
+            await cb();
+
+        }catch(err){
+            console.error("async interval raised an error", err)
+        }
+
     }
-
-
-    if (!intervals[id].done)
-        intervals[id].timeout = setTimeout( _asyncInterval.bind(undefined, cb, timeout, id), timeout);
 
 }
 
@@ -42,19 +38,7 @@ export async function clearAsyncInterval(id){
     if (!id) return;
     if (!intervals[id]) return;
 
-    intervals[id].done = true;
-    clearTimeout( intervals[id].timeout );
-
-    let out;
-    try{
-        out = await intervals[id].promise;
-    }catch(err){
-        console.error("Clear Async Interval raised an error", err);
-    }
-
     delete intervals[id];
-
-    return out;
 
 }
 
