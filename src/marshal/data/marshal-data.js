@@ -10,11 +10,11 @@ export default class MarshalData{
      */
 
     static compressString(s){
-        return Buffer.isBuffer(s) ? s : Buffer.from(s, "ascii");
+        return Buffer.isBuffer(s) ? s : Buffer.from(s, "utf8");
     }
 
     static decompressString(b){
-        return typeof b === "string" ? b : b.toString("ascii");
+        return typeof b === "string" ? b : b.toString("utf8");
     }
 
     static marshalString(b, fixedSize , specifyLength, trim ){

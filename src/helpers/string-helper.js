@@ -29,14 +29,14 @@ class StringHelper {
 
     splitWords(str ){
 
-        str = StringHelper.removeWhitespaces(str);
+        str = this.removeWhitespaces(str);
         return str.split(/[, .;:'"!@#^*()?\-+{}]+/);
 
     }
 
     splitCommaSeparatedWords(str ){
 
-        str = StringHelper.removeWhitespaces(str);
+        str = this.removeWhitespaces(str);
         return str.split(/[,.;:]+/);
 
     }

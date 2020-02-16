@@ -405,7 +405,7 @@ export default class DBSchema extends Marshal{
             if (input)  data = input;
             else data = await this._getMiddleware( loadType, input, multi);
 
-            if ( !data ) throw new Exception(this, "Load raised an error", { id: id, infix:infix, table:table });
+            if ( !data ) throw new Exception(this, "Load raised an error", { id, infix, table });
 
             const promises = [];
 

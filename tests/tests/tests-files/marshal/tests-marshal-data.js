@@ -18,7 +18,7 @@ export default function run () {
 
         'marshal strings': async function () {
 
-            this.expect( MarshalData.compressString("HELLO WORLD"), Buffer.from("HELLO WORLD", "ascii") );
+            this.expect( MarshalData.compressString("HELLO WORLD"), Buffer.from("HELLO WORLD", "utf8") );
             this.expect( MarshalData.decompressString( MarshalData.compressString("HELLO WORLD") ), "HELLO WORLD" );
 
         },

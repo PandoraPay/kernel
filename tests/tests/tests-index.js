@@ -22,8 +22,8 @@ export default {
 
     tests: async scope =>{
 
-        // await TestHashMap(scope);
-        // await TestHashVirtualMap(scope);
+        await TestHashMap(scope);
+        await TestHashVirtualMap(scope);
 
         await TestRadixTree(scope);
 
@@ -34,6 +34,7 @@ export default {
         await TestHelpers( );
 
         await TestsMarshalData();
+
         await TestMarshal( );
 
         await TestSimple( );

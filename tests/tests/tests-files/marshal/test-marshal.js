@@ -164,7 +164,7 @@ export default function run () {
                 onlyFields["field"+index] = true;
 
                 const buffer = obj.toBuffer( undefined, { onlyFields });
-                this.expect( buffer.toString("ascii"), it );
+                this.expect( buffer.toString("utf8"), it );
             });
 
 
@@ -190,7 +190,7 @@ export default function run () {
                 onlyFields["field"+index] = true;
 
                 const buffer = obj2.toBuffer( undefined, { onlyFields });
-                this.expect( buffer.toString("ascii"), it );
+                this.expect( buffer.toString("utf8"), it );
             });
 
             const obj3 = new Marshal(this._scope, schema );
@@ -214,7 +214,7 @@ export default function run () {
                 onlyFields["field"+index] = true;
 
                 const buffer = obj3.toBuffer( undefined, { onlyFields });
-                this.expect( buffer.toString("ascii"), it );
+                this.expect( buffer.toString("utf8"), it );
 
             });
 

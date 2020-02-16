@@ -9,7 +9,7 @@ class PouchSchema extends DBSchema{
         if (infix && infix[infix.length-1] !== ':') infix += ":";
 
         if (type === "hex" && !Buffer.isBuffer(data) ) data = Buffer.from(data, "hex");
-        if (type === "json" && !Buffer.isBuffer(data) ) data = Buffer.from(data, "ascii");
+        if (type === "json" && !Buffer.isBuffer(data) ) data = Buffer.from(data, "utf8");
 
         if (type === "buffer" || type === "hex" || type === "json")
             multi.saveBlob( infix + (table||this.table), id || this.id, data, ()=>{} );
@@ -40,7 +40,7 @@ class PouchSchema extends DBSchema{
                     out = out.toString("hex");
 
                 if (type === "json" && Buffer.isBuffer(out))
-                    out = out.toString("ascii");
+                    out = out.toString("utf8");
                 
                 data = out;
             });

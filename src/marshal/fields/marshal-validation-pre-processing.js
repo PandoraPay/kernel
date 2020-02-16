@@ -29,7 +29,7 @@ export default class MarshalValidationPreProcessing{
     static preprocessing_string(value, schemaField){
 
         if (Buffer.isBuffer(value))
-            value = value.toString("ascii");
+            value = value.toString("utf8");
 
         return value;
 

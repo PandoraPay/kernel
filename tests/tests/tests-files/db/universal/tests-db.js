@@ -266,7 +266,7 @@ export default async function run ( dbType ) {
 
             const count = 42;
 
-            const schema = {...MarshalTests.bufferTestsSchema};
+            const schema = MarshalTests.bufferTestsSchema.schema;
 
             const obj = this.db.createSchemaInstance( schema );
 

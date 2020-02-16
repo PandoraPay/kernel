@@ -80,6 +80,119 @@ class TestClassStoreData extends DBSchema{
 
 }
 
+const bufferTest = {
+
+    fields: {
+
+        field0: {
+            type: "buffer",
+            default: Buffer.from("0011223344", "hex"),
+            fixedBytes: 5,
+        },
+
+        field1: {
+            type: "buffer",
+            default: Buffer.from("0000040200", "hex"),
+            maxSize: 255,
+            minSize: 0,
+
+            removeLeadingZeros: true,
+        },
+
+        field2: {
+            type: "buffer",
+            default: Buffer.from("000099887766", "hex"),
+            maxSize: 255,
+            minSize: 0,
+
+            removeLeadingZeros: false,
+        },
+
+        field3: {
+            type: "buffer",
+            default: Buffer.from("000099887766", "hex"),
+            maxSize: 255,
+            minSize: 0,
+
+            removeLeadingZeros: true,
+        },
+
+        field4: {
+            type: "buffer",
+            default: Buffer.from("0000998877660000", "hex"),
+            maxSize: 255,
+            minSize: 0,
+
+            removeLeadingZeros: true,
+        },
+
+        field5: {
+            type: "buffer",
+            default: Buffer.from("000000000000000000000063FF", "hex"),
+
+            fixedBytes: 32,
+
+            removeLeadingZeros: true,
+        },
+
+        field6: {
+            type: "buffer",
+            default: Buffer.from("000000000000000000000063FF00000000000000000000000000000000000000", "hex"),
+
+            fixedBytes: 32,
+
+            removeLeadingZeros: true,
+            specifyLength: true,
+
+        },
+
+        field7: {
+            type: "buffer",
+            default: Buffer.from("0000000000000000000000AAFF00000000000000000000000000000000000000", "hex"),
+
+            fixedBytes: 32,
+        },
+
+        field8: {
+            type: "buffer",
+            default: Buffer.from("0000000000000000000000000000000000000000000100000000000000000000", "hex"),
+
+            fixedBytes: 32,
+            specifyLength: true,
+        },
+
+        field9: {
+            type: "buffer",
+            default: Buffer.from("0000000000000000000000000020000000000000000000000000000000000000", "hex"),
+
+            fixedBytes: 32,
+            removeLeadingZeros: true,
+            specifyLength: true,
+        },
+
+    },
+
+    saving: {
+        enabled: true,
+    },
+}
+
+class TestClassBuffer extends DBSchema{
+
+    constructor(scope, schema={}, data, type, onlyFields, emptyObject){
+
+        super(scope, {
+
+            ...bufferTest,
+
+            ...schema,
+
+        }, data, type, onlyFields, emptyObject);
+
+    }
+
+}
+
 
 
 export default {
@@ -158,99 +271,10 @@ export default {
 
     bufferTestsSchema:{
 
-        fields: {
+        schema: TestClassBuffer,
 
-            field0: {
-                type: "buffer",
-                default: Buffer.from("0011223344", "hex"),
-                fixedBytes: 5,
-            },
+        ...bufferTest,
 
-            field1: {
-                type: "buffer",
-                default: Buffer.from("0000040200", "hex"),
-                maxSize: 255,
-                minSize: 0,
-
-                removeLeadingZeros: true,
-            },
-
-            field2: {
-                type: "buffer",
-                default: Buffer.from("000099887766", "hex"),
-                maxSize: 255,
-                minSize: 0,
-
-                removeLeadingZeros: false,
-            },
-
-            field3: {
-                type: "buffer",
-                default: Buffer.from("000099887766", "hex"),
-                maxSize: 255,
-                minSize: 0,
-
-                removeLeadingZeros: true,
-            },
-
-            field4: {
-                type: "buffer",
-                default: Buffer.from("0000998877660000", "hex"),
-                maxSize: 255,
-                minSize: 0,
-
-                removeLeadingZeros: true,
-            },
-
-            field5: {
-                type: "buffer",
-                default: Buffer.from("000000000000000000000063FF", "hex"),
-
-                fixedBytes: 32,
-
-                removeLeadingZeros: true,
-            },
-
-            field6: {
-                type: "buffer",
-                default: Buffer.from("000000000000000000000063FF00000000000000000000000000000000000000", "hex"),
-
-                fixedBytes: 32,
-
-                removeLeadingZeros: true,
-                specifyLength: true,
-
-            },
-
-            field7: {
-                type: "buffer",
-                default: Buffer.from("0000000000000000000000AAFF00000000000000000000000000000000000000", "hex"),
-
-                fixedBytes: 32,
-            },
-
-            field8: {
-                type: "buffer",
-                default: Buffer.from("0000000000000000000000000000000000000000000100000000000000000000", "hex"),
-
-                fixedBytes: 32,
-                specifyLength: true,
-            },
-
-            field9: {
-                type: "buffer",
-                default: Buffer.from("0000000000000000000000000020000000000000000000000000000000000000", "hex"),
-
-                fixedBytes: 32,
-                removeLeadingZeros: true,
-                specifyLength: true,
-            },
-
-        },
-
-        saving: {
-            enabled: true,
-        },
 
         data: [
             "0011223344",
@@ -362,13 +386,13 @@ export default {
 
         data: [
             '1929 THE GREAT CRASH',
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "ascii"), Buffer.alloc(10) ]).toString("ascii"),
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "ascii"), Buffer.alloc(10) ]).toString("ascii"),
+            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"),
+            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"),
             'Remember B. Madoff',
             'SATOSHI',
             'NAKAMOTO',
-            Buffer.concat([ Buffer.from('WAS HERE', "ascii"), Buffer.alloc(247) ]).toString("ascii"),
-            Buffer.concat([ Buffer.from('GL', "ascii"), Buffer.alloc(253) ]).toString("ascii"),
+            Buffer.concat([ Buffer.from('WAS HERE', "utf8"), Buffer.alloc(247) ]).toString("utf8"),
+            Buffer.concat([ Buffer.from('GL', "utf8"), Buffer.alloc(253) ]).toString("utf8"),
         ],
 
         json: [
@@ -384,13 +408,13 @@ export default {
 
         output:[
             '1929 THE GREAT CRASH', //exactly 20
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "ascii"), Buffer.alloc(10) ]).toString("ascii"), //adding blank characters
-            Buffer.from( "14", "hex").toString("ascii") + '1929 THE GREAT CRASH', //sepcify length
-            Buffer.from( "12", "hex").toString("ascii") + 'Remember B. Madoff', //specify length by default
-            Buffer.from( "07", "hex").toString("ascii") + 'SATOSHI', //specify length
-            Buffer.from( "08", "hex").toString("ascii") + 'NAKAMOTO', //specify length
-            Buffer.concat([ Buffer.from('WAS HERE', "ascii"), Buffer.alloc(247) ]).toString("ascii"), //adding blank characters
-            Buffer.concat([ Buffer.from("02", "hex"), Buffer.from('GL', "ascii")]).toString("ascii"),
+            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"), //adding blank characters
+            Buffer.from( "14", "hex").toString("utf8") + '1929 THE GREAT CRASH', //sepcify length
+            Buffer.from( "12", "hex").toString("utf8") + 'Remember B. Madoff', //specify length by default
+            Buffer.from( "07", "hex").toString("utf8") + 'SATOSHI', //specify length
+            Buffer.from( "08", "hex").toString("utf8") + 'NAKAMOTO', //specify length
+            Buffer.concat([ Buffer.from('WAS HERE', "utf8"), Buffer.alloc(247) ]).toString("utf8"), //adding blank characters
+            Buffer.concat([ Buffer.from("02", "hex"), Buffer.from('GL', "utf8")]).toString("utf8"),
         ]
 
     },
