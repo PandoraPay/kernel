@@ -51,7 +51,7 @@ class PouchDB extends GenericDatabase{
         //const regex = new RegExp (`^${infix}${table||obj.table}:[\\w_]+$`);
         const out = await this.client.find( {
             selector: { _id: { $regex: `^${infix}${table||obj.table}:[\\w_]+$` }},
-            skip:  index*count,
+            skip:  index,
             limit: count,
         } );
 
@@ -78,7 +78,7 @@ class PouchDB extends GenericDatabase{
                     ]
                 },
                 sort: [ {"SearchScore": "asc"}],
-                skip:  position*count,
+                skip:  position,
                 limit: count,
             });
 
@@ -91,7 +91,7 @@ class PouchDB extends GenericDatabase{
                         { SearchKey:  { $eq: key} },
                     ]
                 },
-                skip:  position*count,
+                skip:  position,
                 limit: count,
             });
 
@@ -105,7 +105,7 @@ class PouchDB extends GenericDatabase{
 
         return {
             ids: final,
-            nextArgument: (final.length > 0) ? position+1 : 0,
+            nextArgument: (final.length > 0) ? position + count : 0,
         };
 
     }
@@ -120,7 +120,7 @@ class PouchDB extends GenericDatabase{
                 ]
             },
             sort: [ {"SortScore": "asc"}],
-            skip:  position*count,
+            skip:  position,
             limit: count,
         });
 

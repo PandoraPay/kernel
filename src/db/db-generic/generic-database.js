@@ -256,7 +256,7 @@ export default class GenericDatabase{
     }
 
     async _findBySearchMiddleware( key, search, searchWords, infix, table, position, count ){
-        return this.client.find( { searchKey: key, sort: "sortScore", words: searchWords, start: position*count, end: (position+1)*count-1 });
+        return this.client.find( { searchKey: key, sort: "sortScore", words: searchWords, start: position, end: position+count-1 });
     }
 
     async findBySort(modelClass, sortName, position=0, count = 10, infix='', table, creationOptions){
@@ -284,7 +284,7 @@ export default class GenericDatabase{
     }
 
     async _findBySortMiddleware( sortKey, sort, infix, table, position, count ){
-        return this.client.find( { sortKey: sortKey, sort: "sortScore", start: position*count, end: (position+1)*count-1 });
+        return this.client.find( { sortKey: sortKey, sort: "sortScore", start: position, end: position+count-1 });
     }
 
     /**

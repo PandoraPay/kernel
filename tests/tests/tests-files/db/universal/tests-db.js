@@ -406,7 +406,7 @@ export default async function run ( dbType ) {
 
             for (let it = 0; it < count; ){
 
-                const sort = await this.db.findBySort( SchemaTests.SchemaSimpleSort, "sort1", it / step, step, "TS6_SORT" );
+                const sort = await this.db.findBySort( SchemaTests.SchemaSimpleSort, "sort1", it , step, "TS6_SORT" );
                 await this.expect( sort.length, step );
 
                 this.expect( sort.reduce( (res, obj, index) => res && (obj.field0 === it+index), true), true);

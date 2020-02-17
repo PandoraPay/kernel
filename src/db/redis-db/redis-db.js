@@ -66,7 +66,7 @@ export default class RedisDB extends GenericDatabase{
     async _scanMiddleware(obj, infix, table, index, count, multi){
 
         if (obj._schema.saving.indexable){
-            const out = await this.client.redis.zrange(`id:orders:${infix}${table || obj.table}`, index*count, (index+1) * count );
+            const out = await this.client.redis.zrange(`id:orders:${infix}${table || obj.table}`, index, index + count );
             return out;
         }
         else {
@@ -102,8 +102,8 @@ export default class RedisDB extends GenericDatabase{
             multi.zinterstore( `search:_outputInter`, searchWords.length, ...searchWords,  ()=>{});
             multi.zunionstore( `search:_outputUnion`, searchWords.length, ...searchWords,  ()=>{});
 
-            multi.zrange( `search:_outputInter`, position * count, (position+1)*count-1, out => dataIntersect = out );
-            multi.zrange( `search:_outputUnion`, position * count, (position+1)*count-1, out => dataUnion = out );
+            multi.zrange( `search:_outputInter`, position, position+count-1, out => dataIntersect = out );
+            multi.zrange( `search:_outputUnion`, position, position+count-1, out => dataUnion = out );
 
         }
         else { //slist
@@ -126,7 +126,7 @@ export default class RedisDB extends GenericDatabase{
             ids = ArrayHelper.unionUnique(dataIntersect, dataUnion);
 
             if (ids.length === 0 || ids.length < count) nextArgument = 0;
-            else nextArgument = position + 1;
+            else nextArgument = position + count;
 
         } else {
 
@@ -148,7 +148,7 @@ export default class RedisDB extends GenericDatabase{
 
     async _findBySortMiddleware( sortKey, sort, infix, table, position, count ){
 
-        return this.client.redis.zrange( sortKey, position*count, (position+1)*count-1);
+        return this.client.redis.zrange( sortKey, position, position+count-1 );
 
     }
 
