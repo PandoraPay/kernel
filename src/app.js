@@ -287,4 +287,8 @@ export default class App{
 
     }
 
+    get argv(){
+        return this._scope.argv;
+    }
+
 }

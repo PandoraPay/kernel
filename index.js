@@ -20,6 +20,11 @@ import App from 'src/app';
 
 import Marshal from "src/marshal/marshal";
 import MarshalData from "src/marshal/data/marshal-data";
+import MarshalFields from "src/marshal/fields/marshal-fields";
+import MarshalValidation from "src/marshal/fields/marshal-validation";
+import UnmarshalFields from "src/marshal/fields/unmarshal-fields";
+import MarshalValidationPreProcessing from "src/marshal/fields/marshal-validation-pre-processing";
+import MarshalValidationPreset from "src/marshal/fields/marshal-validation-pre-set";
 
 import DBSchema from "src/db/db-generic/db-schema";
 import DBSchemaBuffer from "src/db/db-generic/samples/db-schema-buffer";
@@ -84,6 +89,11 @@ const library = {
 
         Marshal,
         MarshalData,
+        MarshalFields,
+        MarshalValidation,
+        UnmarshalFields,
+        MarshalValidationPreset,
+        MarshalValidationPreProcessing,
 
         db:{
             DBSchema,

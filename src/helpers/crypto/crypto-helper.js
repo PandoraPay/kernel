@@ -3,10 +3,6 @@ import sha256 from 'sha256';
 
 class CryptoHelper{
 
-    static dkeccak256Buffer(b) {
-        return Buffer.from( keccak256( Buffer.from( keccak256( b ), "hex" ) ), "hex")
-    }
-
     static dkeccak256(b) {
 
         if (typeof b === "string") b = Buffer.from(b, "hex");
@@ -23,11 +19,13 @@ class CryptoHelper{
     static sha256(b){
 
         if (typeof b === "string") b = Buffer.from(b, "hex");
-
         const out = sha256(b, {asBytes: true });
-
         return Buffer.from(out);
 
+    }
+
+    static dsha256(b){
+        return CryptoHelper.sha256( CryptoHelper.sha256(b) );
     }
 
 }
