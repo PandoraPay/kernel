@@ -32,7 +32,7 @@ export default class MarshalFields {
         if (fixedBytes)
             return  MarshalData.marshalNumberFixed( data, fixedBytes );
         else
-            return MarshalData.marshalNumber( data, MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength") );
+            return MarshalData.marshalNumber( data );
 
     }
 
@@ -77,7 +77,7 @@ export default class MarshalFields {
         const b = Buffer.concat(  MarshalFields.marshal_array(data, schemaField, text, callbackObject, type, marshalOptions ) );
 
         if ( MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing  )
-            return Buffer.concat ([  MarshalData.marshalNumber(data.length), b ]);
+            return Buffer.concat ([  MarshalFields.marshal_number_toBuffer.call(this, data.length, schemaField, text, callbackObject, type, marshalOptions), b ]);
         else
             return b;
 

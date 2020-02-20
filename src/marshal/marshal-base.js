@@ -287,17 +287,12 @@ export default class MarshalBase{
         if (!schemaField.specifyLength)
             schemaField.specifyLength = function () {
 
+                if (schemaField.type === "string") return true; //strings are utf-8 so it will be variable based on the characters stored...
+
                 const fixedBytes = this.checkValue(schemaField.fixedBytes, "fixedBytes");
                 if (fixedBytes) return false;
 
-                const maxSize = this.checkValue(schemaField.maxSize, "maxSize");
-
-                if (schemaField.type === "number") return Math.ceil(Math.log2( maxSize ) / 8);
-
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") {
-                    if ( this.checkValue(schemaField.minSize, "minSize") !== maxSize) return Math.ceil(Math.log2( maxSize) / 8);
-                    if ( this.checkValue(schemaField.emptyAllowed, "emptyAllowed") && maxSize) return Math.ceil(Math.log2( maxSize ) / 8);
-                }
+                return true;
 
             };
 

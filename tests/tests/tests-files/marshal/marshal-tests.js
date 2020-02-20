@@ -323,19 +323,21 @@ export default {
 
             field0: {
                 type: "string",
-                default: '1929 THE GREAT CRASH',
-                fixedBytes: 20,
+                default: '1929 THE GREAT CRASH 儿童游戏',
+                fixedBytes: 25,
+                specifyLength: true,
             },
 
             field1: {
                 type: "string",
-                default: '1929 THE GREAT CRASH',
+                default: '1929 THE GREAT CRASH 儿童游戏',
                 fixedBytes: 30,
+                specifyLength: true,
             },
 
             field2: {
                 type: "string",
-                default: '1929 THE GREAT CRASH',
+                default: '1929 THE GREAT CRASH 儿童游戏',
                 fixedBytes: 30,
 
                 specifyLength: true,
@@ -385,9 +387,9 @@ export default {
         },
 
         data: [
-            '1929 THE GREAT CRASH',
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"),
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"),
+            '1929 THE GREAT CRASH 儿童游戏',
+            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH 儿童游戏', "utf8"), Buffer.alloc(5) ]).toString("utf8"),
+            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH 儿童游戏', "utf8"), Buffer.alloc(5) ]).toString("utf8"),
             'Remember B. Madoff',
             'SATOSHI',
             'NAKAMOTO',
@@ -396,9 +398,9 @@ export default {
         ],
 
         json: [
-            '1929 THE GREAT CRASH',
-            '1929 THE GREAT CRASH',
-            '1929 THE GREAT CRASH',
+            '1929 THE GREAT CRASH 儿童游戏',
+            '1929 THE GREAT CRASH 儿童游戏',
+            '1929 THE GREAT CRASH 儿童游戏',
             'Remember B. Madoff',
             'SATOSHI',
             'NAKAMOTO',
@@ -407,14 +409,14 @@ export default {
         ],
 
         output:[
-            '1929 THE GREAT CRASH', //exactly 20
-            Buffer.concat([ Buffer.from('1929 THE GREAT CRASH', "utf8"), Buffer.alloc(10) ]).toString("utf8"), //adding blank characters
-            Buffer.from( "14", "hex").toString("utf8") + '1929 THE GREAT CRASH', //sepcify length
+            Buffer.from( "21", "hex").toString("utf8") +'1929 THE GREAT CRASH 儿童游戏', //exactly 25
+            Buffer.concat([ Buffer.from( "21", "hex"), Buffer.from('1929 THE GREAT CRASH 儿童游戏', "utf8") ]).toString("utf8"), //adding blank characters
+            Buffer.from( "21", "hex").toString("utf8") + '1929 THE GREAT CRASH 儿童游戏', //sepcify length
             Buffer.from( "12", "hex").toString("utf8") + 'Remember B. Madoff', //specify length by default
             Buffer.from( "07", "hex").toString("utf8") + 'SATOSHI', //specify length
             Buffer.from( "08", "hex").toString("utf8") + 'NAKAMOTO', //specify length
-            Buffer.concat([ Buffer.from('WAS HERE', "utf8"), Buffer.alloc(247) ]).toString("utf8"), //adding blank characters
-            Buffer.concat([ Buffer.from("02", "hex"), Buffer.from('GL', "utf8")]).toString("utf8"),
+            Buffer.concat([ Buffer.from( "08", "hex"), Buffer.from('WAS HERE', "utf8") ]).toString("utf8"), //adding blank characters
+            Buffer.concat([ Buffer.from( "02", "hex"), Buffer.from('GL', "utf8")]).toString("utf8"),
         ]
 
     },

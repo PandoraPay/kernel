@@ -44,13 +44,12 @@ export default class UnmarshalFields {
      */
     static _unmarshalLengthFromBuffer(input, schemaField){
 
-        const specifyLength = MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength");
+        const fixedBytes = MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes");
 
-        if (specifyLength !== undefined)
-            return MarshalData.unmarshalNumber( input, 7 );
-        else 
-            return MarshalData.unmarshalNumberFixed(input, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes") );
-        
+        if (fixedBytes)
+            return fixedBytes;
+        else
+            return UnmarshalFields.unmarshal_number_fromBuffer.call(this, input, schemaField);
 
     }
 

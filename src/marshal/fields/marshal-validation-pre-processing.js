@@ -54,8 +54,10 @@ export default class MarshalValidationPreProcessing{
 
             let error = false;
             for (let i=0; i < value.length; i++)
-                if (value[i] < 0 || value[i] > 255)
+                if (value[i] < 0 || value[i] > 255) {
                     error = true;
+                    break;
+                }
 
             if (!error){
 
