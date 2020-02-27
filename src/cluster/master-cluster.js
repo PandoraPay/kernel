@@ -246,13 +246,16 @@ export default class MasterCluster extends AsyncEvents {
             }catch(err){
                 if (this._scope.argv.debug.enabled)
                     this._scope.logger.error(this, "receivedData raised an error", err);
+            }finally {
+                delete this["__promiseResolve" + data.confirmation];
             }
-            delete this["__promiseResolve"+data.confirmation];
-            return;
 
+            return;
         }
 
         data = BufferHelper.processBufferArray(data);
+
+        let output;
 
         if ( this.isMaster ) { //master
 
@@ -261,14 +264,17 @@ export default class MasterCluster extends AsyncEvents {
              */
             if ( data.broadcast) {
 
+                const emitToMySelf = data.emitToMySelf;
+
                 delete data.broadcast;
+                delete data.emitToMySelf;
 
                 const promises = [];
 
                 for (const work of this.stickyMaster.workers)
-                    if (work) {
+                    if (work && (worker !== work || emitToMySelf )) {
 
-                        if (worker._closed) continue; //closed already
+                        if (work._closed) continue; //closed already
 
                         const confirmation = StringHelper.generateRandomId(32 );
                         const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
@@ -277,17 +283,24 @@ export default class MasterCluster extends AsyncEvents {
                         work.send({msg: message, data: { ... data, confirmation}, });
                     }
 
-                await promises;
+                output = await Promise.all(promises);
 
             }
 
         }
 
-        let output;
 
         if (message === "lock-set") output = this.lockSet(data, worker);
         else if (message === "lock-delete") output = this.lockDelete(data, worker);
-        else await this.emit( message, { ...data, _worker: worker } );
+        else {
+            const out = await this.emit( message, { ...data, _worker: worker } );
+
+            if (Array.isArray(output))
+                output.push(out);
+            else output = out;
+        }
+
+        //this._scope.logger.log(this, "output " +message, {confirmation: data.confirmation, output } );
 
         if (!worker._closed) //not closed already
             await worker.send( {msg: "confirmation", data: {confirmation: data.confirmation, output } } );
@@ -355,7 +368,7 @@ export default class MasterCluster extends AsyncEvents {
 
             const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
 
-            process.send({msg, data: { ...data, confirmation, broadcast},  });
+            process.send({msg, data: { ...data, confirmation, broadcast, emitToMySelf},  });
 
 
             return promise;

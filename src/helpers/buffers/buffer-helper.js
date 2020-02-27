@@ -1,5 +1,3 @@
-import StringHelper from "../string-helper";
-
 var randomBytes = require('randombytes');
 import isArrayBuffer from 'is-array-buffer';
 
