@@ -281,6 +281,8 @@ export default class MasterCluster extends AsyncEvents {
                         promises.push( promise );
 
                         work.send({msg: message, data: { ... data, confirmation}, });
+                    } else {
+                        promises.push( undefined );
                     }
 
                 output = await Promise.all(promises);
@@ -296,7 +298,7 @@ export default class MasterCluster extends AsyncEvents {
             const out = await this.emit( message, { ...data, _worker: worker } );
 
             if (Array.isArray(output))
-                output.push(out);
+                output.unshift(out);
             else output = out;
         }
 
@@ -378,8 +380,8 @@ export default class MasterCluster extends AsyncEvents {
 
     }
 
-    broadcastMessage(msg, data, emitToMySelf){
-        return this.sendMessage(msg, data, true, emitToMySelf);
+    broadcastMessage(msg, data, broadcast = true, emitToMySelf){
+        return this.sendMessage(msg, data, broadcast, emitToMySelf);
     }
 
     async close() {

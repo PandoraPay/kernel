@@ -83,7 +83,7 @@ export default class GenericClient{
 
             },
 
-            emit: (data, emitToMySelf) =>  this._scope.masterCluster.broadcastMessage( channel, data, emitToMySelf ),
+            emit: (data, broadcast, emitToMySelf) =>  this._scope.masterCluster.broadcastMessage( channel, data, broadcast, emitToMySelf ),
         }
 
     }

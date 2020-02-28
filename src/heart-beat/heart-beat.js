@@ -181,9 +181,16 @@ export default class HeartBeat {
 
                 const handle = task.handleTask || process.handle;
 
-                task.promise = new Promise( (resolve) => resolve( handle ( taskName, processName ) ) );
+                let resolver;
+                task.promise = new Promise( resolve => resolver = resolve );
 
-                await task.promise;
+                try{
+                    await handle ( taskName, processName );
+                    resolver( handle );
+                }catch(err){
+                    this._scope.logger.error(this, `${processName} raised an error`, err );
+                    resolver( false );
+                }
 
                 if (task.removedTaskAfterCompletion){
                     delete process.tasks[taskName];

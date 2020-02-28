@@ -672,11 +672,11 @@ export default class DBSchema extends Marshal{
         return this.subscription.off();
     }
 
-    subscribeMessage( name, data, emitToMySelf ){
+    subscribeMessage( name, data, broadcast, emitToMySelf ){
 
         if (!this.subscription) throw new Exception(this, "schema is not subscribed. Use subscribe first");
 
-        return this.subscription.emit( { name, data}, emitToMySelf );
+        return this.subscription.emit( { name, data}, broadcast, emitToMySelf );
     }
 
     subscribeOn(name, callback){
