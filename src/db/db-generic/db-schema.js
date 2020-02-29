@@ -214,20 +214,20 @@ export default class DBSchema extends Marshal{
      * @param table
      * @returns {Promise.<boolean>}
      */
-    async deleteAllSiblings(infix, table, db = this._scope.db){
-        return db.deleteAll(this.constructor, infix, table);
+    async deleteAllSiblings(infix, table, db = this._scope.db, creationOptions){
+        return db.deleteAll(this.constructor, infix, table, creationOptions);
     }
 
-    static deleteAll(db, infix, table){
-        return db.deleteAll(this, infix, table);
+    static deleteAll(db, infix, table, creationOptions){
+        return db.deleteAll(this, infix, table, creationOptions);
     }
 
-    async findAllSiblings(infix, table, db = this._scope.db){
-        return db.findAll(this.constructor, infix, table);
+    async findAllSiblings(infix, table, db = this._scope.db, creationOptions){
+        return db.findAll(this.constructor, infix, table, creationOptions);
     }
 
-    static findAll(db, infix, table){
-        return db.findAll(this, infix, table);
+    static findAll(db, infix, table, creationOptions){
+        return db.findAll(this, infix, table, creationOptions);
     }
 
     static findBySort(db, sortName, position, count, infix, table, creationOptions){
