@@ -1,4 +1,5 @@
 const fs = require('fs');
+import Exception from "src/helpers/exception";
 
 export default class Helper{
 
@@ -8,31 +9,29 @@ export default class Helper{
 
     static _mergeCloned(a, b ){
 
-        if ( a === undefined ) return b;
-        if ( b === undefined) return a;
-        if ( typeof b !== "object" || b.constructor.name !== "Object" ) return b;
-
         let c = {};
 
-        for (const key in a)
-            if ( a.hasOwnProperty(key) ) {
+        if (a)
+            for (const key in a)
+                if ( a.hasOwnProperty(key) ) {
 
-                if (a[key] && typeof a[key] === "object" && a[key].constructor && a[key].constructor.name === "Object")
-                    c[key] = Helper._mergeCloned( {}, a[ key ]) ;
-                else
-                c[key] = a[key];
+                    if (a[key] && typeof a[key] === "object" && a[key].constructor && a[key].constructor.name === "Object")
+                        c[key] = Helper._mergeCloned( {}, a[ key ]) ;
+                    else
+                    c[key] = a[key];
 
-            }
+                }
 
-        for (const key in b)
-            if ( b.hasOwnProperty(key) ) {
+        if (b)
+            for (const key in b)
+                if ( b.hasOwnProperty(key) ) {
 
-                if (typeof b[key] === "object" && b[key].constructor.name === "Object")
-                    c[key] = Helper._mergeCloned(c[key] || {}, b[key]);
-                else
-                    c[key] = b[key];
+                    if (typeof b[key] === "object" && b[key].constructor.name === "Object")
+                        c[key] = Helper._mergeCloned(c[key] || {}, b[key]);
+                    else
+                        c[key] = b[key];
 
-            }
+                }
 
         return c;
 
@@ -41,21 +40,18 @@ export default class Helper{
 
     static _merge(a,b){
 
-        if ( a === undefined ) return b;
-        if ( b === undefined) return a;
-        if ( typeof b !== "object" || b.constructor.name !== "Object" ) return b;
-
         let c = a;
 
-        for (const key in b)
-            if ( b.hasOwnProperty(key) ) {
+        if (b)
+            for (const key in b)
+                if ( b.hasOwnProperty(key) ) {
 
-                if (b[key] && typeof b[key] === "object" && b[key].constructor && b[key].constructor.name === "Object")
-                    c[key] = Helper._merge(c[key] || {}, b[key]);
-                else
-                    c[key] = b[key];
+                    if (b[key] && typeof b[key] === "object" && b[key].constructor && b[key].constructor.name === "Object")
+                        c[key] = Helper._merge(c[key] || {}, b[key]);
+                    else
+                        c[key] = b[key];
 
-            }
+                }
 
         return c;
 
@@ -68,6 +64,9 @@ export default class Helper{
      * @param b
      */
     static merge(a, b, clone = false){
+
+        if (a && typeof a !== "object") throw new Exception(Helper, "a needs to be an object");
+        if (b && typeof b !== "object") throw new Exception(Helper, "b needs to be an object");
 
         return clone ? Helper._mergeCloned(a,b) : Helper._merge(a, b);
 
