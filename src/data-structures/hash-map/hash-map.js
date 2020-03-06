@@ -95,6 +95,25 @@ export default class HashMap extends DBSchema {
 
     }
 
+    async existsMap(id){
+
+        try{
+
+            if (Buffer.isBuffer(id)) id = id.toString("hex");
+
+            const element = this._createSchemaObject({
+                id: id,
+            }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+
+            return element.exists();
+
+        }catch(err){
+
+        }
+
+        return false;
+    }
+
     async getMap ( id ){
 
         try{

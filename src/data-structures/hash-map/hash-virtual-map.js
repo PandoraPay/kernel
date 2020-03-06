@@ -117,6 +117,27 @@ export default class HashVirtualMap extends HashMap {
 
     }
 
+    async existsMap(id){
+
+        try{
+
+            if (Buffer.isBuffer(id)) id = id.toString("hex");
+
+
+            if (this._virtual[id]) {
+                if (this._virtual[id].type === "del") return false;
+                if (this._virtual[id].type === "add" || this._virtual[id].type === "view") return true;
+            }
+
+            return  this._getFallback('existsMap')(id);
+
+        }catch(err){
+
+        }
+
+        return false;
+    }
+
     /**
      * Update will also create it if it doesn't exist
      * @param id
