@@ -16,6 +16,14 @@ export default class ArrayHelper {
         return [...new Set([].concat(...args))];
     }
 
+    /**
+     * Insert an element into a sorted array
+     * O(log N)
+     * @param el
+     * @param arr
+     * @param compare
+     * @returns {*}
+     */
     static addSortedArray(el, arr,  compare  = (a,b) => a - b) {
 
         arr.splice( ArrayHelper.binarySearch(el, arr, 0, arr.length, compare ) + 1, 0, el);
@@ -23,11 +31,42 @@ export default class ArrayHelper {
         return arr;
     }
 
+    /**
+     * Remove an element from a sorted array
+     * O(log N)
+     * @param el
+     * @param arr
+     * @param compare
+     * @returns {*}
+     */
     static removeSortedArray(el, arr, compare  = (a,b) => a - b) {
 
         const found = ArrayHelper.binarySearch(el, arr, 0, arr.length, compare);
-        if (arr[found] === el)
-            arr.splice( found, 1);
+
+        if (typeof el === "object"){
+
+            let i = found;
+            while (i < arr.length && compare(arr[i], el) === 0){
+                if (arr[i] === el){
+                    arr.splice( i, 1);
+                    return arr;
+                }
+                i++;
+            }
+
+            i = found;
+            while ( i >= 0 && compare(arr[i], el) === 0){
+                if (arr[i] === el){
+                    arr.splice(i, 1);
+                    return arr;
+                }
+                i--;
+            }
+
+        } else { //not an object, number, string
+            if (arr[found] === el)
+                arr.splice( found, 1);
+        }
 
         return arr;
     }
@@ -36,7 +75,7 @@ export default class ArrayHelper {
 
         const pivot = (st + en) >> 1;  // should be faster than dividing by 2
 
-        const c = compare(el, arr[pivot]);
+        const c = pivot < arr.length ? compare(el, arr[pivot]) : 0;
 
         if (en - st <= 1 ) return c < 0 ? pivot - 1 : pivot;
 

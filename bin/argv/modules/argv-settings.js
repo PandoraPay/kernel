@@ -26,4 +26,6 @@ export default{
 
     getDateNow: () => Math.floor(  new Date().getTime() / 1000)  - DATE_ORIGIN_SECONDS,
 
+    hashMapVirtualCacheSize: 1000,
+
 }

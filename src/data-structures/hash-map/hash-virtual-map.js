@@ -2,6 +2,7 @@ import DBSchema from "src/db/db-generic/db-schema"
 import HashMap from "./hash-map"
 import Exception from "src/helpers/exception";
 import HashMapElement from "./hash-map-element";
+import ArrayHelper from "../../helpers/array-helper";
 
 export default class HashVirtualMap extends HashMap {
 
@@ -9,6 +10,7 @@ export default class HashVirtualMap extends HashMap {
 
         super(scope, schema, data, type, creationOptions);
         this._virtual = {};
+        this._virtualList = [];
 
         this._fallback = undefined;
 
@@ -66,6 +68,7 @@ export default class HashVirtualMap extends HashMap {
 
         this._virtual[id] = {
             type: "add",
+            sortedListScore: 0,
             element,
         };
 
@@ -91,9 +94,14 @@ export default class HashVirtualMap extends HashMap {
         if (this._virtual[id]) {
 
             if (this._virtual[id].type === "del") return undefined;
+            if (this._virtual[id].type === "add" ) return this._virtual[id].element;
+            if (this._virtual[id].type === "view") {
 
-            if (this._virtual[id].type === "add" || this._virtual[id].type === "view")
+                this._deleteCache(id);
+                this._virtual[id].sortedListScore += 1;
+                this._addCache(id);
                 return this._virtual[id].element;
+            }
 
 
         }
@@ -108,9 +116,13 @@ export default class HashVirtualMap extends HashMap {
             }, "object", "element"); //data is provided
 
             this._virtual[id] = {
+                id,
                 type: "view",
+                sortedListScore: 0,
                 element,
             };
+
+            this._addCache( id );
 
             return element;
         }
@@ -129,7 +141,7 @@ export default class HashVirtualMap extends HashMap {
                 if (this._virtual[id].type === "add" || this._virtual[id].type === "view") return true;
             }
 
-            return  this._getFallback('existsMap')(id);
+            return this._getFallback('existsMap')(id);
 
         }catch(err){
 
@@ -156,6 +168,7 @@ export default class HashVirtualMap extends HashMap {
             }, "object", "element",  ); //data is provided
 
         this._virtual[id] = {
+            id,
             type: "add",
             element,
         };
@@ -187,18 +200,35 @@ export default class HashVirtualMap extends HashMap {
             this.resetHashMap();
         else {
 
-
             for (const id in this._virtual){
 
                 const {type} = this._virtual[id];
 
-                if (type === "add") this._virtual[id].type = "view";
-                else if (type === "del") delete this._virtual[id];
+                if (type === "del") delete this._virtual[id];
+                else if (type === "add") {
+                    this._virtual[id].type = "view";
+                    this._addCache(id);
+                }
                 else if (type === "view") continue;
             }
 
         }
 
+    }
+
+    _deleteCache(id){
+        return ArrayHelper.removeSortedArray( this._virtual[id], this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
+    }
+
+    _addCache(id){
+
+        if (this._virtualList.length >= this._scope.argv.settings.hashMapVirtualCacheSize ){
+            const data = this._virtualList[0];
+            delete this._virtual[data.id];
+            this._virtualList.splice(0, 1);
+        }
+
+        return ArrayHelper.addSortedArray( this._virtual[id], this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
     }
 
 }
