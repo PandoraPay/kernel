@@ -109,7 +109,7 @@ export default class GenericDatabase{
 
             const results =  Promise.all( id.map( async it => {
                 
-                let obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
+                const obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
 
                 //this._scope.logger.info(this, `Loading index ${index} ${it}`);
 
@@ -122,7 +122,7 @@ export default class GenericDatabase{
             return results;
 
         } else {
-            let obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
+            const obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
             await obj.load(id, infix, table);
             output = obj;
         }
@@ -149,7 +149,7 @@ export default class GenericDatabase{
 
         return Promise.all( ids.map( async (it) => {
 
-            let obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
+            const obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
             await obj.load( it, infix, table,);
             return obj.delete();
 
@@ -173,7 +173,7 @@ export default class GenericDatabase{
 
     }
 
-    async count ( modelClass, infix = '', table ){
+    async count ( modelClass, infix = '', table, creationOptions ){
         if (!this._started) await this.connectDB();
     }
 
@@ -229,7 +229,7 @@ export default class GenericDatabase{
         if (!this._started) await this.connectDB();
         if (infix && infix[infix.length-1] !== ':') infix += ":";
 
-        let obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
+        const obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
 
         for (const field in obj._schema.fieldsWithSearches)
             if (obj._schema.fieldsWithSearches[field][searchName]){
@@ -264,7 +264,7 @@ export default class GenericDatabase{
         if (!this._started) await this.connectDB();
         if (infix && infix[infix.length-1] !== ':') infix += ":";
 
-        let obj = new modelClass( { ...this._scope,  db: this }, undefined, undefined, undefined, creationOptions );
+        const obj = new modelClass( { ...this._scope,  db: this }, undefined, undefined, undefined, creationOptions );
 
         for (const field in obj._schema.fieldsWithSorts)
             if ( obj._schema.fieldsWithSorts[field][sortName] ){

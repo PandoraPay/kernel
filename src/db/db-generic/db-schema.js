@@ -238,8 +238,8 @@ export default class DBSchema extends Marshal{
         return db.findBySearch( searchName, value, position, count, infix, table, creationOptions );
     }
 
-    static count(db, infix, table){
-        return db.count(this, infix, table);
+    static count(db, infix, table, creationOptions){
+        return db.count(this, infix, table, creationOptions);
     }
 
     /**
