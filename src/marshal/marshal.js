@@ -282,12 +282,7 @@ export default class Marshal extends MarshalBase {
     validate() {
 
         for (const field of this._schema.fieldsSorted)
-            if (!this._validateField(field, this[field], this._schema.fields[field]))
-                throw new Exception( this, "Field failed validation", {
-                    field: field,
-                    value: this[field],
-                    schema: this._schema.fields[field]
-                });
+            this._validateField(field, this[field], this._schema.fields[field]);
 
         return true;
 
@@ -301,27 +296,12 @@ export default class Marshal extends MarshalBase {
      */
     _validateField(name, value, schemaField) {
 
-        try {
+        schemaField._validateSchemaField(value, schemaField);
 
-            schemaField._validateSchemaField(value, schemaField);
-
-            //additional validation
-            if (typeof schemaField.validation === "function")
-                if (!schemaField.validation.call(this, value, name, schemaField))
-                    throw "Additional Validation was not passed";
-
-        } catch (err) {
-
-            if (this._scope.argv.debug.enabled)
-                this._scope.logger.error(this, 'Invalid field', {
-                    name: name,
-                    value: value,
-                    schemaField: schemaField,
-                    err: err,
-                } );
-
-            throw new Exception(this, "Invalid Field", );
-        }
+        //additional validation
+        if (typeof schemaField.validation === "function")
+            if (!schemaField.validation.call(this, value, name, schemaField))
+                throw new Exception("Additional Validation was not passed", {name});
 
         return true;
     }
@@ -335,55 +315,50 @@ export default class Marshal extends MarshalBase {
         const marshalOnlyFields = marshalOptions.onlyFields;
         const marshalReplaceFields = marshalOptions.replaceFields;
 
-        try {
 
-            const fct = isObject ? '_marshalSchemaField' : '_marshalSchemaFieldToBuffer';
+        const fct = isObject ? '_marshalSchemaField' : '_marshalSchemaFieldToBuffer';
 
-            const fields = this._schema.options.returnOnlyField ? [this._schema.options.returnOnlyField] : this._schema.fieldsSorted;
+        const fields = this._schema.options.returnOnlyField ? [this._schema.options.returnOnlyField] : this._schema.fieldsSorted;
 
-            let i = 0;
-            for (const field of fields )
-                if (!marshalOnlyFields || marshalOnlyFields[field]) {
+        let i = 0;
+        for (const field of fields )
+            if (!marshalOnlyFields || marshalOnlyFields[field]) {
 
-                    if ( marshalOptions.skipMarshalForHashing && this.checkProperty( "skipHashing", field )) continue;
-                    if ( marshalOptions.saving && this.checkProperty( "skipSaving", field )) continue;
-                    if ( !marshalOptions.saving && this.checkProperty( "skipMarshal", field )) continue;
+                if ( marshalOptions.skipMarshalForHashing && this.checkProperty( "skipHashing", field )) continue;
+                if ( marshalOptions.saving && this.checkProperty( "skipSaving", field )) continue;
+                if ( !marshalOptions.saving && this.checkProperty( "skipMarshal", field )) continue;
 
-                    schemaField = this._schema.fields[field];
+                schemaField = this._schema.fields[field];
 
-                    if ( schemaField.ifNonDefault !== undefined)
-                        if (this.__default[field]) continue;
-                        else
-                        if ( !isObject ){
-                            marshal[i] = Buffer.alloc(1);
-                            marshal[i][0] = schemaField.ifNonDefault;
-                            i++;
-                        }
+                if ( schemaField.ifNonDefault !== undefined)
+                    if (this.__default[field]) continue;
+                    else
+                    if ( !isObject ){
+                        marshal[i] = Buffer.alloc(1);
+                        marshal[i][0] = schemaField.ifNonDefault;
+                        i++;
+                    }
 
-                    marshal[ isObject ? field : i ] = this._schema.fields[field][fct](this[field], schemaField, text, callbackObject, type, MarshalHelper.constructOptionsMarshaling( marshalOptions, field) );
-                    i++;
+                marshal[ isObject ? field : i ] = this._schema.fields[field][fct](this[field], schemaField, text, callbackObject, type, MarshalHelper.constructOptionsMarshaling( marshalOptions, field) );
+                i++;
 
-                }
-
-            if (marshalReplaceFields && isObject ){
-
-                const newMarshal = {};
-
-                for (const field in marshal){
-
-                    let fieldName = marshalReplaceFields[ field ];
-                    if (typeof fieldName === "object") fieldName = fieldName._name || field;
-
-                    newMarshal[ fieldName ? fieldName : field ] = marshal[field];
-                }
-
-                marshal = newMarshal;
             }
 
-        } catch (err) {
-            this._scope.logger.error("Invalid Marshal ", err);
-            throw err;
+        if (marshalReplaceFields && isObject ){
+
+            const newMarshal = {};
+
+            for (const field in marshal){
+
+                let fieldName = marshalReplaceFields[ field ];
+                if (typeof fieldName === "object") fieldName = fieldName._name || field;
+
+                newMarshal[ fieldName ? fieldName : field ] = marshal[field];
+            }
+
+            marshal = newMarshal;
         }
+
 
         if (!isObject) return Buffer.concat(marshal);
         else if (isObject) {

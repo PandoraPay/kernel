@@ -127,7 +127,7 @@ export default class MarshalBase{
         }
 
         if (!type)
-            throw new Exception(this, "fromType raised an error. Type is not specified");
+            throw "fromType raised an error. Type is not specified";
 
         if (type === "json") {
             if (typeof data === "string") data = JSON.parse(data);
@@ -179,7 +179,7 @@ export default class MarshalBase{
 
     fromType(data, type, callbackObject, unmarshalOptions) {
 
-        if ( data === undefined) throw new Exception(this, "fromType raised an error. Data is not specified");
+        if ( data === undefined) throw "fromType raised an error. Data is not specified";
 
         const out = this._convertDataType(data, type);
         type = out.type;
@@ -222,24 +222,15 @@ export default class MarshalBase{
      */
     _validateFieldCreation(name, value, schemaField) {
 
-        try {
 
-            if (!schemaField) schemaField = this._schema.fields[name];
+        if (!schemaField) schemaField = this._schema.fields[name];
 
-            if (!schemaField || typeof schemaField !== "object")
-                throw "Schema was not found";
+        if (!schemaField || typeof schemaField !== "object")
+            throw "Schema was not found";
 
-            //validate its type
-            if (!schemaField.type || !defaultValuesExist[schemaField.type])
-                throw "Type is invalid";
-
-        } catch (err) {
-            throw new Exception(this, "Invalid Field." + err, {
-                name: name,
-                value: value,
-                schemaField: schemaField
-            });
-        }
+        //validate its type
+        if (!schemaField.type || !defaultValuesExist[schemaField.type])
+            throw "Type is invalid";
 
     }
 

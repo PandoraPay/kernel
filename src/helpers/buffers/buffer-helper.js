@@ -39,14 +39,16 @@ class BufferHelper{
         if ( Buffer.isBuffer(obj) )
             return obj.toString("hex");
 
-        if (obj && typeof obj === "object") {
-
+        if (obj && typeof obj === "object" && !obj._isActiveClone) {
 
             for (const key in obj)
                 if (Buffer.isBuffer(obj[key]))
                     obj[key] = obj[key].toString("hex");
-                else if (typeof obj[key] === "object")
+                else if (typeof obj[key] === "object") {
+                    obj._isActiveClone = true;
                     this.convertAllBuffersToHex(obj[key]);
+                    delete obj._isActiveClone;
+                }
         }
 
         return obj;
@@ -63,7 +65,7 @@ class BufferHelper{
 
     processBufferArray(data){
 
-        if (data && typeof data === "object"  ) {
+        if (data && typeof data === "object" && !data._isActiveClone  ) {
 
             if (data.hasOwnProperty('type') && data.type === "Buffer" && data.hasOwnProperty("data") ){
                 data = Buffer.from(data);
@@ -75,8 +77,11 @@ class BufferHelper{
 
                     if (isArrayBuffer(data[prop]))
                         data[prop] = Buffer.from(data[prop]);
-                    else
+                    else {
+                        data._isActiveClone = true;
                         data[prop] = this.processBufferArray(data[prop]);
+                        delete data._isActiveClone;
+                    }
 
                 }
             }

@@ -9,7 +9,7 @@ export default class DBSchema extends Marshal{
     constructor(scope, schema,  data, type, creationOptions){
 
         super(scope, schema,  data, type, creationOptions);
-        
+
         this._infix = '';
         this._importMethodsFromDatabaseSchema();
 
@@ -108,27 +108,24 @@ export default class DBSchema extends Marshal{
 
     validateField(name, value, schemaField){
 
-        try{
 
-            if (!super.validateField.call(this, name, value, schemaField))
-                throw "Marshal failed";
+        if (!super.validateField.call(this, name, value, schemaField))
+            throw new Exception(this, "Marshal failed", {name});
 
-            if ( value === undefined) value = this[name];
-            if ( !schemaField ) schemaField = this._schema.fields[name];
+        if ( value === undefined) value = this[name];
+        if ( !schemaField ) schemaField = this._schema.fields[name];
 
-        } catch (err){
-            throw new Exception(this, "Invalid Field."+ err, { name: name, value: value, schemaField: schemaField });
-        }
+
 
         if (schemaField.searches)
             for (const search of schemaField.searches)
                 if ( !this._validateSearchField(name, value, schemaField, schemaField.searches[search] ))
-                    throw new Exception(this, "Invalid Search Field.", { name: name, value: value, schemaField: schemaField });
+                    throw new Exception(this, "Invalid Search Field.", { name: name });
 
         if ( schemaField.sorts )
             for (const sort of schemaField.sorts)
                 if ( !this._validateSortField(name, value, schemaField, schemaField.sorts[sort] ))
-                    throw new Exception(this, "Invalid Sort Field.", { name: name, value: value, schemaField: schemaField });
+                    throw new Exception(this, "Invalid Sort Field.", { name: name });
 
         return true;
 
@@ -151,7 +148,7 @@ export default class DBSchema extends Marshal{
 
         //Remove uniqueness fields from database
         if (this._schema.fieldsWithUniquesLength > 0)
-           await this._setUniqueness(infix, table, id, true, false, multi);
+            await this._setUniqueness(infix, table, id, true, false, multi);
 
         //Remove search results from database
         if (this._schema.fieldsWithSearchesLength > 0)
@@ -265,7 +262,7 @@ export default class DBSchema extends Marshal{
 
         if (!infix) infix = this._infix;
         if (infix && infix[infix.length-1] !== ':') infix += ":";
-        
+
         if (!multi) multi = this._scope.db.client.multi();
 
         if (!saveType) saveType = this._schema.saving.type||this._scope.db.defaultStoringType;
@@ -371,10 +368,10 @@ export default class DBSchema extends Marshal{
      * Table argument was set in this.table
      */
     async _getMiddleware( loadType, input, multi){
-        
+
         let infix = this._infix;
         if (infix && infix[infix.length-1] !== ':') infix += ":";
-        
+
         return this._scope.db.client.get( infix+this.table, id );
     }
 
@@ -400,46 +397,41 @@ export default class DBSchema extends Marshal{
 
         let data;
 
-        try {
+        if (input)  data = input;
+        else data = await this._getMiddleware( loadType, input, multi);
 
-            if (input)  data = input;
-            else data = await this._getMiddleware( loadType, input, multi);
+        if ( !data ) throw new Exception(this, "Load raised an error", { id, infix, table });
 
-            if ( !data ) throw new Exception(this, "Load raised an error", { id, infix, table });
+        const promises = [];
 
-            const promises = [];
+        //TODO multi can be passed on
+        if (callbackObject)
+            callbackObject(this, unmarshalOptions, data, loadType );
 
-            //TODO multi can be passed on
-            if (callbackObject)
-                callbackObject(this, unmarshalOptions, data, loadType );
+        this.fromType(data, loadType, (object, unmarshalOptions, input, ) => {
 
-            this.fromType(data, loadType, (object, unmarshalOptions, input, ) => {
+            //saving only field
+            if (object._schema.options.returnOnlyField || object._schema.saving.storeDataNotId) {
+                object.fromType(input, loadType, undefined, unmarshalOptions, true);
+                object._loaded();
+                return object;
+            }
 
-                //saving only field
-                if (object._schema.options.returnOnlyField || object._schema.saving.storeDataNotId) {
-                    object.fromType(input, loadType, undefined, unmarshalOptions, true);
-                    object._loaded();
-                    return object;
-                }
-
-                const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions, callbackObject);
-                promise.then(()=> object._loaded() );
-                promises.push(promise);
-                return promise;
+            const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions, callbackObject);
+            promise.then(()=> object._loaded() );
+            promises.push(promise);
+            return promise;
 
 
-            }, unmarshalOptions, true );
+        }, unmarshalOptions, true );
 
-            await Promise.all( promises );
+        await Promise.all( promises );
 
-            this._loaded();
-            if (this.onLoaded) this.onLoaded();
+        this._loaded();
+        if (this.onLoaded) this.onLoaded();
 
-            return this;
+        return this;
 
-        } catch (err){
-            throw new Exception( this, "Invalid Load."+ err.toString(), { id: this.id, table: this.table, data  });
-        }
 
     }
 
@@ -468,38 +460,33 @@ export default class DBSchema extends Marshal{
             for (const sortName in schemaField.sorts){
 
                 const sort = schemaField.sorts[sortName];
-                try {
 
+                let score;
 
-                    let score;
+                //compute score
+                if (!remove) {
 
-                    //compute score
-                    if (!remove) {
+                    if (sort.filter && sort.filter.call(this, field, sort) ) continue;
 
-                        if (sort.filter && sort.filter.call(this, field, sort) ) continue;
+                    score = sort.score;
 
-                        score = sort.score;
+                    if (score === undefined) score = value;
+                    else if (typeof score === "function") score = score.call(this, field, value, sort);
 
-                        if (score === undefined) score = value;
-                        else if (typeof score === "function") score = score.call(this, field, value, sort);
+                    if (typeof score !== "number") throw new Exception(this, "Saving Search score is invalid", {score: score});
 
-                        if (typeof score !== "number") throw new Exception(this, "Saving Search score is invalid", {score: score});
-
-                    }
-
-                    const sortKey = `sorts:${sort.globalSort ? '' : infix }${table||this.table}:${sortName}`;
-
-                    this._setSortsMiddleware( sortKey, score, infix, table, id, remove, multi );
-
-                } catch (err) {
-                    throw new Exception(this, "Saving Sorts raised an error" + err, {sort: sort});
                 }
+
+                const sortKey = `sorts:${sort.globalSort ? '' : infix }${table||this.table}:${sortName}`;
+
+                this._setSortsMiddleware( sortKey, score, infix, table, id, remove, multi );
+
 
             }
         }
 
         return true;
-        
+
     }
 
     /**
@@ -509,7 +496,7 @@ export default class DBSchema extends Marshal{
 
         if (remove)
             multi.del( sortKey+":"+(id||this.id), output => {} );
-        else 
+        else
             multi.set( sortKey+":"+(id||this.id), { sortField: sortKey, key: id||this.id, score: sortScore}, output =>{ });
 
     }
@@ -550,34 +537,27 @@ export default class DBSchema extends Marshal{
             let value = this[field].toLowerCase();
 
             if ( typeof value !== "string")
-                throw new Exception(this, "Value is not a string", {value: value} );
+                throw new Exception(this, "Value is not a string", {value} );
 
             for (const searchName in schemaField.searches){
 
-                try {
+                const search = schemaField.searches[searchName];
+                const key = `search:${search.globalSearch ? '' : infix}${table||this.table}:${searchName}`;
 
-                    const search = schemaField.searches[searchName];
-                    const key = `search:${search.globalSearch ? '' : infix}${table||this.table}:${searchName}`;
+                let score  = search.score;
 
-                    let score  = search.score;
+                if (!remove) {
 
-                    if (!remove) {
+                    if (search.filter && search.filter.call(this, field, search) ) continue;
 
-                        if (search.filter && search.filter.call(this, field, search) ) continue;
+                    if (typeof score === "function") score = score.call(this, field, value, search);
+                    else if (typeof score !== "number"  && score !== undefined) throw new Exception( this, "Saving Search score is invalid", {score});
 
-                        if (typeof score === "function") score = score.call(this, field, value, search);
-                        else if (typeof score !== "number"  && score !== undefined) throw new Exception( this, "Saving Search score is invalid", {score: score});
-
-                    }
-
-                    let searchValue = DBSchema.processSearchValue(search, value, this._scope.argv.db.SEARCH_MAX_WORDS);
-
-                    this._setSearchesMiddleware( key, searchValue, search, score, infix, table, id, remove, multi )
-
-
-                } catch (err) {
-                    throw new Exception(this, "Saving Search raised an error" + err , {  search: searchName  });
                 }
+
+                let searchValue = DBSchema.processSearchValue(search, value, this._scope.argv.db.SEARCH_MAX_WORDS);
+
+                this._setSearchesMiddleware( key, searchValue, search, score, infix, table, id, remove, multi )
 
             }
 
@@ -591,7 +571,7 @@ export default class DBSchema extends Marshal{
      * Save/Update Uniqueness Fields in Database. The method should be overwritten by Database schema connector.
      */
     async _setUniqueness(infix='', table, id, remove = false, validate = false, multi ){
-        
+
         if (infix && infix[infix.length-1] !== ':') infix += ":";
 
         //delete uniqueness keys
@@ -614,7 +594,7 @@ export default class DBSchema extends Marshal{
                 multi.get( uniquenessKey, unique => {
 
                     if ( unique && unique !== (id||this.id) )
-                        throw new Exception(this, "There is already an object with the same key", { key: key, value: value, id: id||this.id, found: unique  });
+                        throw new Exception(this, "There is already an object with the same key", { key, value, id: id||this.id, found: unique  });
 
                 });
 

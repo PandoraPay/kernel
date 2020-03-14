@@ -67,6 +67,9 @@ npm link ;
 cd ~/zero/blockchain/webpack-config ;
 npm link ;
 
+cd ~/zero/zero ;
+npm link
+
 cd ~/zero/blockchain/sticky-session ;
 npm link ;
 npm link async-events ;
@@ -82,6 +85,7 @@ npm link ;
 npm link sticky-session ;
 npm link webpack-config ;
 npm link kernel ;
+npm link zetherjs ;
 
 cd ~/zero/blockchain/Networking ;
 npm link ;
