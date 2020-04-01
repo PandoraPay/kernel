@@ -23,6 +23,7 @@ export default class HashVirtualMap extends HashMap {
 
     resetHashMap(){
         this._virtual = {};
+        this._virtualList = [];
     }
 
     clearHashMap( ){
@@ -38,12 +39,14 @@ export default class HashVirtualMap extends HashMap {
 
             const siblings = await this.findAllHashMap(  );
 
-            for (let i=0; i < siblings.length; i++)
-                this._virtual[ siblings[i].id ] = {
+            for (let i=0; i < siblings.length; i++) {
+                this._virtual[siblings[i].id] = {
                     type: "view",
+                    sortedListScore: 0,
                     element: siblings[i],
                 };
-
+                this._addCache(id);
+            }
             return true;
 
         }catch(err){
@@ -66,6 +69,7 @@ export default class HashVirtualMap extends HashMap {
                 data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element"); //data is provided
 
+        this._deleteCache(id);
         this._virtual[id] = {
             type: "add",
             sortedListScore: 0,
@@ -81,6 +85,7 @@ export default class HashVirtualMap extends HashMap {
         if (!this._virtual[id])
             this._virtual[id] = { };
 
+        if ( this._hasCash(id) ) this._deleteCache(id);
         this._virtual[id].type = "del";
 
         return id;
@@ -97,6 +102,7 @@ export default class HashVirtualMap extends HashMap {
             if (this._virtual[id].type === "add" ) return this._virtual[id].element;
             if (this._virtual[id].type === "view") {
 
+                //updating importance
                 this._deleteCache(id);
                 this._virtual[id].sortedListScore += 1;
                 this._addCache(id);
@@ -167,6 +173,8 @@ export default class HashVirtualMap extends HashMap {
                 data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element",  ); //data is provided
 
+        if ( this._hasCash(id) ) this._deleteCache(id);
+
         this._virtual[id] = {
             id,
             type: "add",
@@ -214,6 +222,10 @@ export default class HashVirtualMap extends HashMap {
 
         }
 
+    }
+
+    _hasCash(id){
+        return this._virtual[id] && this._virtual[id].type === "view";
     }
 
     _deleteCache(id){
