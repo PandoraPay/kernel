@@ -69,10 +69,9 @@ export default class HashVirtualMap extends HashMap {
                 data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element"); //data is provided
 
-        this._deleteCache(id);
+        if (this._hasCache(id)) this._deleteCache(id);
         this._virtual[id] = {
             type: "add",
-            sortedListScore: 0,
             element,
         };
 
@@ -85,7 +84,7 @@ export default class HashVirtualMap extends HashMap {
         if (!this._virtual[id])
             this._virtual[id] = { };
 
-        if ( this._hasCash(id) ) this._deleteCache(id);
+        if ( this._hasCache(id) ) this._deleteCache(id);
         this._virtual[id].type = "del";
 
         return id;
@@ -173,7 +172,7 @@ export default class HashVirtualMap extends HashMap {
                 data: data instanceof DBSchema ? data.toBuffer() : data,
             }, "object", "element",  ); //data is provided
 
-        if ( this._hasCash(id) ) this._deleteCache(id);
+        if ( this._hasCache(id) ) this._deleteCache(id);
 
         this._virtual[id] = {
             id,
@@ -224,7 +223,7 @@ export default class HashVirtualMap extends HashMap {
 
     }
 
-    _hasCash(id){
+    _hasCache(id){
         return this._virtual[id] && this._virtual[id].type === "view";
     }
 
