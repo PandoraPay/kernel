@@ -25,7 +25,6 @@ export default class MasterCluster extends AsyncEvents {
         this._startedStatus = false;
 
         this.isMaster = undefined;
-        this.isMasterCluster = undefined;
         this.isWorker = undefined;
         this.workerId = undefined;
         this.workerName = undefined;
@@ -82,7 +81,6 @@ export default class MasterCluster extends AsyncEvents {
 
         const isMaster = cluster.isMaster;
 
-        this.isMasterCluster = isMaster;
         this.isMaster = isMaster;
         this.isWorker = !isMaster;
 

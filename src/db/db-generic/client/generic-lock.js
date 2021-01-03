@@ -10,7 +10,7 @@ class GenericLock {
 
         let out;
 
-        if (this._scope.masterCluster.isMasterCluster) {
+        if (this._scope.masterCluster.isMaster) {
 
             if ( this._scope.masterCluster.lockSet )
                 out = this._scope.masterCluster.lockSet({ lockName, lockTime: timeout}, process);
@@ -64,7 +64,7 @@ class GenericLock {
         const masterCluster = this._scope.masterCluster;
 
         let out;
-        if (masterCluster.isMasterCluster) {
+        if (masterCluster.isMaster) {
 
             if (masterCluster.lockDelete )
                 out = masterCluster.lockDelete({ lockName}, process);

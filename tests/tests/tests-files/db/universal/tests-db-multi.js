@@ -39,7 +39,7 @@ export default async function run ( dbType) {
 
             const obj = new classSchema(this._scope);
 
-            if ( masterCluster.isMasterCluster ) { //master
+            if ( masterCluster.isMaster ) { //master
 
                 await Helper.sleep(3000);
 
@@ -98,7 +98,7 @@ export default async function run ( dbType) {
 
             await masterCluster.start();
 
-            if ( masterCluster.isMasterCluster ) { //master
+            if ( masterCluster.isMaster ) { //master
 
                 await Helper.waitUntilCondition( () => masterCluster.stickyMaster.workers.length === 0, undefined, 55000 );
 

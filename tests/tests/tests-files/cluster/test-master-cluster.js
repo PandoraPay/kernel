@@ -19,7 +19,7 @@ export default function run (){
             this.expect( typeof masterCluster.clientsCluster, "object");
             this.expect( typeof masterCluster.serverCluster, "object");
 
-            if ( masterCluster.isMasterCluster ) { //master
+            if ( masterCluster.isMaster ) { //master
 
                 await Helper.waitUntilCondition( () => masterCluster.stickyMaster.workers.length === 0 );
 

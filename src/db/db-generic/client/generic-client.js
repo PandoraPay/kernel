@@ -108,7 +108,7 @@ export default class GenericClient{
     lockDeleteAll(){
 
         const masterCluster = this._scope.masterCluster;
-        if ( masterCluster.isMasterCluster){
+        if ( masterCluster.isMaster){
 
             for (const lockName in masterCluster.locks){
 
