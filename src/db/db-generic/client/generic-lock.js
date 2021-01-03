@@ -32,9 +32,6 @@ class GenericLock {
             resolve = promiseResolve;
         });
 
-        const retry = () => setTimeout( check.bind(this), retryDelay);
-
-
         const check = async () => {
 
             const lockTimeoutTime = Date.now() + timeout + 1;
@@ -51,7 +48,7 @@ class GenericLock {
             }
 
             if (retryDelay === -1) return resolve(undefined);
-            else return retry();
+            else return setTimeout( check.bind(this), retryDelay)
 
         };
 

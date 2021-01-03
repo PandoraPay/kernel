@@ -399,11 +399,20 @@ export default class MasterCluster extends AsyncEvents {
 
     async _closed() {
 
-        return Promise.all([
-            this.serverCluster ? this.serverCluster.close() : undefined,
-            this.clientsCluster ? this.clientsCluster.close() : undefined,
-            this.stickyMaster ? this.stickyMaster.close() : undefined,
-        ]);
+        if (this.serverCluster) {
+            await this.serverCluster.close();
+            this._scope.logger.log(this, "serverCluster closed");
+        }
+
+        if (this.clientsCluster) {
+            await this.clientsCluster.close();
+            this._scope.logger.log(this, "clientsCluster closed");
+        }
+
+        if (this.stickyMaster) {
+            this.stickyMaster.close();
+            this._scope.logger.log(this, "stickyMaster closed");
+        }
     }
 
 }

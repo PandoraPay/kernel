@@ -86,8 +86,6 @@ class PouchClient extends GenericClient{
         const finalAddress = `${this._scope.argv.db.couchDB.address}:${this._scope.argv.db.couchDB.port}/${this._scope.argv.db.couchDB.db}`;
         this._client = new PouchDB( finalAddress, {revs_limit: 1, auto_compaction: true} );
 
-        console.log("connecting to ",finalAddress)
-
     }
 
     async saveBlob(table, name, data){
