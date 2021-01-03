@@ -2,15 +2,15 @@ export default {
 
     /**
      * CouchDB - requires installation (see installation-database.md)
-     *
      */
+
     address: "http://localhost",
     port: 5984,
     
     db: "network",
 
     /**
-     * Credentials. BE AWARE TO FIREWALL YOUR REDIS DATABASE. BLOCK ANY INCOMING CONNECTIONS TO YOUR REDIS DATABASE.
+     * Credentials. BE AWARE TO FIREWALL YOUR DATABASE. BLOCK ANY INCOMING CONNECTIONS TO YOUR DATABASE.
      */
     user: "",
     password: ""

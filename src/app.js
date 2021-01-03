@@ -243,13 +243,13 @@ export default class App{
         //connect Database client
         if (this._scope.dbPublic)
             if (await this._scope.dbPublic.connectDB())
-                this._scope.logger.info(`Status`, `Public Main Database was connected successfully`);
+                this._scope.logger.info(`Status`, `Public Main Database was connected successfully ${this._scope.argv.dbPublic.selectedDB}`);
 
         await this.events.emit("start/public-db-connected", this._scope );
 
         if (this._scope.dbPrivate)
             if (await this._scope.dbPrivate.connectDB())
-                this._scope.logger.info(`Status`, `Private Database was connected successfully`);
+                this._scope.logger.info(`Status`, `Private Database was connected successfully ${this._scope.argv.dbPrivate.selectedDB}`);
 
         await this.events.emit("start/private-db-connected", this._scope );
 

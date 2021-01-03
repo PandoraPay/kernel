@@ -48,9 +48,9 @@ class PouchDB extends GenericDatabase{
 
     async _scanMiddleware(obj, infix, table, index, count, multi){
 
-        //const regex = new RegExp (`^${infix}${table||obj.table}:[\\w_]+$`);
-        const out = await this.client.find( {
-            selector: { _id: { $regex: `^${infix}${table||obj.table}:[\\w_]+$` }},
+        const out = await this.client._client.allDocs( {
+            startkey: `${infix}${table||obj.table}:`,
+            endkey: `${infix}${table||obj.table}:\ufff0`,
             skip:  index,
             limit: count,
         } );

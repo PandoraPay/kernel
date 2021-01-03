@@ -47,7 +47,7 @@ class DBConstructor{
                             ...scope.argv.dbPublic,
                         }
                     }
-                } )
+                }, true )
             );
 
         } catch (err){
@@ -74,7 +74,7 @@ class DBConstructor{
                             ...scope.argv.dbPrivate,
                         }
                     }
-                } )
+                }, true )
             );
 
         } catch (err){
