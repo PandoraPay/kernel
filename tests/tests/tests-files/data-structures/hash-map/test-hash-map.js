@@ -3,7 +3,7 @@ import TestsHashMap from "./tests-hash-map"
 
 /**
  *
- * UNIT TESTING FOR REDIS
+ * UNIT TESTING FOR HASH MAP
  *
  */
 

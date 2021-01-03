@@ -133,7 +133,7 @@ export default async function run () {
 
             const tree = new MerkleTree(this._scope);
 
-            const length = TestsHelper.randomNumbers(0, 10000);
+            const length = TestsHelper.randomNumbers(10, 10000);
             const data = TestsHelper.fillBuffer( length );
 
             await basicTest.call(this, tree, data ,length);
@@ -144,7 +144,7 @@ export default async function run () {
 
             const tree = new MerkleTree(this._scope);
 
-            const length = TestsHelper.randomNumbers(0, 1000);
+            const length = TestsHelper.randomNumbers(10, 1000);
             const data = TestsHelper.randomBuffers( 10, length);
 
             await basicTest.call(this, tree, data ,length);

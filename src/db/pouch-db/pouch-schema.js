@@ -60,50 +60,6 @@ class PouchSchema extends DBSchema{
         return data;
     }
 
-    /**
-     * Middleware used for setting up sorted fields
-     */
-    _setSortsMiddleware( sortKey, sortScore, infix='', table, id, remove = false,  multi){
-
-        if (remove)
-            multi.del( sortKey+":"+(id||this.id), output => {} );
-        else {
-
-            multi.createIndex({
-                index: {
-                    fields: ["SortScore", "SortKey" ],
-                },
-            }, ()=>{},);
-
-            multi.set( sortKey+":"+(id||this.id), { SortKey: sortKey, key: id||this.id, SortScore: sortScore }, output =>{ });
-        }
-
-    }
-
-
-    /**
-     * Middleware used for setting up sorted fields
-     */
-    _setSearchesMiddleware( key, words, search, score, infix='', table, id, remove = false, multi ){
-
-        if (remove)
-            multi.del( key+":"+(id||this.id), output => {} );
-        else {
-
-            multi.createIndex({
-                index: {
-                    fields: ["SearchScore", "SearchWords", "SearchKey" ],
-                },
-            }, ()=>{},);
-
-            multi.set( key+":"+(id||this.id), { SearchKey: key, SearchWords: words, key: id||this.id, SearchScore: score }, output =>{ });
-        }
-
-    }
-
-
-
-    
 }
 
 export default PouchSchema

@@ -287,12 +287,9 @@ export default async function run ( dbType ) {
 
     });
 
-    describe(()=>`${dbType} SEARCH AND SORTS`,{
+    describe(()=>`${dbType} UNIQUE TESTS`,{
 
         "declare schemas": async function () {
-
-            //await this.db.defineSchemaClassForSpecialDatabaseOps(SchemaTests.SchemaSimpleSearch);
-            //await this.db.defineSchemaClassForSpecialDatabaseOps(SchemaTests.SchemaSimpleSort);
 
         },
 
@@ -317,108 +314,6 @@ export default async function run ( dbType ) {
             obj3.id =  obj2.id;
 
             await obj3.save("TEST_UNIQUE");
-
-        },
-
-        /**
-         * Testing SEARCH by creation, saving, searching and deleting
-         */
-        "SEARCH save": async function (){
-
-            const step = 10;
-            const count = 10*step;
-
-
-            let list = [];
-
-            let obj;
-            for (let i=0; i < count; i++) {
-                obj = this.db.createSchemaInstance( SchemaTests.SchemaSimpleSearch );
-                obj._schema.fields.field0.searches["search1"].score = count-i-1;
-                obj._schema.fields.field2.searches["search3"].score = count-i-1;
-                await obj.save("TS5_SEARCH");
-
-                list.push( obj.id ) ;
-            }
-
-            list = list.reverse();
-
-            /**
-             * zlist
-             */
-            let next = 0;
-            for (let it = 0; it < count; ){
-
-                const search1 = await this.db.findBySearch( SchemaTests.SchemaSimpleSearch, "search1", "people", next, step, "TS5_SEARCH" );
-                this.expect( search1.data.length, step );
-                this.expect( search1.data.reduce( (res, obj, index) => res && (obj.id === list[ it+index ] ), true), true);
-
-                const search2 = await this.db.findBySearch( SchemaTests.SchemaSimpleSearch, "search1", "built    by    people", next, step, "TS5_SEARCH" );
-                this.expect( search2.data.length, step );
-                this.expect( search2.data.reduce( (res, obj, index) => res && (obj.id === list[ it+index ] ), true), true);
-
-                const search3 = await this.db.findBySearch( SchemaTests.SchemaSimpleSearch, "search1", "build by", next, step, "TS5_SEARCH" );
-                this.expect( search3.data.length, 0 );
-
-                it+=step;
-                next = search2.next;
-            }
-
-            /**
-             * slist
-             */
-            next = 0;
-            const check  = {};
-            do{
-
-                const search = await this.db.findBySearch( SchemaTests.SchemaSimpleSearch, "search2", "love FUCKING", next, step, "TS5_SEARCH" );
-
-                search.data.map( it => check[it.id] = true);
-
-                next = search.next;
-            }
-            while (next !== 0);
-
-            this.expect( Object.keys(check).length, count);
-
-
-            await obj.save("TS5_SEARCH_DEL");
-            await obj.delete("TS5_SEARCH_DEL");
-
-            await this.expect( await this.db.client.existsAny("TS5_SEARCH_DEL"), false );
-
-        },
-
-        /**
-         * Testing SORTS by creation, saving, sorting and deleting
-         */
-        "SORTS save": async function (){
-
-            const step = 10;
-            const count = 10*step;
-
-            let  obj;
-            for (let it=0; it < count; it++) {
-                obj = this.db.createSchemaInstance( SchemaTests.SchemaSimpleSort );
-                obj.field0 = count-it-1;
-                await obj.save("TS6_SORT");
-            }
-
-            for (let it = 0; it < count; ){
-
-                const sort = await this.db.findBySort( SchemaTests.SchemaSimpleSort, "sort1", it , step, "TS6_SORT" );
-                await this.expect( sort.length, step );
-
-                this.expect( sort.reduce( (res, obj, index) => res && (obj.field0 === it+index), true), true);
-
-                it += step;
-
-            }
-
-            await obj.save("TS6_SORT_DEL");
-            await obj.delete("TS6_SORT_DEL");
-
-            await this.expect( await this.db.client.existsAny("TS6_SORT_DEL"), false );
 
         },
 

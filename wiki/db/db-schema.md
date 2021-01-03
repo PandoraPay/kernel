@@ -11,10 +11,6 @@ DB Schema introduces new fields in the database
 3. `keyRename` - rename the field with a key in order to store more efficiently the field in the database
 4. `skipSaving` - skipSaving it into the database
 
-Moreover, DB Schema introduces two special kind of fields
-1. `searches` - lists (sorted optionally) for search by words/values
-2. `sorts` - sorted lists by a score
-
 In case the score is calculated based on field, you need to specify `scoreParams`
 
 
@@ -61,37 +57,8 @@ schema {
             
             keyRename: "new_name",
             
-            searches: {
-
-                "search1":{
-                    type: "value", "words",
-                    startingLetters: 4,
-                    
-                    score: undefined || callback(name, value)      
-                    scoreParams: undefined || []
-
-                    searchGlobal: false,
-                },                 
-            }
-                                            
         }
         
-        field2: {
-        
-            type: "number",
-            
-            sorts: {
-
-                "sort1":{
-                    score: undefined || callback(name, value)
-                    scoreParams: undefined || []
-
-                    sortGlobal: true
-                }           
-            }
-        
-        }
-    
     }       
         
     saving: {
@@ -123,15 +90,6 @@ schema {
             skipSaving: false,
             skipMarshal: true,
             
-            sorts: {
-
-                sort1: {
-                    score: (name, value) => this.score         
-                    scoreParams: ["score"]
-
-                    sortGlobal: true,
-                }            
-            }
         
         }
     
@@ -144,20 +102,6 @@ schema {
             unique: false,
             validation: callback(name, value),
             
-            searches:{
-
-                "title":{
-                    type: "words",
-                    startingLetters: 5,
-                    
-                    score: (name, value) => this.score         
-                    scoreParams: ["score"]
-
-                    searchGlobal: false,
-                }
-            
-            },
-        
         }
         
         category : {
@@ -168,18 +112,6 @@ schema {
             
             unique: false,
             validation: callback(name, value),           
-            
-            searches:{
-
-                "category":{
-                    type: "value",
-                    
-                    score: (name, value) => this.score         
-                    scoreParams: ["score"]
-
-                    searchGlobal: false,
-                },                  
-            }
             
         },
         
@@ -193,25 +125,9 @@ schema {
             validation: true,
             validation: callback(name, value),
             
-            searches:{
-
-                "country":{
-                    name: "country",
-                    type: "value",                 
-                    
-                    score: (name, value) => this.score         
-                    scoreParams: ["score"]
-
-                    searchGlobal: false,
-                },                  
-            }
-            
         },
-        
-
     
     }
-    
     
     saving: {
         enabled: true,        

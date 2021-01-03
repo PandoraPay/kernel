@@ -2,7 +2,6 @@ import Marshal from "src/marshal/marshal"
 import Exception from "src/helpers/exception";
 import Helper from "src/helpers/helper"
 import MarshalData from "src/marshal/data/marshal-data"
-import StringHelper from "../../helpers/string-helper";
 
 export default class DBSchema extends Marshal{
 
@@ -72,15 +71,11 @@ export default class DBSchema extends Marshal{
         if (!super._createSchema.call(this, data, type,  creationOptions))
             return false;
 
-        this._schema.fieldsWithSearches = {}; this._schema.fieldsWithSearchesLength = 0;
-        this._schema.fieldsWithSorts = {}; this._schema.fieldsWithSortsLength = 0;
         this._schema.fieldsWithUniques = {}; this._schema.fieldsWithUniquesLength = 0;
 
-        for (const key in this._schema.fields) {
-            if (this._schema.fields[key].searches) { this._schema.fieldsWithSearches[key] = this._schema.fields[key].searches; this._schema.fieldsWithSearchesLength++;}
-            if (this._schema.fields[key].sorts){ this._schema.fieldsWithSorts[key] = this._schema.fields[key].sorts; this._schema.fieldsWithSortsLength++; }
+        for (const key in this._schema.fields)
             if (this._schema.fields[key].unique){ this._schema.fieldsWithUniques[key] = this._schema.fields[key].unique; this._schema.fieldsWithUniquesLength++; }
-        }
+
 
         return true;
     }
@@ -96,14 +91,6 @@ export default class DBSchema extends Marshal{
          * uniqueGlobal
          */
 
-        //filling searches with default values
-        if (schemaField.searches)
-            for (const sort in schemaField.searches) {
-                schemaField.searches[sort].name = schemaField.searches[sort].name || "search1";
-                schemaField.searches[sort].type = schemaField.searches[sort].type || "words";
-                schemaField.searches[sort].startingLetters = schemaField.searches[sort].startingLetters || 4;
-            }
-
     }
 
     validateField(name, value, schemaField){
@@ -116,16 +103,6 @@ export default class DBSchema extends Marshal{
         if ( !schemaField ) schemaField = this._schema.fields[name];
 
 
-
-        if (schemaField.searches)
-            for (const search of schemaField.searches)
-                if ( !this._validateSearchField(name, value, schemaField, schemaField.searches[search] ))
-                    throw new Exception(this, "Invalid Search Field.", { name: name });
-
-        if ( schemaField.sorts )
-            for (const sort of schemaField.sorts)
-                if ( !this._validateSortField(name, value, schemaField, schemaField.sorts[sort] ))
-                    throw new Exception(this, "Invalid Sort Field.", { name: name });
 
         return true;
 
@@ -149,14 +126,6 @@ export default class DBSchema extends Marshal{
         //Remove uniqueness fields from database
         if (this._schema.fieldsWithUniquesLength > 0)
             await this._setUniqueness(infix, table, id, true, false, multi);
-
-        //Remove search results from database
-        if (this._schema.fieldsWithSearchesLength > 0)
-            this._setSearches(infix, table, id, true, multi);
-
-        //Remove sorts results from database
-        if (this._schema.fieldsWithSortsLength > 0)
-            this._setSorts(infix, table, id, true, multi);
 
         //delete data
         await this._deleteMiddleware(infix, table, id, db, multi);
@@ -225,14 +194,6 @@ export default class DBSchema extends Marshal{
 
     static findAll(db, infix, table, creationOptions){
         return db.findAll(this, infix, table, creationOptions);
-    }
-
-    static findBySort(db, sortName, position, count, infix, table, creationOptions){
-        return db.findBySort(this, sortName, position, count, infix, table, creationOptions );
-    }
-
-    static findBySearch(db, searchName, value, position, count, infix, table, creationOptions){
-        return db.findBySearch( searchName, value, position, count, infix, table, creationOptions );
     }
 
     static count(db, infix, table, creationOptions){
@@ -333,14 +294,6 @@ export default class DBSchema extends Marshal{
             throw new Exception( this, "Invalid Save."+ err, { id: this.id, table: this.table,  });
         }
 
-        //save search results in database
-        if (this._schema.fieldsWithSearchesLength > 0)
-            this._setSearches(infix, table, id, false, multi);
-
-        //save sorts results in database
-        if (this._schema.fieldsWithSortsLength > 0)
-            this._setSorts(infix, table, id,  false, multi);
-
         await multi.execAsync();
 
         if (this.savingAdditional){
@@ -437,134 +390,6 @@ export default class DBSchema extends Marshal{
 
     _loaded(){
         this.__changes = {};
-    }
-
-    /**
-     * Sorts for sorting elements by specific fields
-     * @param infix
-     * @param table
-     * @param id
-     * @param remove
-     * @param multi
-     * @private
-     */
-    _setSorts(infix, table, id, remove = false, multi) {
-
-        if (infix && infix[infix.length-1] !== ':') infix += ":";
-
-        for (const field in this._schema.fieldsWithSorts){
-
-            const schemaField = this._schema.fields[field];
-            const value = this[field];
-
-            for (const sortName in schemaField.sorts){
-
-                const sort = schemaField.sorts[sortName];
-
-                let score;
-
-                //compute score
-                if (!remove) {
-
-                    if (sort.filter && sort.filter.call(this, field, sort) ) continue;
-
-                    score = sort.score;
-
-                    if (score === undefined) score = value;
-                    else if (typeof score === "function") score = score.call(this, field, value, sort);
-
-                    if (typeof score !== "number") throw new Exception(this, "Saving Search score is invalid", {score: score});
-
-                }
-
-                const sortKey = `sorts:${sort.globalSort ? '' : infix }${table||this.table}:${sortName}`;
-
-                this._setSortsMiddleware( sortKey, score, infix, table, id, remove, multi );
-
-
-            }
-        }
-
-        return true;
-
-    }
-
-    /**
-     * Middleware used for setting up sorted fields
-     */
-    _setSortsMiddleware( sortKey, sortScore, infix='', table, id, remove = false,  multi){
-
-        if (remove)
-            multi.del( sortKey+":"+(id||this.id), output => {} );
-        else
-            multi.set( sortKey+":"+(id||this.id), { sortField: sortKey, key: id||this.id, score: sortScore}, output =>{ });
-
-    }
-
-
-    _setSearchesMiddleware( key, words, search, score, infix='', table, id, remove = false, multi ){
-
-    }
-
-    static processSearchValue(search, searchValue, SEARCH_MAX_WORDS){
-
-        let out;
-
-        //process words
-        if (search.type === "words") {
-
-            if (typeof searchValue === "string") {
-                out = StringHelper.splitWords(searchValue);
-                out = out.reduce((newList, word) => word.length >= search.startingLetters ? newList.concat ( word.toLowerCase() ) : newList, []);
-            }
-
-            if (out.length > SEARCH_MAX_WORDS )
-                out = out.splice( 0, SEARCH_MAX_WORDS );
-
-        } else throw new Exception(this, "search.type is invalid");
-
-        return out;
-
-    }
-
-    _setSearches(infix, table, id, remove = false, multi ){
-
-        if (infix && infix[infix.length-1] !== ':') infix += ":";
-
-        for (const field in this._schema.fieldsWithSearches){
-
-            const schemaField = this._schema.fields[field];
-            let value = this[field].toLowerCase();
-
-            if ( typeof value !== "string")
-                throw new Exception(this, "Value is not a string", {value} );
-
-            for (const searchName in schemaField.searches){
-
-                const search = schemaField.searches[searchName];
-                const key = `search:${search.globalSearch ? '' : infix}${table||this.table}:${searchName}`;
-
-                let score  = search.score;
-
-                if (!remove) {
-
-                    if (search.filter && search.filter.call(this, field, search) ) continue;
-
-                    if (typeof score === "function") score = score.call(this, field, value, search);
-                    else if (typeof score !== "number"  && score !== undefined) throw new Exception( this, "Saving Search score is invalid", {score});
-
-                }
-
-                let searchValue = DBSchema.processSearchValue(search, value, this._scope.argv.db.SEARCH_MAX_WORDS);
-
-                this._setSearchesMiddleware( key, searchValue, search, score, infix, table, id, remove, multi )
-
-            }
-
-        }
-
-        return true;
-
     }
 
     /**
@@ -684,9 +509,6 @@ export default class DBSchema extends Marshal{
         schemaObject._saveMiddleware = this.prototype._saveMiddleware.bind(schemaObject);
         schemaObject._getMiddleware = this.prototype._getMiddleware.bind(schemaObject);
         schemaObject._deleteMiddleware = this.prototype._deleteMiddleware.bind(schemaObject);
-
-        schemaObject._setSortsMiddleware = this.prototype._setSortsMiddleware.bind(schemaObject);
-        schemaObject._setSearchesMiddleware = this.prototype._setSearchesMiddleware.bind(schemaObject);
 
     }
 

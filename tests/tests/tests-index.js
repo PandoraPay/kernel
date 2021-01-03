@@ -29,7 +29,7 @@ export default {
 
         await TestMerkleTree();
 
-        await TestRedis();
+        //await TestRedis();
 
         await TestHelpers( );
 
@@ -41,7 +41,7 @@ export default {
 
         await TestMasterCluster( );
 
-        await TestCouch();
+        //await TestCouch();
         await TestPouch();
 
     },

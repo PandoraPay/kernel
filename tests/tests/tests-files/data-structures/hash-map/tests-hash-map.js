@@ -6,7 +6,7 @@ import HashMapElement from "src/data-structures/hash-map/hash-map-element"
 
 /**
  *
- * UNIT TESTING FOR REDIS
+ * UNIT TESTING FOR HASH MAP
  *
  */
 
@@ -17,7 +17,7 @@ export default async function run (hashmap, name) {
     const data = TestsHelper.randomBuffers( 10, count);
     const newData = TestsHelper.randomBuffers( 10, count);
 
-    describe("Test Hash Map" + name, {
+    describe(`Test Hash Map ${name} ${count}`, {
 
         'Test Hash Map Add': async function () {
 

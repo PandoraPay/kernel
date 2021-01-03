@@ -214,80 +214,6 @@ export default class GenericDatabase{
     }
 
     /**
-     * Filter objects from database using searchName and searchKey
-     * @param modelClass
-     * @param searchName
-     * @param searchKey
-     * @param position
-     * @param count
-     * @param infix
-     * @param table
-     * @returns {Promise<*>}
-     */
-    async findBySearch( modelClass, searchName, value, position, count = 10, infix='', table, creationOptions ){
-
-        if (!this._started) await this.connectDB();
-        if (infix && infix[infix.length-1] !== ':') infix += ":";
-
-        const obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
-
-        for (const field in obj._schema.fieldsWithSearches)
-            if (obj._schema.fieldsWithSearches[field][searchName]){
-
-                const search = obj._schema.fieldsWithSearches[field][searchName];
-                const key = `search:${search.globalSearch ? '' : infix}${table||obj.table}:${searchName}`;
-
-                let searchValue = DBSchema.processSearchValue(search, value, this._scope.argv.db.SEARCH_MAX_WORDS);
-
-                const out = await this._findBySearchMiddleware(key, search, searchValue, infix, table, position, count);
-
-                return {
-                    data: await this.find( modelClass, out.ids, infix, table, creationOptions),
-                    next: out.nextArgument,
-                }
-
-            }
-
-        return {
-            data: [],
-            next: 0,
-        };
-
-    }
-
-    async _findBySearchMiddleware( key, search, searchWords, infix, table, position, count ){
-        return this.client.find( { searchKey: key, sort: "sortScore", words: searchWords, start: position, end: position+count-1 });
-    }
-
-    async findBySort(modelClass, sortName, position=0, count = 10, infix='', table, creationOptions){
-
-        if (!this._started) await this.connectDB();
-        if (infix && infix[infix.length-1] !== ':') infix += ":";
-
-        const obj = new modelClass( { ...this._scope,  db: this }, undefined, undefined, undefined, creationOptions );
-
-        for (const field in obj._schema.fieldsWithSorts)
-            if ( obj._schema.fieldsWithSorts[field][sortName] ){
-
-                const sort = obj._schema.fieldsWithSorts[field][sortName];
-                const sortKey = `sorts:${sort.globalSort ? '' : infix }${table||obj.table}:${sortName}`;
-
-                let ids = await this._findBySortMiddleware(  sortKey, sort, infix, table, position, count );
-
-                if (ids.length === 0) return [];
-                else return this.find(modelClass, ids, infix, table, creationOptions);
-
-            }
-
-        return [];
-
-    }
-
-    async _findBySortMiddleware( sortKey, sort, infix, table, position, count ){
-        return this.client.find( { sortKey: sortKey, sort: "sortScore", start: position, end: position+count-1 });
-    }
-
-    /**
      * CPU consuming for some databases. Efficient for REDIS.
      */
     async countsAny(infix){
@@ -303,14 +229,6 @@ export default class GenericDatabase{
 
     get started(){
         return this._started;
-    }
-
-    /**
-     * Some databases require special work to define the search and sorts fields
-     * @param schema
-     */
-    async defineSchemaClassForSpecialDatabaseOps(DBSchemaClass){
-
     }
 
 }

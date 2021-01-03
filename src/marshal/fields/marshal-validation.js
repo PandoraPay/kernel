@@ -79,32 +79,6 @@ export default class MarshalValidation{
 
 
 
-    static _validateSearchField(name, value, schemaField, schemaSearch){
-
-        if ( !schemaSearch.name && typeof schemaSearch.name !== "string" )  throw "search name is not set.";
-        if ( typeof schemaSearch.type !== "string" || !["value", "words"].includes(schemaSearch.type) )  throw "search type is not correctly set.";
-        if ( typeof schemaSearch.startingLetters !== "number" || schemaSearch.startingLetters < 0 )  throw "search startingLetters is not correctly set.";
-
-        if ( schemaSearch.score && typeof schemaSearch.score !== "function" && typeof schemaSearch.score !== "number") throw "search score call is not a function.";
-
-
-        return true;
-
-    }
-
-    static _validateSortField(name, value, schemaField, schemaSort){
-
-        if ( !schemaSort.name && typeof schemaSort.name !== "string" )  throw "search name is not set.";
-        if ( !schemaSort.score && schemaField.type !== "number") throw "sort score type is not supported.";
-
-        if ( schemaSort.score && typeof schemaSort.score !== "function" && typeof schemaSort.score !== "number") throw "sort score call is not a function.";
-
-
-        return true;
-
-    }
-
-
 
     static _validateFieldArray(value, schemaField ){
 

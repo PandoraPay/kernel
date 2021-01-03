@@ -8,7 +8,6 @@ export default class ArgvHelper{
         if (!argv1 || !argv2) return;
 
         return Helper.import( argv1, argv2 );
-
     }
 
     static processCommandLine(argv, argvBrowser){

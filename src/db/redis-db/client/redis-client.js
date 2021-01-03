@@ -1,5 +1,3 @@
-import RedisLock from "./redis-lock";
-
 const redis = require("redis");
 const bluebird = require("bluebird");
 bluebird.promisifyAll(redis.RedisClient.prototype);

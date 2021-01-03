@@ -5,7 +5,12 @@ import ArgvCouchDB from "./modules/argv-couch-db"
 export default{
 
     //possible answers: [ "couch", "pouch", "redis", "custom"]
-    selectedDB: BROWSER ? "pouch" : "redis",
+
+    /**
+     * REDIS is not supported as it is not memory intensive
+     */
+
+    selectedDB: "pouch",
 
     create: true,
 
@@ -17,7 +22,5 @@ export default{
 
     //couch used to store data in a couch database via http
     couchDB: ArgvCouchDB,
-
-    SEARCH_MAX_WORDS: 5,
 
 }

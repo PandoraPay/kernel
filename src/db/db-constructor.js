@@ -109,8 +109,6 @@ class DBConstructor{
         if (!db)
             throw new Exception(this, "NO DB was specified");
 
-        await Promise.all( Object.keys( this._schemas ).map ( (key, index) => db.defineSchemaClassForSpecialDatabaseOps( this._schemas[key] ) ) );
-
         return db;
     }
 

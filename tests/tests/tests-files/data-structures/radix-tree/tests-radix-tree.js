@@ -8,7 +8,7 @@ import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual"
 
 /**
  *
- * UNIT TESTING FOR REDIS
+ * UNIT TESTING FOR RADIX
  *
  */
 
@@ -26,7 +26,7 @@ export default async function run () {
             data: Buffer.from([i]),
         });
 
-    describe("Redis Test", {
+    describe(`Radix Test ${radixTest.length}`, {
 
         "Radix Delete all prev data": async function (){
 
@@ -290,7 +290,7 @@ export default async function run () {
 
     let randomDataDeleted = {};
 
-    describe("Redis Test Random "+ randomCount, {
+    describe("Radix Test Random "+ randomCount, {
 
         'Radix Tree random add one by one 1/20 of nodes': async function () {
 

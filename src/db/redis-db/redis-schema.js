@@ -4,72 +4,6 @@ import Exception from "src/helpers/exception";
 export default class RedisSchema extends DBSchema{
 
     /**
-     * Middleware used for setting up sorted fields
-     */
-     _setSortsMiddleware( sortKey, sortScore, infix='', table, id, remove = false,  multi){
-
-        if (remove)
-            return multi.zrem(sortKey, id || this.id );
-        else 
-            return multi.zadd(sortKey, sortScore, id || this.id );
-        
-    }
-
-    /**
-     * Add or Remove search results from Redis Database.
-     * For redis a word must store all its prefixes
-     */
-    _setSearchesMiddleware( key, words, search, score, infix='', table, id, remove = false, multi ){
-
-        let store = ( key, score ) => {
-
-            let arg = [key, id||this.id ];
-            let redisFct;
-
-            //if there is a score, it must use zlist
-            if ( score !== undefined ){
-
-                if (remove) redisFct = 'zrem';
-                else {
-                    redisFct = 'zadd';
-                    arg = [ key, score, id||this.id ];
-                }
-
-            }
-            //if there isn't a score, just a simple slist
-            else {
-
-                if (remove) redisFct = 'srem';
-                else redisFct = 'sadd';
-
-            }
-
-            return multi[redisFct]( ...arg );
-
-        };
-
-        words.map(  word  => {
-
-            let substr = word.substr(0, search.startingLetters);
-            let position = search.startingLetters;
-
-            while (substr.length <= word.length){
-
-                store(`${key}:${substr}`, score);
-
-                if (position === word.length) break;
-
-                substr = substr + word[position];
-                position ++;
-            }
-
-        });
-
-        return true;
-    }
-
-  
-    /**
      * Delete from Redis Database. It works to delete Buffers, Hex, JASON and Objects
      */
     async _deleteMiddleware(infix, table, id, db, multi){
@@ -204,19 +138,7 @@ export default class RedisSchema extends DBSchema{
     }
 
 
-    /**
-     * Used to export methods to new instances
-     * @param schemaObject
-     */
 
-    static exportDatabaseSchemaMethods(schemaObject){
-
-        DBSchema.exportDatabaseSchemaMethods.call( this, schemaObject );
-
-        schemaObject._setSearches = this.prototype._setSearches.bind(schemaObject);
-        schemaObject._setSorts = this.prototype._setSorts.bind(schemaObject);
-
-    }
 
 }
 
