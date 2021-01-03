@@ -55,8 +55,8 @@ class PouchDB extends GenericDatabase{
             limit: count,
         } );
 
-        if (out && out.docs)
-            return out.docs.map ( it => it._id.replace(`${infix}${table||obj.table}:`, "") );
+        if (out.total_rows)
+            return out.rows.map ( it => it.id.replace(`${infix}${table||obj.table}:`, "") );
 
         return [];
     }

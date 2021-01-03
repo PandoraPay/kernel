@@ -143,42 +143,6 @@ export default class RedisClient extends GenericClient{
 
     }
 
-    /*
-
-    // REDIS specific lock
-
-    get lockClass(){
-        return RedisLock;
-    }
-
-    /!**
-     * Used to create a deadlock to avoid two different instances to do the same task twice.
-     * It creates fully non-blocking and asynchronous dead-locks using Redis using SETNX
-     * It returns undefined or callback to remove the deadlock
-     * @param lockName
-     * @param timeout
-     * @returns {Promise.<function>} which is the callback to finish the deadlock
-     *!/
-    async lock(lockName, timeout, retryDelay){
-
-        if (!this._scope.parent._started) await this._scope.parent.connectDB();
-
-        return RedisLock.lock ( this, lockName, timeout,retryDelay );
-    }
-
-    /!**
-     * delete all locks in the database
-     * @returns {Promise<void>}
-     *!/
-    async lockDeleteAll(){
-
-        if (!this._scope.parent._started) await this._scope.parent.connectDB();
-
-        //return this.redis.hdel( "lock" );
-        return this.deleteAny("lock", "");
-
-    }
-    */
 
     /*
 

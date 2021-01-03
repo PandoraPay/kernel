@@ -137,8 +137,5 @@ export default class RedisSchema extends DBSchema{
         return data;
     }
 
-
-
-
 }
 

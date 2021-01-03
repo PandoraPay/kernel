@@ -14,7 +14,6 @@ import Exception from "src/helpers/exception";
 import GenericClient from "../../db-generic/client/generic-client"
 import BufferHelper from "src/helpers/buffers/buffer-helper"
 import Helper from "src/helpers/helper";
-import PouchLock from "./pouch-lock"
 
 class PouchClient extends GenericClient{
 
@@ -318,7 +317,7 @@ class PouchClient extends GenericClient{
 
         if (!this._scope.parent._started) await this._scope.parent.connectDB();
 
-        let out = await this._client.allDocs({
+        const out = await this._client.allDocs({
             startkey: infix,
             endkey: infix+'\uffff'
         });
@@ -326,42 +325,6 @@ class PouchClient extends GenericClient{
         return out.rows.length;
 
     }
-
-
-
-    // // POUCH specific timelock
-    //
-    //
-    // get lockClass(){
-    //     return PouchLock;
-    // }
-    //
-    // /**
-    //  * Used to create a deadlock to avoid two different instances to do the same task twice.
-    //  * PouchDB has locking system in place
-    //  * @param lockName
-    //  * @param timeout
-    //  * @returns {Promise.<function>} which is the callback to finish the deadlock
-    //  */
-    // async lock(lockName, timeout, retryDelay){
-    //
-    //     if (!this._scope.parent._started) await this._scope.parent.connectDB();
-    //
-    //     return PouchLock.lock(this, lockName, timeout, retryDelay)
-    // }
-    //
-    // /**
-    //  * delete all locks in the database
-    //  * @returns {Promise<void>}
-    //  */
-    // async lockDeleteAll(){
-    //
-    //     if (!this._scope.parent._started) await this._scope.parent.connectDB();
-    //
-    //     await this.delete("lock");
-    //
-    // }
-
 
 }
 
