@@ -10,7 +10,7 @@ export default{
      * REDIS is not supported as it is not memory intensive
      */
 
-    selectedDB: "pouch",
+    selectedDB: typeof BROWSER === undefined ? "couch" : "pouch",
 
     create: true,
 

@@ -186,7 +186,6 @@ export default class MasterCluster extends AsyncEvents {
                 }
 
 
-
                 this._scope.logger.info( this, `Instance created ${this.workerName}`);
 
             }

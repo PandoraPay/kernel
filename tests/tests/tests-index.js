@@ -41,7 +41,7 @@ export default {
 
         await TestMasterCluster( );
 
-        //await TestCouch();
+        await TestCouch();
         await TestPouch();
 
     },

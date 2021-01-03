@@ -19,24 +19,15 @@ required version >= 2.0
 
 Linux
 
-```
-$ sudo nano /etc/apt/sources.list
-```
-add `deb https://apache.bintray.com/couchdb-deb xenial main` and save it
+The easy way
 
 ```
-curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc | sudo apt-key add -
-sudo apt-get install apt-transport-https
-sudo apt-get update && sudo apt-get install couchdb
+sudo snap install couchdb
 ```
 
-if you encounter issues, install PouchDB Server using npm ( not recommended )
-```
-$ npm install -g pouchdb-server
-$ pouchdb-server --port 5984
-```
+Or the hard way.
 
-MacOS and Windows users will need to install from [couchdb website](https://couchdb.apache.org/#download)
+Linux, MacOS and Windows users will need to install from [couchdb website](https://couchdb.apache.org/#download)
 
 Verify installation
 
