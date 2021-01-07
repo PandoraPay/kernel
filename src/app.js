@@ -42,35 +42,39 @@ export default class App{
 
     }
 
+    async _onKillProcess(error){
+
+        if (!this._scope.masterCluster.isMaster)
+            await this._scope.masterCluster.sendExitWorker();
+
+        if (error) {
+            this._scope.logger.fatal(`Status`,error);
+            process.emit('cleanup', error);
+        } else
+            this._scope.logger.info(`Status`, 'Modules ready and launched');
+
+    }
+
     _initProcess(){
 
-        process.once('cleanup', async (error, code) => {
+        process.on('SIGTERM', () => {
+            this._scope.logger.warn(`Status`, 'SIGTERM');
+            return this._onKillProcess();
+        });
 
-            this._scope.logger.info(`Status`, 'Cleaning up...', code);
+        process.on('exit', code => {
+            this._scope.logger.warn(`Status`, 'EXIT');
+            return this._onKillProcess();
+        });
 
-            if (!this._scope.masterCluster.isMaster)
-                await this._scope.masterCluster.sendExitWorker();
+        process.on('SIGINT', () => {
+            this._scope.logger.warn(`Status`, 'SIGINT');
+            return this._onKillProcess();
+        });
 
-            process.once('SIGTERM', () => {
-                process.emit('cleanup');
-            });
-
-            process.once('exit', code => {
-                process.emit('cleanup', null, code);
-            });
-
-            process.once('SIGINT', () => {
-                process.emit('cleanup');
-            });
-
-
-            if (error) {
-                this._scope.logger.fatal(`Status`,error);
-                process.emit('cleanup', error);
-            } else
-                this._scope.logger.info(`Status`, 'Modules ready and launched');
-
-
+        process.on('cleanup', async (error, code) => {
+            this._scope.logger.warn(`Status`, 'Cleaning up...', code);
+            return this._onKillProcess(error);
         });
 
         // TODO: This should be the only place in the master process where

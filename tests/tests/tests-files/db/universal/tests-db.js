@@ -1,6 +1,6 @@
 import describe from 'tests/tests/unit-testing/describe';
 import MarshalTests from "tests/tests/tests-files/marshal/marshal-tests"
-import SchemaTests from "tests/tests/tests-files/marshal/schema-tests"
+import SchemaTests from "tests/tests/tests-files/marshal/tests-schema"
 import Helper from "src/helpers/helper"
 /**
  *

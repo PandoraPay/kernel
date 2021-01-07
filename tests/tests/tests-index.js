@@ -1,20 +1,20 @@
 import ArgvTest from "./argv/argv-test";
 
-import TestSimple from "./tests-files/test-simple";
-import TestMarshal from "./tests-files/marshal/test-marshal";
+import TestsSimple from "./tests-files/tests-simple";
+import TestsMarshal from "./tests-files/marshal/tests-marshal";
 import TestsMarshalData from "./tests-files/marshal/tests-marshal-data";
 
-import TestHelpers from "./tests-files/helpers/tests-helpers";
-import TestMasterCluster from "./tests-files/cluster/test-master-cluster";
+import TestsHelpers from "./tests-files/helpers/tests-helpers";
+import TestsMasterCluster from "./tests-files/cluster/tests-master-cluster";
 
-import TestCouch from "./tests-files/db/couchdb/test-couchdb";
-import TestPouch from "./tests-files/db/pouchdb/test-pouchdb";
-import TestRedis from "./tests-files/db/redis/tests-redis";
+import TestsCouch from "./tests-files/db/couchdb/tests-couchdb";
+import TestsPouch from "./tests-files/db/pouchdb/tests-pouchdb";
+import TestsRedis from "./tests-files/db/redis/tests-redis";
 
-import TestMerkleTree from "./tests-files/data-structures/merkle-tree/tests-merkle-tree";
-import TestRadixTree from "./tests-files/data-structures/radix-tree/tests-radix-tree";
-import TestHashVirtualMap from "./tests-files/data-structures/hash-map/test-hash-virtual-map";
-import TestHashMap from "./tests-files/data-structures/hash-map/test-hash-map";
+import TestsMerkleTree from "./tests-files/data-structures/merkle-tree/tests-merkle-tree";
+import TestsRadixTree from "./tests-files/data-structures/radix-tree/tests-radix-tree-index";
+import TestsRadixTreeRandom from "./tests-files/data-structures/radix-tree/tests-radix-tree-random";
+import TestsHashMap from "./tests-files/data-structures/hash-map/tests-hash-map-index";
 
 export default {
 
@@ -22,27 +22,27 @@ export default {
 
     tests: async scope =>{
 
-        await TestHashMap(scope);
-        await TestHashVirtualMap(scope);
+        await TestsHashMap(scope);
 
-        await TestRadixTree(scope);
+        await TestsRadixTree(scope);
+        await TestsRadixTreeRandom(scope);
 
-        await TestMerkleTree();
+        await TestsMerkleTree();
 
-        //await TestRedis();
+        //await TestsRedis();
 
-        await TestHelpers( );
+        await TestsHelpers( );
 
         await TestsMarshalData();
 
-        await TestMarshal( );
+        await TestsMarshal( );
 
-        await TestSimple( );
+        await TestsSimple( );
 
-        await TestMasterCluster( );
+        await TestsMasterCluster( );
 
-        await TestCouch();
-        await TestPouch();
+        await TestsCouch();
+        await TestsPouch();
 
     },
 

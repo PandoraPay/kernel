@@ -85,7 +85,6 @@ npm link ;
 npm link sticky-session ;
 npm link webpack-config ;
 npm link kernel ;
-npm link zetherjs ;
 
 cd ~/zero/blockchain/Networking ;
 npm link ;

@@ -142,7 +142,7 @@ export default class MasterCluster extends AsyncEvents {
                         const done = { };
                         let count = 0, broadcasted = false;
 
-                        this.on("exit-worker!", async data =>{
+                        this._statusExitOn = this.on("exit-worker!", async data =>{
 
                             if (!data.result) return;
 
@@ -172,7 +172,7 @@ export default class MasterCluster extends AsyncEvents {
                                     await this.sendReadyMaster( true );
                                     resolve(true);
                                 } else {
-                                    await this.sendReadyMaster( data._worker);
+                                    await this.sendReadyMaster( data._worker.index );
                                 }
 
                             }
@@ -321,7 +321,8 @@ export default class MasterCluster extends AsyncEvents {
     }
 
     async sendExitWorker(){
-        return this.sendMessage( "exit-worker!", { result: true } );
+        this._scope.logger.log(this, 'exit-worker!');
+        return this.sendMessage( "exit-worker!", { result: true }, false, false );
     }
 
     async sendReadyMaster(worker){
@@ -407,6 +408,9 @@ export default class MasterCluster extends AsyncEvents {
 
         if (this._statusOn)
             this._statusOn();
+
+        if (this._statusExitOn)
+            this._statusExitOn();
 
         await this._closed();
 

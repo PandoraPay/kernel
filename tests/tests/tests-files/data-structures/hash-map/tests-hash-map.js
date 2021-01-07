@@ -10,9 +10,9 @@ import HashMapElement from "src/data-structures/hash-map/hash-map-element"
  *
  */
 
-export default async function run (hashmap, name) {
+export default async function run (hashmap, name, selectedDB) {
 
-    const  count = 10000;
+    const  count = selectedDB ===  "couch" ? 500 : 10000;
     const ids = TestsHelper.randomBuffers( 32, count).map( id => id.toString("hex") );
     const data = TestsHelper.randomBuffers( 10, count);
     const newData = TestsHelper.randomBuffers( 10, count);
@@ -101,17 +101,24 @@ export default async function run (hashmap, name) {
 
         },
 
-        'Test Hash Map clearHashMap': async function () {
+        'Test Hash Map clearHashMap - step 1 ADD': async function () {
 
             const results = await Promise.all(  ids.map( (it, index) => hashmap.addMap ( it, data[index] )) );
             await Promise.all(  results.map (it => this.expect( it instanceof HashMapElement, true)));
 
+        },
+
+        'Test Hash Map clearHashMap - step 2 CLEAR': async function () {
+
             await hashmap.clearHashMap();
+
+        },
+
+        'Test Hash Map clearHashMap - step 3 getMap': async function (){
 
             for (let i=0; i < count; i++)
                 this.expectError( hashmap.getMap ( ids[i] ) );
-
-        },
+        }
 
 
     });
