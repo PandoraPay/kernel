@@ -44,7 +44,7 @@ export default class App{
 
     async _onKillProcess(error){
 
-        if (!this._scope.masterCluster.isMaster)
+        if (this._scope && this._scope.masterCluster && !this._scope.masterCluster.isMaster)
             await this._scope.masterCluster.sendExitWorker();
 
         if (error) {
@@ -73,7 +73,7 @@ export default class App{
         });
 
         process.on('cleanup', async (error, code) => {
-            this._scope.logger.warn(`Status`, 'Cleaning up...', code);
+            this._scope.logger.warn(`Status`, 'Cleaning up...', {code, error: !!error });
             return this._onKillProcess(error);
         });
 

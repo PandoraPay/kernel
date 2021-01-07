@@ -13,7 +13,6 @@ import TestsRedis from "./tests-files/db/redis/tests-redis";
 
 import TestsMerkleTree from "./tests-files/data-structures/merkle-tree/tests-merkle-tree";
 import TestsRadixTree from "./tests-files/data-structures/radix-tree/tests-radix-tree-index";
-import TestsRadixTreeRandom from "./tests-files/data-structures/radix-tree/tests-radix-tree-random";
 import TestsHashMap from "./tests-files/data-structures/hash-map/tests-hash-map-index";
 
 export default {
@@ -25,7 +24,6 @@ export default {
         await TestsHashMap(scope);
 
         await TestsRadixTree(scope);
-        await TestsRadixTreeRandom(scope);
 
         await TestsMerkleTree();
 

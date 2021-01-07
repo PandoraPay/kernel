@@ -10,9 +10,8 @@ import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual"
  *
  */
 
-export default async function run (scope) {
+export default async function run (selectedDB) {
 
-    const selectedDB = scope.argv.dbPublic.selectedDB;
     const randomCount = selectedDB === 'couch' ? 200 : 3000;
 
     const randomLabels = TestsHelper.randomBuffers( 20, randomCount ).map( it => it.toString("hex") );
