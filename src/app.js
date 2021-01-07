@@ -48,6 +48,9 @@ export default class App{
 
             this._scope.logger.info(`Status`, 'Cleaning up...', code);
 
+            if (!this._scope.masterCluster.isMaster)
+                await this._scope.masterCluster.sendExitWorker();
+
             process.once('SIGTERM', () => {
                 process.emit('cleanup');
             });

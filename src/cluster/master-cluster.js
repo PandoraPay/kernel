@@ -134,13 +134,23 @@ export default class MasterCluster extends AsyncEvents {
                     this.stickyMaster.events.on("message", data =>  this.receivedData( data.worker, data.msg, data.data ) );
 
                     /**
-                     * waiting for receving all hello
+                     * waiting for receiving all hello
                      */
 
                     initializePromise = new Promise( resolve =>{
 
                         const done = { };
                         let count = 0, broadcasted = false;
+
+                        this.on("exit-worker!", async data =>{
+
+                            if (!data.result) return;
+
+                            data._worker._closed = true;
+                            for (let i=0; i < this.stickyMaster.workers.length; i++)
+                                if (this.stickyMaster.workers[i] === data._worker)
+                                    this.stickyMaster.workers.splice(i, 1);
+                        });
 
                         this._statusOn = this.on("ready-worker!", async data =>{
 
@@ -310,6 +320,10 @@ export default class MasterCluster extends AsyncEvents {
         return this.sendMessage( "ready-worker!", { result: true } );
     }
 
+    async sendExitWorker(){
+        return this.sendMessage( "exit-worker!", { result: true } );
+    }
+
     async sendReadyMaster(worker){
         return this.sendMessage( "ready-master!", { result: true }, worker );
     }
@@ -337,9 +351,15 @@ export default class MasterCluster extends AsyncEvents {
                         const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
                         promises.push( promise );
 
-                        worker.send({msg: msg, data: { ... data, confirmation}, });
+                        try{
+                            worker.send({msg: msg, data: { ... data, confirmation}, });
+                            confirmation = StringHelper.generateRandomId(32 );
+                        }catch(err){
+                            this._scope.logger.error(this, 'worker.send returned an error', err);
+                            this["__promiseResolve" + confirmation ]();
 
-                        confirmation = StringHelper.generateRandomId(32 );
+                        }
+
                     }
 
                 if (emitToMySelf)

@@ -31,6 +31,12 @@ Linux, MacOS and Windows users will need to install from [couchdb website](https
 
 Verify installation
 
+restart 
+
+```
+sudo snap restart couchdb
+```
+
 ```
 curl localhost:5984
 ``` 

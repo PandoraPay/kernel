@@ -34,7 +34,7 @@ class PouchSchema extends DBSchema{
             multi.getBlob(infix+this.table, this.id, (out)=>{
                 
                 if (out === null)
-                    throw new Exception(this, "Load raised an error", {key: `data:${infix}${this.table}:${this.id}` } );
+                    throw new Exception(this, "Pouch Load raised an error", {key: `data:${infix}${this.table}:${this.id}` } );
 
                 if (type === "hex" && Buffer.isBuffer(out) )
                     out = out.toString("hex");
