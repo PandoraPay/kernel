@@ -44,14 +44,19 @@ export default class App{
 
     async _onKillProcess(error){
 
-        if (this._scope && this._scope.masterCluster && !this._scope.masterCluster.isMaster)
+        if (this._killed){
+            this._scope.logger.info(this,`process.exit()` );
+            return process.exit()
+        }
+        this._killed = true;
+
+        if (this._scope && this._scope.masterCluster && this._scope.masterCluster.isWorker )
             await this._scope.masterCluster.sendExitWorker();
 
-        if (error) {
-            this._scope.logger.fatal(`Status`,error);
-            process.emit('cleanup', error);
-        } else
-            this._scope.logger.info(`Status`, 'Modules ready and launched');
+        if (error)
+            this._scope.logger.fatal(this, `Status`, error);
+
+        process.exit()
 
     }
 
@@ -59,17 +64,29 @@ export default class App{
 
         process.on('SIGTERM', () => {
             this._scope.logger.warn(`Status`, 'SIGTERM');
-            return this._onKillProcess();
+            process.emit('cleanup', null);
         });
 
+        //do something when app is closing
         process.on('exit', code => {
             this._scope.logger.warn(`Status`, 'EXIT');
-            return this._onKillProcess();
+            process.emit('cleanup', null);
         });
 
-        process.on('SIGINT', () => {
+        //catches ctrl+c event
+        process.on('SIGINT', (error, code) => {
             this._scope.logger.warn(`Status`, 'SIGINT');
-            return this._onKillProcess();
+            process.emit('cleanup', null);
+        });
+
+        //catches "kill pid" (for example: nodemon restart)
+        process.on('SIGUSR1', (error, code) => {
+            this._scope.logger.warn(`Status`, 'SIGUSR1');
+            process.emit('cleanup', null);
+        });
+        process.on('SIGUSR2', (error, code) => {
+            this._scope.logger.warn(`Status`, 'SIGUSR2');
+            process.emit('cleanup', null);
         });
 
         process.on('cleanup', async (error, code) => {
@@ -80,10 +97,11 @@ export default class App{
         // TODO: This should be the only place in the master process where
         // 'uncaughtException' is handled. Right now, one of our dependencies (js-nacl;
 
+        //catches uncaught exceptions
         process.on('uncaughtException', ( err ) => {
 
             // Handle error safely
-            this._scope.logger.fatal(`Status`, 'System error', err);
+            this._scope.logger.fatal(`Status`, 'uncaughtException', err);
             process.emit('cleanup', err);
 
         });
@@ -91,6 +109,7 @@ export default class App{
         process.on('unhandledRejection', ( err ) => {
 
             // Handle unhandledRejection safely
+            this._scope.logger.fatal(`Status`, 'unhandledRejection', err);
             process.emit('cleanup', err);
 
         });
@@ -134,6 +153,11 @@ export default class App{
     }
 
     async createMasterCluster(scope = this._scope, merge = {} ){
+
+        if (this._masterClusteredCreatedBefore){
+            await Helper.sleep(5000);
+            this._masterClusteredCreatedBefore = true;
+        }
 
         await this.events.emit('master-cluster/creation', scope);
 

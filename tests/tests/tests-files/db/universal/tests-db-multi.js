@@ -20,7 +20,7 @@ export default async function run ( dbType) {
         }
     }
 
-    describe( () => `${dbType} DB Master CLuster testing subscription ${TEST1}`, {
+    describe( () => `${dbType} DB Master Cluster testing subscription ${TEST1}`, {
 
         "creation objects subscription": async function () {
 
