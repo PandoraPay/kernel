@@ -94,18 +94,20 @@ class PouchClient extends GenericClient{
             data = name;
             name = undefined;
         }
-
+        const finalId = table + (name ? ':'+name: '');
 
         let revId;
 
         try {
 
-            const exists = await this._client.get(table + (name ? ":" + name : ''));
+            const exists = await this._client.get( finalId );
 
             if (exists)
                 revId = exists._rev;
 
         } catch(err) {
+            if (err.status !== 404)
+                this._scope.logger.error(this, `SaveBlob Get raised an error ${ finalId }`, err);
         }
 
         try{
@@ -120,7 +122,7 @@ class PouchClient extends GenericClient{
             };
 
             const out = await this._client.put({
-                _id: table+ (name ? ":"+name : ''),
+                _id: finalId,
                 ...data,
                 _rev: revId,
             });
@@ -129,10 +131,9 @@ class PouchClient extends GenericClient{
             return out;
 
         } catch (err){
-
-            this._scope.logger.error(this, "Store Blob raised an error", err);
-
+            this._scope.logger.error(this, `SaveBlob raised an error ${finalId}`, err);
             return undefined;
+
         }
 
     }
@@ -144,22 +145,23 @@ class PouchClient extends GenericClient{
             name = undefined;
         }
 
-        //console.log("Saving ", table, name , data);
-
          if (typeof data  === "string")
             data = { notAnObject: data };
 
         if (!this._scope.parent._started) await this._scope.parent.connectDB();
+        const finalId = table + (name ? ':'+name: '');
 
         let revId;
         try {
 
-            const exists = await this._client.get(table + (name ? ":" + name : ''));
+            const exists = await this._client.get( finalId );
 
             if (exists)
                 revId = exists._rev;
 
         } catch (err) {
+            if (err.status !== 404)
+                this._scope.logger.error(this, `Save.Get raised an error ${finalId}`, err);
         }
 
         try{
@@ -167,7 +169,7 @@ class PouchClient extends GenericClient{
             data = BufferHelper.convertAllBuffersToHex(data);
 
             const out = await this._client.put({
-                _id: table+ (name ? ":"+name : ''),
+                _id: finalId,
                 ...data,
                 _rev: revId,
             });
@@ -175,7 +177,7 @@ class PouchClient extends GenericClient{
             return out;
 
         } catch (err){
-
+            this._scope.logger.error(this, `Save raised an error ${finalId}`, err);
             return undefined;
         }
 
@@ -184,10 +186,11 @@ class PouchClient extends GenericClient{
     async getBlob(table, name){
 
         if (!this._scope.parent._started) await this._scope.parent.connectDB();
+        const finalId = table+ (name ? ":"+name : '');
 
         try{
 
-            const out = await this._client.get( table+ (name ? ":"+name : ''), { attachments: true });
+            const out = await this._client.get( finalId, { attachments: true });
 
             if (out._attachments)
                 return Buffer.from( out._attachments.data.data, "base64");
@@ -196,6 +199,7 @@ class PouchClient extends GenericClient{
 
         } catch (err){
 
+            this._scope.logger.error(this, `GetBlob raised an error ${finalId}`, err);
             return undefined;
 
         }
@@ -206,10 +210,11 @@ class PouchClient extends GenericClient{
     async get(table, name){
 
         if (!this._scope.parent._started) await this._scope.parent.connectDB();
+        const finalId = table+ (name ? ":"+name : '');
 
         try{
 
-            const out = await this._client.get( table+ (name ? ":"+name : ''), );
+            const out = await this._client.get( finalId, );
 
             if (out.notAnObject)
                 return out.notAnObject;
@@ -217,6 +222,9 @@ class PouchClient extends GenericClient{
             return out;
 
         } catch (err){
+
+            if (err.status !== 404)
+                this._scope.logger.error(this, `Get raised an error ${finalId}`, err);
 
             return undefined;
         }
@@ -226,16 +234,20 @@ class PouchClient extends GenericClient{
     async delete(table, name){
 
         if (!this._scope.parent._started) await this._scope.parent.connectDB();
+        const finalId = table+ (name ? ":"+name : '');
 
         try{
 
             let exists;
             try{
 
-                exists = await this._client.get( table + (name ? ":"+name : '') );
+                exists = await this._client.get( finalId );
                 if (!exists) return undefined;
 
             }catch(err){
+                if (err.status !== 404)
+                    this._scope.logger.error(this, `Del raised an error ${finalId}`, err);
+
                 return undefined;
             }
 
@@ -246,9 +258,7 @@ class PouchClient extends GenericClient{
             return out.ok;
 
         }catch (err){
-
-            console.log(err);
-            this._scope.logger.error(this, "Del raised an error", err);
+            this._scope.logger.error(this, `Del raised an error ${finalId}`, err);
             return false;
         }
 
@@ -264,6 +274,8 @@ class PouchClient extends GenericClient{
             return out;
 
         }catch (err){
+            if (err.status !== 404)
+                this._scope.logger.error(this, `Find raised an error ${query}`, err);
             return [];
         }
     }
