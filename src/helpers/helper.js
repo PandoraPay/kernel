@@ -4,7 +4,7 @@ import Exception from "src/helpers/exception";
 export default class Helper{
 
     static sleep (time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
+        return new Promise(resolve => setTimeout( resolve, time));
     }
 
     static _mergeCloned(a, b ){

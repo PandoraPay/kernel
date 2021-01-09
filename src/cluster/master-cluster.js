@@ -23,6 +23,7 @@ export default class MasterCluster extends AsyncEvents {
         super();
 
         this._startedStatus = false;
+        this._startingStatus = false;
 
         this.isMaster = undefined;
         this.isWorker = undefined;
@@ -34,6 +35,8 @@ export default class MasterCluster extends AsyncEvents {
         if (applyConstructor)
             this._constructor(scope);
 
+        this.startedPromise = undefined;
+        this._startedPromiseResolver = undefined;
 
     }
 
@@ -68,13 +71,20 @@ export default class MasterCluster extends AsyncEvents {
 
     async start(){
 
-        if (this._startedStatus) return true;
+        if (this._startedStatus || this._startingStatus ) return this.startedPromise;
+
+        this._startingStatus = true;
+
+        if (cluster.isMaster)
+            await Helper.sleep(100)
 
         await this._started();
 
         await this._scope.events.emit("master-cluster/started", this );
         this._startedStatus = true;
+        this._startingStatus = false;
 
+        return this.startedPromise;
     }
 
     async _started(){
@@ -89,6 +99,9 @@ export default class MasterCluster extends AsyncEvents {
         this.workerName = isMaster ? "master" : "worker" + workerId;
         this.workerId = workerId;
 
+        this.startedPromise = new Promise( resolve => {
+            this._startedPromiseResolver = resolve;
+        });
 
         if ( isMaster )
             await this._scope.db.client.lockDeleteAll();
@@ -100,8 +113,6 @@ export default class MasterCluster extends AsyncEvents {
 
         if (this.clientsCluster)
             await this.clientsCluster.init();
-
-        let initializePromise;
 
         if (this.serverCluster){
 
@@ -137,53 +148,59 @@ export default class MasterCluster extends AsyncEvents {
                      * waiting for receiving all hello
                      */
 
-                    initializePromise = new Promise( resolve =>{
+                    const done = { };
+                    let count = 0, broadcasted = false;
 
-                        const done = { };
-                        let count = 0, broadcasted = false;
+                    this._statusExitOn = this.on("exit-worker", async data =>{
 
-                        this._statusExitOn = this.on("exit-worker!", async data =>{
+                        this._scope.logger.log(this, 'exit-worker2', {} );
 
-                            if (!data.result) return;
+                        if (!data.result) return;
 
-                            data._worker._closed = true;
-                            for (let i=0; i < this.stickyMaster.workers.length; i++)
-                                if (this.stickyMaster.workers[i] === data._worker)
-                                    this.stickyMaster.workers.splice(i, 1);
-                        });
-
-                        this._statusOn = this.on("ready-worker!", async data =>{
-
-                            if (!data.result) return;
-
-                            //should take workers into
-
-                            if (!done[data._worker.index]) {
-                                done[data._worker.index] = 0;
-                                count++;
+                        for (let i=this.stickyMaster.workers.length-1; i >= 0; i--)
+                            if (this.stickyMaster.workers[i] === data._worker) {
+                                this.stickyMaster.workers.splice(i, 1);
+                                this._scope.logger.log(this, 'worker removed', {index: i});
+                                break;
                             }
 
-                            done[data._worker.index]++;
+                        await this.sendExitWorkerConfirmation( data._worker );
 
-                            if (count === this.stickyMaster.workers.length  ) {
+                        data._worker._closed = true;
 
-                                if (!broadcasted) {
-                                    broadcasted = true;
-                                    await this.sendReadyMaster( true );
-                                    resolve(true);
-                                } else {
-                                    await this.sendReadyMaster( data._worker.index );
-                                }
+                    });
 
+                    this._statusOn = this.on("ready-worker", async data =>{
+
+                        if (!data.result) return;
+
+                        this._scope.logger.info(this, 'ready-worker received');
+
+                        //should take workers into
+                        if (!done[data._worker.index]) {
+                            done[data._worker.index] = 0;
+                            count++;
+                        }
+
+                        done[data._worker.index]++;
+
+                        if (count === this.stickyMaster.workers.length  ) {
+
+                            if (!broadcasted) {
+                                broadcasted = true;
+                                await this.sendReadyMasterConfirmation( true );
+                                await Helper.sleep(100);
+                                this._startedPromiseResolver(true);
+                            } else {
+                                await this.sendReadyMasterConfirmation( data._worker.index );
                             }
 
-                        });
+                        }
 
                     });
 
 
                 } else {
-
 
                     /**
                      * Worker aka Slave
@@ -200,14 +217,16 @@ export default class MasterCluster extends AsyncEvents {
 
         }
 
+        if (isMaster)
+            await Helper.promiseTimeout( this.startedPromise, 60*1000 );
 
         if (this.clientsCluster)
             await this.clientsCluster.start();
 
-        await Helper.promiseTimeout( initializePromise, 60*1000 );
-
-        if (this.isWorker)
+        if (this.isWorker) {
             await this.sendReadyWorker();
+            this._startedPromiseResolver(true);
+        }
 
     }
 
@@ -317,16 +336,20 @@ export default class MasterCluster extends AsyncEvents {
     }
 
     async sendReadyWorker(){
-        return this.sendMessage( "ready-worker!", { result: true } );
+        return this.sendMessage( "ready-worker", { result: true }, false, false );
+    }
+
+    async sendReadyMasterConfirmation(worker){
+        return this.sendMessage( "ready-worker", { result: true }, worker );
     }
 
     async sendExitWorker(){
-        this._scope.logger.log(this, 'exit-worker!');
-        return this.sendMessage( "exit-worker!", { result: true }, false, false );
+        this._scope.logger.log(this, "exit-worker");
+        return this.sendMessage( "exit-worker", { result: true }, false, false );
     }
 
-    async sendReadyMaster(worker){
-        return this.sendMessage( "ready-master!", { result: true }, worker );
+    async sendExitWorkerConfirmation(worker){
+        return this.sendMessage( "exit-worker", { result: true }, worker );
     }
 
     async sendMessage( msg, data, broadcast = false, emitToMySelf = true ){
@@ -345,9 +368,7 @@ export default class MasterCluster extends AsyncEvents {
                 const promises = [];
 
                 for (const worker of this.stickyMaster.workers)
-                    if (worker) {
-
-                        if (worker._closed) continue; //closed already
+                    if (worker && !worker._closed) {
 
                         const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
                         promises.push( promise );
@@ -380,6 +401,15 @@ export default class MasterCluster extends AsyncEvents {
 
                 return await promise;
 
+            } else if (typeof broadcast === "object" && typeof broadcast.index === "number"){
+
+                const worker =  broadcast;
+                if (worker._closed) return; //closed already
+
+                const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
+                worker.send({msg: msg, data: { ... data, confirmation}, });
+                return await promise;
+
             } else
                 throw new Exception(this, "broadcast parameter can be only boolean and number");
 
@@ -389,7 +419,6 @@ export default class MasterCluster extends AsyncEvents {
             const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
 
             process.send({msg, data: { ...data, confirmation, broadcast, emitToMySelf},  });
-
 
             return promise;
         }
@@ -406,15 +435,17 @@ export default class MasterCluster extends AsyncEvents {
 
         if (!this._startedStatus) return;
 
-        if (this._statusOn)
+        if (typeof this._statusOn === "function")
             this._statusOn();
 
-        if (this._statusExitOn)
+        if (typeof this._statusExitOn === "function")
             this._statusExitOn();
 
         await this._closed();
 
         this._startedStatus = false;
+        this._startingStatus = false;
+
         await this._scope.events.emit("master-cluster/closed", this );
 
     }
@@ -432,7 +463,7 @@ export default class MasterCluster extends AsyncEvents {
         }
 
         if (this.stickyMaster) {
-            this.stickyMaster.close();
+            await this.stickyMaster.close();
             this._scope.logger.log(this, "stickyMaster closed");
         }
     }

@@ -21,23 +21,23 @@ export default {
 
     tests: async scope =>{
 
-        await TestsHashMap(scope);
-
-        await TestsRadixTree(scope);
-
-        await TestsMerkleTree();
-
-        //await TestsRedis();
-
-        await TestsHelpers( );
-
-        await TestsMarshalData();
-
-        await TestsMarshal( );
-
-        await TestsSimple( );
-
-        await TestsMasterCluster( );
+        // await TestsHashMap(scope);
+        //
+        // await TestsRadixTree(scope);
+        //
+        // await TestsMerkleTree();
+        //
+        // //await TestsRedis();
+        //
+        // await TestsHelpers( );
+        //
+        // await TestsMarshalData();
+        //
+        // await TestsMarshal( );
+        //
+        // await TestsSimple( );
+        //
+        // await TestsMasterCluster( );
 
         await TestsCouch();
         await TestsPouch();

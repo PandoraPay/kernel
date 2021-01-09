@@ -44,18 +44,22 @@ export default class App{
 
     async _onKillProcess(error){
 
-        if (this._killed){
-            this._scope.logger.info(this,`process.exit()` );
-            return process.exit()
-        }
+        this._scope.logger.info(this, 'onKillProcess');
+
+        if (this._killed)
+            return this._killedReady ?  process.exit() : undefined;
+
         this._killed = true;
 
-        if (this._scope && this._scope.masterCluster && this._scope.masterCluster.isWorker )
+        if ( this._scope && this._scope.masterCluster && this._scope.masterCluster.isWorker && !this._killedReady ) {
             await this._scope.masterCluster.sendExitWorker();
+            await Helper.sleep(500);
+        }
 
         if (error)
             this._scope.logger.fatal(this, `Status`, error);
 
+        this._killedReady = true;
         process.exit()
 
     }
@@ -153,11 +157,6 @@ export default class App{
     }
 
     async createMasterCluster(scope = this._scope, merge = {} ){
-
-        if (this._masterClusteredCreatedBefore){
-            await Helper.sleep(5000);
-            this._masterClusteredCreatedBefore = true;
-        }
 
         await this.events.emit('master-cluster/creation', scope);
 
