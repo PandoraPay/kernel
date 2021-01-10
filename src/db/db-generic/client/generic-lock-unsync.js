@@ -28,7 +28,9 @@ class GenericLock {
 
     }
 
-    async _acquireLock( lockName, timeout, retryDelay = -1) {
+    async _acquireLock( lockName, timeout = 10000, retryDelay = -1) {
+
+        if (timeout === -1) timeout = 24*60*60*1000;
 
         let resolve;
         const promise = new Promise( async promiseResolve =>{

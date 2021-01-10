@@ -454,8 +454,6 @@ export default class DBSchema extends Marshal{
      */
     lock(timeout, retryDelay, infix='', table, db = this._scope.db){
 
-        if (timeout === -1) timeout = 24*60*60*1000;
-
         if (infix && infix[infix.length-1] !== ':') infix += ":";
         return db.client.lock( `${infix}${ this._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  this._schema.saving.saveInfixParentId ? this.id + ":" : '' }`, timeout, retryDelay );
 
