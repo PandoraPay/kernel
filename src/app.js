@@ -52,6 +52,7 @@ export default class App{
         this._killed = true;
 
         if ( this._scope && this._scope.masterCluster && this._scope.masterCluster.isWorker && !this._killedReady ) {
+            await Helper.sleep(500);
             await this._scope.masterCluster.sendExitWorker();
             await Helper.sleep(500);
         }
@@ -294,7 +295,7 @@ export default class App{
 
             await this.events.emit("start/tests-started", this._scope );
 
-            return true;g
+            return true;
 
         }
 

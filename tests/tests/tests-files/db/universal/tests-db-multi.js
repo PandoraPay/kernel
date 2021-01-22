@@ -20,7 +20,7 @@ export default async function run ( dbType) {
         }
     }
 
-    describe( () => `${dbType} DB Master Cluster testing subscription ${TEST1}`, {
+    describe( () => `${dbType} DB  Master Cluster testing subscription ${TEST1}`, {
 
         "creation objects subscription": async function () {
 
@@ -69,7 +69,9 @@ export default async function run ( dbType) {
 
                         });
 
-                    }), 500000 );
+                    }), 5000000 );
+
+                await Helper.sleep(1000);
 
                 process.exit(1);
 

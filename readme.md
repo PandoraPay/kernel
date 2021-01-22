@@ -1,6 +1,6 @@
 #### PandoraPay Kernel
 
-This is an implementation of core functionality used used by PandoraPay blockchain or any other blockchain
+This is an implementation of core functionality used by PandoraPay blockchain or any other blockchain
 
 
 1. [Install the Package](./wiki/readme.md#install-the-package)

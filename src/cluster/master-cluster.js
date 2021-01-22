@@ -99,6 +99,9 @@ export default class MasterCluster extends AsyncEvents {
         this.workerName = isMaster ? "master" : "worker" + workerId;
         this.workerId = workerId;
 
+        if (!isMaster)
+            process.index = "master";
+
         this.startedPromise = new Promise( resolve => {
             this._startedPromiseResolver = resolve;
         });
@@ -158,16 +161,19 @@ export default class MasterCluster extends AsyncEvents {
                         if (!data.result) return;
 
                         for (let i=this.stickyMaster.workers.length-1; i >= 0; i--)
-                            if (this.stickyMaster.workers[i] === data._worker) {
+                            if (this.stickyMaster.workers[i].index === data._workerIndex) {
+
+                                const worker = this.stickyMaster.workers[i];
                                 this.stickyMaster.workers.splice(i, 1);
+
+                                await worker.send( {msg: "confirmation", data: {confirmation: data.confirmation, output: true } } );
+
+                                worker._closed = true;
                                 this._scope.logger.log(this, 'worker removed', {index: i});
-                                break;
+                                return true;
                             }
 
-                        await this.sendExitWorkerConfirmation( data._worker );
-
-                        data._worker._closed = true;
-
+                        return false;
                     });
 
                     this._statusOn = this.on("ready-worker", async data =>{
@@ -177,12 +183,12 @@ export default class MasterCluster extends AsyncEvents {
                         this._scope.logger.info(this, 'ready-worker received');
 
                         //should take workers into
-                        if (!done[data._worker.index]) {
-                            done[data._worker.index] = 0;
+                        if (!done[data._workerIndex]) {
+                            done[data._workerIndex] = 0;
                             count++;
                         }
 
-                        done[data._worker.index]++;
+                        done[data._workerIndex]++;
 
                         if (count === this.stickyMaster.workers.length  ) {
 
@@ -192,7 +198,7 @@ export default class MasterCluster extends AsyncEvents {
                                 await Helper.sleep(100);
                                 this._startedPromiseResolver(true);
                             } else {
-                                await this.sendReadyMasterConfirmation( data._worker.index );
+                                await this.sendReadyMasterConfirmation( data._workerIndex );
                             }
 
                         }
@@ -206,7 +212,9 @@ export default class MasterCluster extends AsyncEvents {
                      * Worker aka Slave
                      */
 
-                    process.on("message", data => this.receivedData( process, data.msg, data.data ) );
+                    process.on("message", data =>
+                        this.receivedData( process,
+                            data.msg, data.data ) );
 
                 }
 
@@ -224,8 +232,16 @@ export default class MasterCluster extends AsyncEvents {
             await this.clientsCluster.start();
 
         if (this.isWorker) {
+
+            //this._scope.logger.info(this, 'sendReadyWorker sending' );
+
+            this.on("ready-master", ()=>{
+                //this._scope.logger.info(this, 'ready-master received' );
+                this._startedPromiseResolver(true);
+            })
+
             await this.sendReadyWorker();
-            this._startedPromiseResolver(true);
+            //this._scope.logger.info(this, 'sendReadyWorker received' );
         }
 
     }
@@ -283,49 +299,14 @@ export default class MasterCluster extends AsyncEvents {
 
         let output;
 
-        if ( this.isMaster ) { //master
-
-            /**
-             * It requires to propagate the message to all other workers
-             */
-            if ( data.broadcast) {
-
-                const emitToMySelf = data.emitToMySelf;
-
-                delete data.broadcast;
-                delete data.emitToMySelf;
-
-                const promises = [];
-
-                for (const work of this.stickyMaster.workers)
-                    if (work && (worker !== work || emitToMySelf )) {
-
-                        if (work._closed) continue; //closed already
-
-                        const confirmation = StringHelper.generateRandomId(32 );
-                        const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
-                        promises.push( promise );
-
-                        work.send({msg: message, data: { ... data, confirmation}, });
-                    } else {
-                        promises.push( undefined );
-                    }
-
-                output = await Promise.all(promises);
-
-            }
-
-        }
-
-
         if (message === "lock-set") output = this.lockSet(data, worker);
         else if (message === "lock-delete") output = this.lockDelete(data, worker);
         else {
-            const out = await this.emit( message, { ...data, _worker: worker } );
-
-            if (Array.isArray(output))
-                output.unshift(out);
-            else output = out;
+            const broadcast = data.broadcast;
+            const emitToMySelf = data.emitToMySelf;
+            data.broadcast = false;
+            data.emitToMySelf = false;
+            output = await this.sendMessage(message, data, broadcast, emitToMySelf, false);
         }
 
         //this._scope.logger.log(this, "output " +message, {confirmation: data.confirmation, output } );
@@ -336,94 +317,92 @@ export default class MasterCluster extends AsyncEvents {
     }
 
     async sendReadyWorker(){
-        return this.sendMessage( "ready-worker", { result: true }, false, false );
+        return this.sendMessage( "ready-worker", { result: true }, "master", false );
     }
 
     async sendReadyMasterConfirmation(worker){
-        return this.sendMessage( "ready-worker", { result: true }, worker );
+        return this.sendMessage( "ready-master", { result: true }, worker );
     }
 
     async sendExitWorker(){
         this._scope.logger.log(this, "exit-worker");
-        return this.sendMessage( "exit-worker", { result: true }, false, false );
+        return this.sendMessage( "exit-worker", { result: true }, "master", false );
     }
 
     async sendExitWorkerConfirmation(worker){
         return this.sendMessage( "exit-worker", { result: true }, worker );
     }
 
-    async sendMessage( msg, data, broadcast = false, emitToMySelf = true ){
+    async sendMessage( msg, data, broadcast = false, emitToMySelf = true, includeWorkerIndex = true ){
 
         if (BROWSER) return; //no slaves in browser
 
+        if (includeWorkerIndex)
+            data._workerIndex = this.workerId;
+
         let confirmation = StringHelper.generateRandomId(32 );
+
+        const output = [];
 
         if ( this.isMaster ) {
 
+            if ( broadcast === "master"){
+                output.push( this.emit(msg, {...data, _worker: process }) );
+            } else
             if (typeof broadcast === "boolean"){
 
-                if (!broadcast)
-                    throw new Exception(this, "process.send doesn't exist");
+                if (broadcast){
 
-                const promises = [];
+                    for (const worker of this.stickyMaster.workers)
+                        if (worker && !worker._closed) {
 
-                for (const worker of this.stickyMaster.workers)
-                    if (worker && !worker._closed) {
+                            const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
+                            output.push( promise );
 
-                        const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
-                        promises.push( promise );
+                            try{
+                                worker.send({msg: msg, data: { ... data, confirmation, broadcast:false, emitToMySelf: true}, _workerIndex: this.workerId });
+                                confirmation = StringHelper.generateRandomId(32 );
+                            }catch(err){
+                                this._scope.logger.error(this, 'worker.send returned an error', err);
+                                this["__promiseResolve" + confirmation ]();
 
-                        try{
-                            worker.send({msg: msg, data: { ... data, confirmation}, });
-                            confirmation = StringHelper.generateRandomId(32 );
-                        }catch(err){
-                            this._scope.logger.error(this, 'worker.send returned an error', err);
-                            this["__promiseResolve" + confirmation ]();
+                            }
 
                         }
 
-                    }
+                    emitToMySelf = true;
 
-                if (emitToMySelf)
-                    promises.push( this.emit( msg, {...data, _worker: process }) );
+                }
 
-                return await Promise.all(promises);
-
-            } else if (typeof broadcast === "number"){
+            } else if (typeof broadcast === "number" ){
 
                 const worker = this.stickyMaster.workers[broadcast];
-
                 if (worker._closed) return; //closed already
 
-                const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
-
+                output.push ( new Promise( resolve => this["__promiseResolve"+confirmation] = resolve ) );
                 worker.send({msg: msg, data: { ... data, confirmation}, });
 
-                return await promise;
-
-            } else if (typeof broadcast === "object" && typeof broadcast.index === "number"){
-
-                const worker =  broadcast;
+            } else
+            if (typeof broadcast === "object"){
+                const worker = broadcast;
                 if (worker._closed) return; //closed already
 
-                const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
+                output.push ( new Promise( resolve => this["__promiseResolve"+confirmation] = resolve ) );
                 worker.send({msg: msg, data: { ... data, confirmation}, });
-                return await promise;
-
             } else
                 throw new Exception(this, "broadcast parameter can be only boolean and number");
 
-
         } else {
 
-            const promise = new Promise( resolve => this["__promiseResolve"+confirmation] = resolve );
+            output.push( new Promise( resolve => this["__promiseResolve"+confirmation] = resolve ) );
+            process.send({msg, data: { ...data, confirmation, broadcast, emitToMySelf } });
 
-            process.send({msg, data: { ...data, confirmation, broadcast, emitToMySelf},  });
-
-            return promise;
         }
 
+        if (emitToMySelf)
+            output.push(this.emit(msg, {...data, _worker: process }));
 
+        return await Promise.all(output);
 
     }
 
