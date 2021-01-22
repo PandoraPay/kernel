@@ -297,11 +297,18 @@ export default class MasterCluster extends AsyncEvents {
 
         let output;
 
-        const broadcast = data.broadcast;
-        const emitToMySelf = data.emitToMySelf;
-        data.broadcast = false;
-        data.emitToMySelf = false;
-        output = await this.sendMessage(message, data, broadcast, emitToMySelf, false);
+        if (data.broadcast){
+            const broadcast = data.broadcast;
+            const emitToMySelf = data.emitToMySelf;
+            data.broadcast = false;
+            data.emitToMySelf = false;
+            output = await this.sendMessage(message, data, broadcast, emitToMySelf, false, broadcast === true  );
+
+        } else {
+            if ( message === "lock-set") output = this.lockSet(data, data._workerIndex);
+            else if (message === "lock-delete") output = this.lockDelete(data, data._workerIndex);
+            else output = await this.emit(message, {...data, _worker: worker});
+        }
 
         //this._scope.logger.log(this, "output " +message, {confirmation: data.confirmation, output } );
 
@@ -327,7 +334,7 @@ export default class MasterCluster extends AsyncEvents {
         return this.sendMessage( "exit-worker", { result: true }, worker, false );
     }
 
-    async sendMessage( msg, data, broadcast = false, emitToMySelf = true, includeWorkerIndex = true ){
+    async sendMessage( msg, data, broadcast = false, emitToMySelf = true, includeWorkerIndex = true, forceMasterEmitToMySelf = false ){
 
         if (BROWSER) return; //no slaves in browser
 
@@ -340,13 +347,9 @@ export default class MasterCluster extends AsyncEvents {
 
         if ( this.isMaster ) {
 
-            if ( broadcast === "master"){
-
-                if (msg === "lock-set") output.push(  this.lockSet(data, data._workerIndex) );
-                else if (msg === "lock-delete") output.push( this.lockDelete(data, data._workerIndex) );
-                else output.push( this.emit(msg, {...data, _worker: process }) );
-
-            } else
+            if ( broadcast === "master")
+                emitToMySelf = true;
+            else
             if (typeof broadcast === "boolean"){
 
                 if (broadcast){
@@ -367,8 +370,6 @@ export default class MasterCluster extends AsyncEvents {
                             }
 
                         }
-
-                    emitToMySelf = true;
 
                 }
 
@@ -397,8 +398,13 @@ export default class MasterCluster extends AsyncEvents {
 
         }
 
-        if (emitToMySelf)
-            output.push(this.emit(msg, {...data, _worker: process }));
+        if (emitToMySelf || forceMasterEmitToMySelf) {
+
+            if (msg === "lock-set") output.push(  this.lockSet(data, data._workerIndex) );
+            else if (msg === "lock-delete") output.push( this.lockDelete(data, data._workerIndex) );
+            else output.push(this.emit(msg, {...data, _worker: process}));
+
+        }
 
         const finalOutput = await Promise.all(output);
         if (finalOutput.length === 1) return finalOutput[0];
