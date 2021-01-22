@@ -212,9 +212,7 @@ export default class MasterCluster extends AsyncEvents {
                      * Worker aka Slave
                      */
 
-                    process.on("message", data =>
-                        this.receivedData( process,
-                            data.msg, data.data ) );
+                    process.on("message", data =>  this.receivedData( process, data.msg, data.data ) );
 
                 }
 
@@ -299,15 +297,11 @@ export default class MasterCluster extends AsyncEvents {
 
         let output;
 
-        if (message === "lock-set") output = this.lockSet(data, worker);
-        else if (message === "lock-delete") output = this.lockDelete(data, worker);
-        else {
-            const broadcast = data.broadcast;
-            const emitToMySelf = data.emitToMySelf;
-            data.broadcast = false;
-            data.emitToMySelf = false;
-            output = await this.sendMessage(message, data, broadcast, emitToMySelf, false);
-        }
+        const broadcast = data.broadcast;
+        const emitToMySelf = data.emitToMySelf;
+        data.broadcast = false;
+        data.emitToMySelf = false;
+        output = await this.sendMessage(message, data, broadcast, emitToMySelf, false);
 
         //this._scope.logger.log(this, "output " +message, {confirmation: data.confirmation, output } );
 
@@ -321,7 +315,7 @@ export default class MasterCluster extends AsyncEvents {
     }
 
     async sendReadyMasterConfirmation(worker){
-        return this.sendMessage( "ready-master", { result: true }, worker );
+        return this.sendMessage( "ready-master", { result: true }, worker, false );
     }
 
     async sendExitWorker(){
@@ -330,7 +324,7 @@ export default class MasterCluster extends AsyncEvents {
     }
 
     async sendExitWorkerConfirmation(worker){
-        return this.sendMessage( "exit-worker", { result: true }, worker );
+        return this.sendMessage( "exit-worker", { result: true }, worker, false );
     }
 
     async sendMessage( msg, data, broadcast = false, emitToMySelf = true, includeWorkerIndex = true ){
@@ -347,7 +341,11 @@ export default class MasterCluster extends AsyncEvents {
         if ( this.isMaster ) {
 
             if ( broadcast === "master"){
-                output.push( this.emit(msg, {...data, _worker: process }) );
+
+                if (msg === "lock-set") output.push(  this.lockSet(data, data._workerIndex) );
+                else if (msg === "lock-delete") output.push( this.lockDelete(data, data._workerIndex) );
+                else output.push( this.emit(msg, {...data, _worker: process }) );
+
             } else
             if (typeof broadcast === "boolean"){
 
@@ -402,7 +400,10 @@ export default class MasterCluster extends AsyncEvents {
         if (emitToMySelf)
             output.push(this.emit(msg, {...data, _worker: process }));
 
-        return await Promise.all(output);
+        const finalOutput = await Promise.all(output);
+        if (finalOutput.length === 1) return finalOutput[0];
+        if (finalOutput.length > 1) return finalOutput;
+        return undefined;
 
     }
 

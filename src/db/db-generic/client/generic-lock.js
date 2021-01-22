@@ -18,7 +18,7 @@ class GenericLock {
                 out = {result: true}; // no masterCluster.lockSet
         }
         else
-            out = await this._scope.masterCluster.sendMessage("lock-set", { lockName, lockTime: timeout});
+            out = await this._scope.masterCluster.sendMessage("lock-set", { lockName, lockTime: timeout}, "master", false );
 
         if (out.result)
             return true;
@@ -72,7 +72,7 @@ class GenericLock {
                 out = {result: true};
         }
         else
-            out = await masterCluster.sendMessage("lock-delete", { lockName } );
+            out = await masterCluster.sendMessage("lock-delete", { lockName }, "master", false );
 
         if (out.result)
             return true;
