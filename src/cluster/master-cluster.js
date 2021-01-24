@@ -356,7 +356,7 @@ module.exports = class MasterCluster extends AsyncEvents {
                 if (broadcast){
 
                     for (const worker of this.stickyMaster.workers)
-                        if (worker && !worker._closed) {
+                        if (worker && !worker._closed && (!forceMasterEmitToMySelf || data._workerIndex !== worker.index )) {
 
                             const promise = new Promise( resolve => this["__promiseResolve" + confirmation ] = resolve );
                             output.push( promise );
