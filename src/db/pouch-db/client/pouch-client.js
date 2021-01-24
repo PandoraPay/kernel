@@ -2,9 +2,9 @@
  * pouchdb library and install find plugin
  */
 const PouchDB = require('pouchdb')
-const Exception = require.main.require("./src/helpers/exception");
-const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
-const Helper = require.main.require( "./src/helpers/helper");
+const Exception = require("../../../helpers/exception");
+const BufferHelper = require("../../../helpers/buffers/buffer-helper")
+const Helper = require( "../../../helpers/helper");
 
 const PouchMultiProcessor = require( "./pouch-multi-processor");
 const PouchCommands = require( "./pouch-commands")

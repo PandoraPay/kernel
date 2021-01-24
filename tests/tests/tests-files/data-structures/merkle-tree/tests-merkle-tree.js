@@ -1,7 +1,7 @@
-const describe = require.main.require('./tests/tests/unit-testing/describe');
-const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
-const MerkleTree = require.main.require( "./src/data-structures/merkle-tree/merkle-tree")
-const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
+const describe = require('../../../unit-testing/describe');
+const TestsHelper = require( "../../../unit-testing/tests-helper")
+const MerkleTree = require( "../../../../../src/data-structures/merkle-tree/merkle-tree")
+const CryptoHelper = require( "../../../../../src/helpers/crypto/crypto-helper");
 
 /**
  *

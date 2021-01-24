@@ -1,6 +1,6 @@
 const DBSchema = require( "../db-generic/db-schema");
-const Exception = require.main.require( "./src/helpers/exception");
-const BufferHelper = require.main.require( "./src/helpers/buffers/buffer-helper");
+const Exception = require( "../../helpers/exception");
+const BufferHelper = require( "../../helpers/buffers/buffer-helper");
 
 class PouchSchema extends DBSchema{
 

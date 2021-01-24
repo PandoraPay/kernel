@@ -1,7 +1,7 @@
 const BN = require(  'bn.js');
 
-const Exception = require.main.require( "./src/helpers/exception")
-const StringHelper = require.main.require( "./src/helpers/string-helper");
+const Exception = require( "../../helpers/exception")
+const StringHelper = require( "../../helpers/string-helper");
 
 module.exports = class MarshalData{
 

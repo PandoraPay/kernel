@@ -1,4 +1,4 @@
-const Exception = require.main.require('./src/helpers/exception');
+const Exception = require('../../../src/helpers/exception');
 const BN = require("bn.js");
 
 class DescribeList {

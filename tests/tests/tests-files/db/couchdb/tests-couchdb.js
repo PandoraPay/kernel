@@ -1,7 +1,7 @@
-const describe = require.main.require('./tests/tests/unit-testing/describe');
-const DBConstructor = require.main.require( "./src/db/db-constructor");
-const cluster = require.main.require('./src/cluster/cluster');
-const Helper = require.main.require( "./src/helpers/helper");
+const describe = require('../../../unit-testing/describe');
+const DBConstructor = require( "../../../../../src/db/db-constructor");
+const cluster = require('../../../../../src/cluster/cluster');
+const Helper = require( "../../../../../src/helpers/helper");
 
 const TestsDB = require("./../universal/tests-db")
 const TestsDBBenchmark = require( "../universal/tests-db-benchmark");

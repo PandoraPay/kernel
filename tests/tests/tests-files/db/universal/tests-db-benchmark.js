@@ -1,6 +1,6 @@
-const describe = require.main.require( './tests/tests/unit-testing/describe');
-const MarshalTests = require.main.require( "./tests/tests/tests-files/marshal/marshal-tests")
-const DBSchema = require.main.require( "./src/db/db-generic/db-schema");
+const describe = require( '../../../unit-testing/describe');
+const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
+const DBSchema = require( "../../../../../src/db/db-generic/db-schema");
 
 /**
  *

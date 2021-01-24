@@ -1,5 +1,4 @@
-const Exception = require.main.require("./src/helpers/exception");
-const Events = require.main.require( "./src/helpers/events/events");
+const Events = require( "../../helpers/events/events");
 
 module.exports = class MasterClientsCluster extends Events{
 	

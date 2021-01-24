@@ -1,8 +1,8 @@
-const describe = require.main.require('./tests/tests/unit-testing/describe');
-const TestsHelper = require.main.require("./tests/tests/unit-testing/tests-helper");
+const describe = require('../../../unit-testing/describe');
+const TestsHelper = require("../../../unit-testing/tests-helper");
 
-const HashMap = require.main.require("./src/data-structures/hash-map/hash-map");
-const HashMapElement = require.main.require("./src/data-structures/hash-map/hash-map-element");
+const HashMap = require("../../../../../src/data-structures/hash-map/hash-map");
+const HashMapElement = require("../../../../../src/data-structures/hash-map/hash-map-element");
 
 /**
  *

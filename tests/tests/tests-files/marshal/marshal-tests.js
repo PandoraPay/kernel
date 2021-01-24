@@ -1,5 +1,5 @@
-const DBSchema = require.main.require("./src/db/db-generic/db-schema");
-const DBSchemaBuffer = require.main.require("./src/db/db-generic/samples/db-schema-buffer");
+const DBSchema = require("../../../../src/db/db-generic/db-schema");
+const DBSchemaBuffer = require("../../../../src/db/db-generic/samples/db-schema-buffer");
 
 const BN = require("bn.js")
 

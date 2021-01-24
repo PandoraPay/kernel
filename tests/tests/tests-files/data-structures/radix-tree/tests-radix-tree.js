@@ -1,7 +1,7 @@
-const describe = require.main.require( './tests/tests/unit-testing/describe');
-const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
-const RadixTree = require.main.require( "./src/data-structures/radix-tree/radix-tree")
-const RadixTreeVirtual = require.main.require( "./src/data-structures/radix-tree/radix-tree-virtual");
+const describe = require( '../../../unit-testing/describe');
+const TestsHelper = require( "../../../unit-testing/tests-helper")
+const RadixTree = require( "../../../../../src/data-structures/radix-tree/radix-tree")
+const RadixTreeVirtual = require( "../../../../../src/data-structures/radix-tree/radix-tree-virtual");
 
 /**
  *

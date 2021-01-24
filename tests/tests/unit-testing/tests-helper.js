@@ -1,6 +1,6 @@
-const Helper = require.main.require("./src/helpers/helper")
-const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
-const MarshalData = require.main.require("./src/marshal/data/marshal-data");
+const Helper = require("../../../src/helpers/helper")
+const BufferHelper = require("../../../src/helpers/buffers/buffer-helper")
+const MarshalData = require("../../../src/marshal/data/marshal-data");
 
 module.exports = class TestsHelper {
 

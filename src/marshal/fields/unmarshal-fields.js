@@ -1,7 +1,7 @@
 const MarshalData = require( "../data/marshal-data");
-const Exception = require.main.require("./src/helpers/exception");
-const BufferReader = require.main.require( "./src/helpers/buffers/buffer-reader");
-const MarshalHelper = require( "./../helpers/marshal-helper");
+const Exception = require("../../helpers/exception");
+const BufferReader = require( "../../helpers/buffers/buffer-reader");
+const MarshalHelper = require( "../helpers/marshal-helper");
 
 module.exports = class UnmarshalFields {
 

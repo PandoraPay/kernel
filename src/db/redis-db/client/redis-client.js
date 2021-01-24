@@ -1,8 +1,8 @@
 const redis = require("redis");
 const bluebird = require("bluebird");
 
-const Events = require.main.require( "./src/helpers/events/events")
-const Exception = require.main.require("./src/helpers/exception");
+const Events = require( "../../../helpers/events/events")
+const Exception = require("../../../helpers/exception");
 
 const RedisMultiProcessor = require( "./redis-multi-processor")
 const RedisCommands = require("./redis-commands")

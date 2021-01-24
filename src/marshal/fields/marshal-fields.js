@@ -1,5 +1,5 @@
 const MarshalData = require(  "../data/marshal-data");
-const Exception = require.main.require( "./src/helpers/exception");
+const Exception = require( "../../helpers/exception");
 const MarshalHelper = require( "./../helpers/marshal-helper");
 
 module.exports = class MarshalFields {

@@ -4,8 +4,8 @@ const child_process = require('child_process');
 const path = require('path');
 
 const Exception = require("../exception");
-const Helper = require.main.require("./src/helpers/helper")
-const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
+const Helper = require("../../helpers/helper")
+const BufferHelper = require("../../helpers/buffers/buffer-helper")
 
 /**
     Scope

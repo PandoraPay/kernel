@@ -1,7 +1,7 @@
-const Marshal  = require.main.require( "./src/marshal/marshal")
-const Exception  = require.main.require( "./src/helpers/exception");
-const Helper  = require.main.require( "./src/helpers/helper")
-const MarshalData  = require.main.require( "./src/marshal/data/marshal-data")
+const Marshal  = require( "./../../marshal/marshal")
+const Exception  = require( "../../helpers/exception");
+const Helper  = require( "../../helpers/helper")
+const MarshalData  = require( "./../../marshal/data/marshal-data")
 
 module.exports = class DBSchema extends Marshal{
 

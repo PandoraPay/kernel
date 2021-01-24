@@ -1,5 +1,5 @@
-const describe = require.main.require('./tests/tests/unit-testing/describe');
-const {asyncTimeout} = require.main.require("./src/helpers/async-interval")
+const describe = require('../../tests/unit-testing/describe');
+const {asyncTimeout} = require("../../../src/helpers/async-interval")
 
 module.exports = function run () {
 

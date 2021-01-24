@@ -1,8 +1,8 @@
-const describe = require.main.require('./tests/tests/unit-testing/describe');
-const MarshalData = require.main.require("./src/marshal/data/marshal-data");
+const describe = require('../../unit-testing/describe');
+const MarshalData = require("../../../../src/marshal/data/marshal-data");
 const BN = require('bn.js');
-const TestsHelper = require.main.require("./tests/tests/unit-testing/tests-helper");
-const BufferReader = require.main.require("./src/helpers/buffers/buffer-reader");
+const TestsHelper = require("../../unit-testing/tests-helper");
+const BufferReader = require("../../../../src/helpers/buffers/buffer-reader");
 
 /**
  *

@@ -1,5 +1,5 @@
 const BN = require( "bn.js")
-const Exception = require.main.require( "./src/helpers/exception");
+const Exception = require( "../../helpers/exception");
 
 const MarshalHelper = require( "./../helpers/marshal-helper")
 const MarshalFields = require( "./marshal-fields");

@@ -11,7 +11,7 @@ const ArgvMasterCluster = require( "./modules/master-cluster/argv-master-cluster
 const ArgvHeartBeat = require( "./modules/heart-beat/argv-heart-beat")
 const ArgvBansManager = require( "./modules/bans-manager/argv-bans-manager")
 
-const Helper = require.main.require( "./src/helpers/helper")
+const Helper = require( "../../src/helpers/helper")
 
 /**
  *

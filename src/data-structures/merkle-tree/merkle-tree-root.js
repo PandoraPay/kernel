@@ -1,4 +1,4 @@
-const Helper = require.main.require( "./src/helpers/helper");
+const Helper = require( "../../helpers/helper");
 const MerkleTreeNode = require( "./merkle-tree-node");
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum");
 

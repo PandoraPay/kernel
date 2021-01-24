@@ -1,7 +1,7 @@
-const describe = require.main.require( './tests/tests/unit-testing/describe');
-const MarshalTests = require.main.require( "./tests/tests/tests-files/marshal/marshal-tests")
-const SchemaTests = require.main.require( "./tests/tests/tests-files/marshal/tests-schema")
-const Helper = require.main.require( "./src/helpers/helper")
+const describe = require( '../../../unit-testing/describe');
+const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
+const SchemaTests = require( "../../../tests-files/marshal/tests-schema")
+const Helper = require( "../../../../../src/helpers/helper")
 
 /**
  *

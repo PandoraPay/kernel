@@ -1,5 +1,5 @@
-const { setAsyncInterval, clearAsyncInterval } = require.main.require("./src/helpers/async-interval")
-const Exception = require.main.require("./src/helpers/exception");
+const { setAsyncInterval, clearAsyncInterval } = require("../helpers/async-interval")
+const Exception = require("../helpers/exception");
 
 /**
  * To avoid linear growth with the number of data, the heart beat was introduced.

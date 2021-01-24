@@ -1,6 +1,6 @@
-const Helper = require.main.require( "./src/helpers/helper");
-const DBSchema = require.main.require( "./src/db/db-generic/db-schema")
-const Exception = require.main.require("./src/helpers/exception");
+const Helper = require( "../../helpers/helper");
+const DBSchema = require( "../../db/db-generic/db-schema")
+const Exception = require("../../helpers/exception");
 
 const MarshalFields = require( "../../marshal/fields/marshal-fields");
 

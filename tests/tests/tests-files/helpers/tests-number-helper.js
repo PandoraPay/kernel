@@ -1,7 +1,7 @@
-const NumberHelper = require.main.require("./src/helpers/number-helper")
-const BufferReader = require.main.require("./src/helpers/buffers/buffer-reader")
+const NumberHelper = require("../../../../src/helpers/number-helper")
+const BufferReader = require("../../../../src/helpers/buffers/buffer-reader")
 
-const describe = require.main.require('./tests/tests/unit-testing/describe');
+const describe = require('../../unit-testing/describe');
 
 module.exports = async function run(){
 

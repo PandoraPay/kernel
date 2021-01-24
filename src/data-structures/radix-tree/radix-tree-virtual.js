@@ -1,4 +1,4 @@
-const Exception = require.main.require("./src/helpers/exception");
+const Exception = require("../../helpers/exception");
 
 const RadixTree = require("./radix-tree");
 const RadixTreeNode = require( "./radix-tree-node");

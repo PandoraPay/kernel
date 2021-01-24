@@ -1,4 +1,4 @@
-const Exception = require.main.require("./src/helpers/exception");
+const Exception = require("../../helpers/exception");
 
 const GenericDatabase = require( "../db-generic/generic-database");
 const RedisSchema = require( "./redis-schema");

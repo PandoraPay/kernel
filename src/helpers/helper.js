@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Exception = require.main.require("./src/helpers/exception");
+const Exception = require("../helpers/exception");
 
 module.exports = class Helper{
 

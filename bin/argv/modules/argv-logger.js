@@ -1,4 +1,4 @@
-const LoggerEnum = require.main.require("./src/helpers/logger/logger-enum");
+const LoggerEnum = require("../../../src/helpers/logger/logger-enum");
 
 const path = require('path');
 

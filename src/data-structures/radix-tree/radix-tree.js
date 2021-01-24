@@ -1,6 +1,6 @@
-const Exception = require.main.require("./src/helpers/exception");
-const Helper = require.main.require( "./src/helpers/helper");
-const Marshal = require.main.require( "./src/marshal/marshal");
+const Exception = require("../../helpers/exception");
+const Helper = require( "../../helpers/helper");
+const Marshal = require( "../../marshal/marshal");
 
 const DBSchema = require("../../db/db-generic/db-schema");
 const RadixTreeRoot = require( "./radix-tree-root")

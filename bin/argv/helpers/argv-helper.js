@@ -1,4 +1,4 @@
-const Helper = require.main.require( "./src/helpers/helper")
+const Helper = require( "../../../src/helpers/helper")
 const ArgvProcessor = require("./argv-processor")
 
 module.exports = class ArgvHelper{

@@ -1,5 +1,5 @@
-const EnumHelper = require.main.require("./src/helpers/enum-helper")
-const describe = require.main.require('./tests/tests/unit-testing/describe');
+const EnumHelper = require("../../../../src/helpers/enum-helper")
+const describe = require('../../unit-testing/describe');
 
 module.exports = async function run(){
 

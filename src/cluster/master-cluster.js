@@ -2,12 +2,12 @@ const AsyncEvents = require( "async-events");
 const cluster = require('./cluster');
 
 const ClientsCluster = require("./clients/clients-cluster")
-const StringHelper  = require.main.require( "./src/helpers/string-helper");
+const StringHelper  = require( "../helpers/string-helper");
 
-const Helper = require.main.require( "./src/helpers/helper");
-const Exception = require.main.require("./src/helpers/exception");
+const Helper = require( "../helpers/helper");
+const Exception = require("../helpers/exception");
 
-const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
+const BufferHelper = require("../helpers/buffers/buffer-helper")
 
 const ServerCluster =  BROWSER ? undefined : require( "./server/server-cluster" );
 

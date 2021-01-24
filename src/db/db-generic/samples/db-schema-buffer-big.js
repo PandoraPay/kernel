@@ -1,6 +1,6 @@
-const Helper = require.main.require( "./src/helpers/helper");
+const Helper = require( "../../../helpers/helper");
 const DBSchema = require( "../db-schema");
-const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
+const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 
 const DBSchemaBuffer = require( "./db-schema-buffer" );
 

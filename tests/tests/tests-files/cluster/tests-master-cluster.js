@@ -1,7 +1,7 @@
-const {asyncTimeout} = require.main.require("./src/helpers/async-interval")
-const describe = require.main.require( './tests/tests/unit-testing/describe');
-const MasterCluster = require.main.require("./src/cluster/master-cluster")
-const Helper = require.main.require( "./src/helpers/helper");
+const {asyncTimeout} = require("../../../../src/helpers/async-interval")
+const describe = require( '../../unit-testing/describe');
+const MasterCluster = require("../../../../src/cluster/master-cluster")
+const Helper = require( "../../../../src/helpers/helper");
 
 module.exports = function run (){
 

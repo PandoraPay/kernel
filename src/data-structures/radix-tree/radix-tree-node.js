@@ -1,9 +1,9 @@
-const Helper = require.main.require( "./src/helpers/helper");
-const DBSchema = require.main.require("./src/db/db-generic/db-schema")
-const Exception = require.main.require("./src/helpers/exception");
-const DBSchemaBuffer = require.main.require( "./src/db/db-generic/samples/db-schema-buffer" );
-const DBSchemaString = require.main.require("./src/db/db-generic/samples/db-schema-string");
-const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
+const Helper = require( "../../helpers/helper");
+const DBSchema = require("../../db/db-generic/db-schema")
+const Exception = require("../../helpers/exception");
+const DBSchemaBuffer = require( "../../db/db-generic/samples/db-schema-buffer" );
+const DBSchemaString = require("../../db/db-generic/samples/db-schema-string");
+const CryptoHelper = require( "../../helpers/crypto/crypto-helper");
 
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
 

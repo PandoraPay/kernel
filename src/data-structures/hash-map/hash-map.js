@@ -1,6 +1,6 @@
 const DBSchema = require("../../db/db-generic/db-schema");
-const Helper = require.main.require( "./src/helpers/helper");
-const Exception = require.main.require("./src/helpers/exception");
+const Helper = require( "../../helpers/helper");
+const Exception = require("../../helpers/exception");
 
 const HashMapElement = require( "./hash-map-element")
 

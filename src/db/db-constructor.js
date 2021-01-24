@@ -1,7 +1,7 @@
 const PouchDB = require( "./pouch-db/pouch-db");
 
-const Exception = require.main.require( "./src/helpers/exception");
-const Helper = require.main.require( "./src/helpers/helper")
+const Exception = require( "../helpers/exception");
+const Helper = require( "../helpers/helper")
 
 const RedisDB = BROWSER ? undefined : require( "./redis-db/redis-db" );
 

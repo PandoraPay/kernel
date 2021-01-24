@@ -1,8 +1,8 @@
 const AsyncEvents = require( "async-events");
 
-const Argv = require.main.require("./bin/argv/argv");
-const Tests = require.main.require( './tests/tests/tests-index');
-const RunTests = require.main.require( "./tests/tests/run-tests");
+const Argv = require("../bin/argv/argv");
+const Tests = require( '../tests/tests/tests-index');
+const RunTests = require( "../tests/tests/run-tests");
 
 const Logger = require( "./helpers/logger/logger");
 const Readline = require( "./helpers/readline/readline");

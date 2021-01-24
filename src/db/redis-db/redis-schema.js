@@ -1,5 +1,5 @@
 const DBSchema = require( "../db-generic/db-schema" );
-const Exception = require.main.require("./src/helpers/exception");
+const Exception = require("../../helpers/exception");
 
 module.exports = class RedisSchema extends DBSchema{
 

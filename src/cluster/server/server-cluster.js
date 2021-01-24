@@ -3,7 +3,7 @@
  *          argv, logger, db, masterCluster
  */
 
-const Events = require.main.require( "./src/helpers/events/events");
+const Events = require( "../../helpers/events/events");
 const HttpServer = require( "./http-server" )
 
 module.exports = class MasterServerCluster  extends Events {

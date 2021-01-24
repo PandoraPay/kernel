@@ -1,5 +1,5 @@
-const Helper = require.main.require( "./src/helpers/helper" )
-const NetworkTypeEnum = require.main.require("./bin/argv/modules/network-type-enum");
+const Helper = require( "../../../src/helpers/helper" )
+const NetworkTypeEnum = require("../../../bin/argv/modules/network-type-enum");
 
 module.exports = (argv) => Helper.merge( argv, {
 
