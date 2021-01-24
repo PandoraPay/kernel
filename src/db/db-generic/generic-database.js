@@ -2,12 +2,11 @@
  * It uses promises to make it sure the connection to the Database was established
  */
 
-import Exception from "src/helpers/exception"
-import Marshal from "src/marshal/marshal";
-import DBSchema from "./db-schema";
-import StringHelper from "src/helpers/string-helper";
+const Exception = require.main.require( "./src/helpers/exception")
+const Marshal = require.main.require("./src/marshal/marshal");
+const DBSchema = require("./db-schema");
 
-export default class GenericDatabase{
+module.exports = class GenericDatabase{
 
     constructor(scope){
 

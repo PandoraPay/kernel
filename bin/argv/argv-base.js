@@ -1,7 +1,7 @@
-import ArgvHelper from "./helpers/argv-helper";
-import ArgvProcessor from "./helpers/argv-processor";
+const ArgvHelper = require("./helpers/argv-helper");
+const ArgvProcessor = require("./helpers/argv-processor");
 
-export default {
+module.exports = {
 
     verbose: false,
 

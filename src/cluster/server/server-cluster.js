@@ -3,10 +3,10 @@
  *          argv, logger, db, masterCluster
  */
 
-import Events from "src/helpers/events/events"
-import HttpServer from "./http-server"
+const Events = require.main.require( "./src/helpers/events/events");
+const HttpServer = require( "./http-server" )
 
-export default class MasterServerCluster  extends Events {
+module.exports = class MasterServerCluster  extends Events {
 
 	constructor(scope)	{
 

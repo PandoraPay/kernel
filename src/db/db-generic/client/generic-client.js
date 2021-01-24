@@ -1,7 +1,7 @@
-import GenericLock from "./generic-lock";
-import GenericLockUnsync from "./generic-lock-unsync"
+const GenericLock = require("./generic-lock");
+const GenericLockUnsync = require( "./generic-lock-unsync")
 
-export default class GenericClient{
+module.exports = class GenericClient{
 
     constructor(scope){
         

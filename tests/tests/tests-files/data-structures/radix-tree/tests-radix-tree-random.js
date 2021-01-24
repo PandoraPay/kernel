@@ -1,8 +1,8 @@
-import describe from 'tests/tests/unit-testing/describe';
-import TestsHelper from "tests/tests/unit-testing/tests-helper"
-import RadixTree from "src/data-structures/radix-tree/radix-tree"
-import MarshalData from "src/marshal/data/marshal-data"
-import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual";
+const describe = require.main.require( './tests/tests/unit-testing/describe');
+const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
+const RadixTree = require.main.require( "./src/data-structures/radix-tree/radix-tree")
+const MarshalData = require.main.require( "./src/marshal/data/marshal-data")
+const RadixTreeVirtual = require.main.require( "./src/data-structures/radix-tree/radix-tree-virtual");
 
 /**
  *
@@ -10,7 +10,7 @@ import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual"
  *
  */
 
-export default async function run (selectedDB) {
+module.exports = async function run (selectedDB) {
 
     const randomCount = selectedDB === 'couch' ? 200 : 3000;
 

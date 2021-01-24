@@ -1,8 +1,8 @@
-import Helper from "src/helpers/helper"
-import BufferHelper from "src/helpers/buffers/buffer-helper"
-import MarshalData from "src/marshal/data/marshal-data"
+const Helper = require.main.require("./src/helpers/helper")
+const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
+const MarshalData = require.main.require("./src/marshal/data/marshal-data");
 
-export default class TestsHelper {
+module.exports = class TestsHelper {
 
     static randomNumbers(a = 0, b = Number.MAX_SAFE_INTEGER, count = 0, float = false){
 

@@ -1,6 +1,6 @@
-import MarshalData from "src/marshal/data/marshal-data"
+const MarshalData = require( "../marshal/data/marshal-data" )
 
-export default class NumberHelper{
+module.exports = class NumberHelper{
 
     static marshalNumber(num){
         return MarshalData.marshalNumber(num)

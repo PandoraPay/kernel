@@ -1,4 +1,4 @@
-import describe from './unit-testing/describe-list';
+const describe = require('./unit-testing/describe-list');
 
 const  fs = require('fs'),
        path = require('path');
@@ -9,7 +9,7 @@ const  fs = require('fs'),
  */
 
 
-export default async function runTests( scope ){
+module.exports = async function runTests( scope ){
 
     /**
      * The describe.js library doesn't really support promises. A simple library which supports Promises was written that behave in a similar way

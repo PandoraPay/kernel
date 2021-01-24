@@ -1,5 +1,5 @@
-const library = require("./index").default;
+const library = require("./index");
 
 window.library = library;
 
-export default library;
+module.exports = library;

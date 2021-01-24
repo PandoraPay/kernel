@@ -1,4 +1,4 @@
-export default class BrowserCluster {
+module.exports = class BrowserCluster {
 
     constructor() {
 

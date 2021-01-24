@@ -1,5 +1,5 @@
-import Exception from "src/helpers/exception";
-import BN from "bn.js"
+const Exception = require.main.require('./src/helpers/exception');
+const BN = require("bn.js");
 
 class DescribeList {
 
@@ -271,4 +271,4 @@ class DescribeList {
 
 }
 
-export default new DescribeList();
+module.exports = new DescribeList();

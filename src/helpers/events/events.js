@@ -1,6 +1,6 @@
 const EventsBasic = require('events');
 
-export default class Events extends EventsBasic{
+module.exports = class Events extends EventsBasic{
 
     on(){
 

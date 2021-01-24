@@ -1,7 +1,7 @@
-import Helper from "src/helpers/helper"
-import ArgvProcessor from "./argv-processor"
+const Helper = require.main.require( "./src/helpers/helper")
+const ArgvProcessor = require("./argv-processor")
 
-export default class ArgvHelper{
+module.exports = class ArgvHelper{
 
     static importArguments(argv1, argv2){
 

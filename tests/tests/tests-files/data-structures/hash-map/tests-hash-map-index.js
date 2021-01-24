@@ -1,7 +1,7 @@
-import HashMap from "src/data-structures/hash-map/hash-map"
-import HashVirtualMap from "src/data-structures/hash-map/hash-virtual-map"
+const HashMap = require.main.require("./src/data-structures/hash-map/hash-map");
+const HashVirtualMap = require.main.require( "./src/data-structures/hash-map/hash-virtual-map")
 
-import TestsHashMap from "./tests-hash-map"
+const TestsHashMap = require( "./tests-hash-map")
 
 /**
  *
@@ -9,7 +9,7 @@ import TestsHashMap from "./tests-hash-map"
  *
  */
 
-export default async function run (scope) {
+module.exports = async function run (scope) {
 
     const hashmap = new HashMap(scope);
     await TestsHashMap(hashmap, "", scope.argv.dbPublic.selectedDB);

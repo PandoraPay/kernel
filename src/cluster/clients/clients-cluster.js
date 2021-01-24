@@ -1,7 +1,7 @@
-import Exception from "src/helpers/exception"
-import Events from "src/helpers/events/events"
+const Exception = require.main.require("./src/helpers/exception");
+const Events = require.main.require( "./src/helpers/events/events");
 
-export default class MasterClientsCluster extends Events{
+module.exports = class MasterClientsCluster extends Events{
 	
 	constructor(scope)	{
 

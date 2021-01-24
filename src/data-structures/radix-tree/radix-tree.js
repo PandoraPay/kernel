@@ -1,12 +1,13 @@
-import DBSchema from "../../db/db-generic/db-schema";
-import Helper from "../../helpers/helper";
-import RadixTreeRoot from "./radix-tree-root"
-import Exception from "src/helpers/exception";
-import RadixTreeNodeTypeEnum from "./radix-tree-node-type-enum";
-import RadixTreeNode from "./radix-tree-node";
-import Marshal from "src/marshal/marshal";
+const Exception = require.main.require("./src/helpers/exception");
+const Helper = require.main.require( "./src/helpers/helper");
+const Marshal = require.main.require( "./src/marshal/marshal");
 
-export default class RadixTree extends DBSchema {
+const DBSchema = require("../../db/db-generic/db-schema");
+const RadixTreeRoot = require( "./radix-tree-root")
+const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
+const RadixTreeNode = require( "./radix-tree-node");
+
+module.exports = class RadixTree extends DBSchema {
 
     constructor(scope, schema, data, type, creationOptions) {
 

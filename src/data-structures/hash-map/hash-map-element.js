@@ -1,8 +1,8 @@
-import DBSchema from "../../db/db-generic/db-schema";
-import Helper from "../../helpers/helper";
-import Exception from "src/helpers/exception";
+const DBSchema = require( "../../db/db-generic/db-schema" );
+const Helper = require.main.require( "./src/helpers/helper");
+const Exception = require.main.require("./src/helpers/exception");
 
-export default class HashMapElement extends DBSchema {
+module.exports = class HashMapElement extends DBSchema {
 
     constructor(scope, schema, data, type, creationOptions) {
 

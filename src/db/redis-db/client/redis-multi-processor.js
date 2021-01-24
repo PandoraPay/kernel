@@ -1,7 +1,7 @@
-import RedisCommands from "./redis-commands"
-import GenericMultiProcessor from "./../../db-generic/client/generic-multi-processor"
+const RedisCommands = require("./redis-commands")
+const GenericMultiProcessor = require( "./../../db-generic/client/generic-multi-processor")
 
-export default class RedisMultiProcessor extends GenericMultiProcessor {
+module.exports = class RedisMultiProcessor extends GenericMultiProcessor {
 
 
     get _commands() {

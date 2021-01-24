@@ -1,4 +1,4 @@
-export default [
+module.exports = [
     "flushdb",
     "get","set", "exists", "del", "incrby", "expire", "scan", "keys",
     "hget", "hdel", "hgetall", "hincrby", "hlen", "hset", "hexists", "hscan",

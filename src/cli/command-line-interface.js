@@ -1,5 +1,5 @@
 
-export default class CommandLineInterface {
+module.exports = class CommandLineInterface {
 
     constructor(scope){
 
@@ -43,7 +43,7 @@ export default class CommandLineInterface {
 
     askInput(title, defaultValue){
 
-        if (BROWSER){
+        if ( BROWSER ){
 
             const out = prompt(title, defaultValue);
             return out;
@@ -54,7 +54,8 @@ export default class CommandLineInterface {
     }
 
     askConfirmation(title){
-        if (BROWSER){
+
+        if ( BROWSER ){
 
             const out = confirm(title);
             return out;

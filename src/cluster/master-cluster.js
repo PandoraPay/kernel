@@ -1,22 +1,22 @@
-import cluster from 'src/cluster/cluster';
+const AsyncEvents = require( "async-events");
+const cluster = require('./cluster');
 
-import ClientsCluster from "./clients/clients-cluster"
-import StringHelper from "src/helpers/string-helper";
+const ClientsCluster = require("./clients/clients-cluster")
+const StringHelper  = require.main.require( "./src/helpers/string-helper");
 
-import Helper from "src/helpers/helper"
-import Exception from "../helpers/exception";
+const Helper = require.main.require( "./src/helpers/helper");
+const Exception = require.main.require("./src/helpers/exception");
 
-import AsyncEvents from "async-events";
-import BufferHelper from "../helpers/buffers/buffer-helper";
+const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
 
-const ServerCluster = BROWSER ? undefined : require( "./server/server-cluster" ).default;
+const ServerCluster =  BROWSER ? undefined : require( "./server/server-cluster" );
 
 /**
  * scope
  *          argv, logger, db, httpServer, httpServerClass
  */
 
-export default class MasterCluster extends AsyncEvents {
+module.exports = class MasterCluster extends AsyncEvents {
 
     constructor(scope, applyConstructor = true){
 
@@ -100,7 +100,7 @@ export default class MasterCluster extends AsyncEvents {
 
         let workerId;
 
-        if (!BROWSER) {
+        if ( !BROWSER ) {
             workerId = isMaster ? 'master' : Number.parseInt(process.env.SLAVE_INDEX);
             if (!isMaster ) process.index = "master";
         } else {
@@ -337,7 +337,7 @@ export default class MasterCluster extends AsyncEvents {
 
     async sendMessage( msg, data, broadcast = false, emitToMySelf = true, includeWorkerIndex = true, forceMasterEmitToMySelf = false ){
 
-        if (BROWSER) return; //no slaves in browser
+        if ( BROWSER) return; //no slaves in browser
 
         if (includeWorkerIndex)
             data._workerIndex = this.workerId;

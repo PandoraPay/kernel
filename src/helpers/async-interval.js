@@ -1,17 +1,9 @@
-import Exception from "../helpers/exception";
-import Helper from "src/helpers/helper"
+const Exception = require( "../helpers/exception" );
+const Helper = require( "../helpers/helper");
 
 const intervals = {};
 let intervalsCount = 0;
 
-export function setAsyncInterval(cb, timeout, id  = ++intervalsCount){
-
-    intervals[id] = true;
-
-    _asyncInterval(id, cb, timeout);
-
-    return id;
-}
 
 async function _asyncInterval(id, cb, timeout){
 
@@ -30,34 +22,46 @@ async function _asyncInterval(id, cb, timeout){
         }
 
     }
-
 }
 
-export async function clearAsyncInterval(id){
+module.exports = {
 
-    if (!id) return;
-    if (!intervals[id]) return;
+     setAsyncInterval(cb, timeout, id  = ++intervalsCount){
 
-    delete intervals[id];
+        intervals[id] = true;
 
-}
+        _asyncInterval(id, cb, timeout);
 
-/**
- * it will return the callback answer
- * @param cb
- * @param timeout
- * @returns {Promise<any>}
- */
-export function asyncTimeout(cb, timeout = 1000 ){
+        return id;
+    },
 
-    return new Promise( resolve => {
+    async clearAsyncInterval(id){
 
-        setTimeout( () => resolve ( cb() ), timeout );
+        if (!id) return;
+        if (!intervals[id]) return;
 
-    })
+        delete intervals[id];
 
-}
+    },
 
-export function clearAsyncTimeout( id ) {
+    /**
+     * it will return the callback answer
+     * @param cb
+     * @param timeout
+     * @returns {Promise<any>}
+     */
+    asyncTimeout(cb, timeout = 1000 ){
+
+        return new Promise( resolve => {
+
+            setTimeout( () => resolve ( cb() ), timeout );
+
+        })
+
+    },
+
+    clearAsyncTimeout( id ) {
+
+    }
 
 }

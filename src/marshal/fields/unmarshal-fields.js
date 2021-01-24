@@ -1,9 +1,9 @@
-import MarshalData from "../data/marshal-data";
-import Exception from "src/helpers/exception";
-import BufferReader from "src/helpers/buffers/buffer-reader";
-import MarshalHelper from "./../helpers/marshal-helper";
+const MarshalData = require( "../data/marshal-data");
+const Exception = require.main.require("./src/helpers/exception");
+const BufferReader = require.main.require( "./src/helpers/buffers/buffer-reader");
+const MarshalHelper = require( "./../helpers/marshal-helper");
 
-export default class UnmarshalFields {
+module.exports = class UnmarshalFields {
 
     /**
      * BIG NUMBER

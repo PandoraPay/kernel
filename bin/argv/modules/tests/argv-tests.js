@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     enabled: false,
     directory: 'tests/tests-files',
@@ -7,7 +7,7 @@ export default {
     runOnlySpecificTestFilename: '',
 
     isEnabled(){
-        return process.env.tests && this.enabled;
+        return this.enabled;
     }
 
 }

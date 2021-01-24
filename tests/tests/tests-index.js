@@ -1,21 +1,21 @@
-import ArgvTest from "./argv/argv-test";
+const ArgvTest = require("./argv/argv-test");
 
-import TestsSimple from "./tests-files/tests-simple";
-import TestsMarshal from "./tests-files/marshal/tests-marshal";
-import TestsMarshalData from "./tests-files/marshal/tests-marshal-data";
+const TestsSimple = require( "./tests-files/tests-simple");
+const TestsMarshal = require( "./tests-files/marshal/tests-marshal");
+const TestsMarshalData = require( "./tests-files/marshal/tests-marshal-data");
 
-import TestsHelpers from "./tests-files/helpers/tests-helpers";
-import TestsMasterCluster from "./tests-files/cluster/tests-master-cluster";
+const TestsHelpers = require( "./tests-files/helpers/tests-helpers");
+const TestsMasterCluster = require( "./tests-files/cluster/tests-master-cluster");
 
-import TestsCouch from "./tests-files/db/couchdb/tests-couchdb";
-import TestsPouch from "./tests-files/db/pouchdb/tests-pouchdb";
-import TestsRedis from "./tests-files/db/redis/tests-redis";
+const TestsCouch = require( "./tests-files/db/couchdb/tests-couchdb");
+const TestsPouch = require( "./tests-files/db/pouchdb/tests-pouchdb");
+const TestsRedis = require( "./tests-files/db/redis/tests-redis");
 
-import TestsMerkleTree from "./tests-files/data-structures/merkle-tree/tests-merkle-tree";
-import TestsRadixTree from "./tests-files/data-structures/radix-tree/tests-radix-tree-index";
-import TestsHashMap from "./tests-files/data-structures/hash-map/tests-hash-map-index";
+const TestsMerkleTree = require( "./tests-files/data-structures/merkle-tree/tests-merkle-tree");
+const TestsRadixTree = require( "./tests-files/data-structures/radix-tree/tests-radix-tree-index");
+const TestsHashMap = require( "./tests-files/data-structures/hash-map/tests-hash-map-index");
 
-export default {
+module.exports = {
 
     argvTests: ArgvTest,
 

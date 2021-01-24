@@ -1,4 +1,5 @@
-import cluster from 'src/cluster/cluster';
+const cluster = require( './../cluster');
+
 const sticky = require('sticky-session');
 const path = require('path');
 const cors = require('cors');
@@ -10,7 +11,7 @@ const bodyParser = require('body-parser');
  *          argv, logger, HttpServerRouter, SocketServer, SocketServerRouter
  */
 
-export default class HttpServer {
+module.exports = class HttpServer {
 
     constructor( scope ){
 

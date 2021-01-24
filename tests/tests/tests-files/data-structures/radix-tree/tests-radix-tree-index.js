@@ -1,5 +1,5 @@
-import TestsRadixTree from "./tests-radix-tree"
-import TestsRadixTreeRandom from "./tests-radix-tree-random"
+const TestsRadixTree = require( "./tests-radix-tree")
+const TestsRadixTreeRandom = require( "./tests-radix-tree-random")
 
 /**
  *
@@ -7,7 +7,7 @@ import TestsRadixTreeRandom from "./tests-radix-tree-random"
  *
  */
 
-export default async function run (scope) {
+module.exports = async function run (scope) {
 
     await TestsRadixTree()
     await TestsRadixTreeRandom(scope.argv.dbPublic.selectedDB)

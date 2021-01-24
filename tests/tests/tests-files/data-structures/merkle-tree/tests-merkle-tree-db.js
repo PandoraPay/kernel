@@ -1,7 +1,6 @@
-import describe from 'tests/tests/unit-testing/describe';
-import TestsHelper from "tests/tests/unit-testing/tests-helper"
-import MerkleTree from "src/data-structures/merkle-tree/merkle-tree"
-import Helper from "src/helpers/helper"
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
+const MerkleTree = require.main.require( "./src/data-structures/merkle-tree/merkle-tree")
 
 /**
  *
@@ -9,7 +8,7 @@ import Helper from "src/helpers/helper"
  *
  */
 
-export default async function run ( dbType) {
+module.exports = async function run ( dbType) {
 
     describe(() => `${dbType} Testing Save Merkle Tree`, {
 

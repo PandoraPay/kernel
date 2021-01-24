@@ -1,4 +1,4 @@
-export default class ArrayHelper {
+module.exports = class ArrayHelper {
 
     static isByteArray(array, length = 0) {
 

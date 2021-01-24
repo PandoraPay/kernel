@@ -1,6 +1,6 @@
-import MarshalHelper from "../helpers/marshal-helper";
+const MarshalHelper = require( "../helpers/marshal-helper");
 
-export default class MarshalValidationPreSet{
+module.exports = class MarshalValidationPreSet{
 
     static preset_string(value, schemaField){
 

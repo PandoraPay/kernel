@@ -1,6 +1,6 @@
-import DBSchema from "../db-generic/db-schema";
-import Exception from "src/helpers/exception";
-import BufferHelper from "../../helpers/buffers/buffer-helper";
+const DBSchema = require( "../db-generic/db-schema");
+const Exception = require.main.require( "./src/helpers/exception");
+const BufferHelper = require.main.require( "./src/helpers/buffers/buffer-helper");
 
 class PouchSchema extends DBSchema{
 
@@ -62,4 +62,4 @@ class PouchSchema extends DBSchema{
 
 }
 
-export default PouchSchema
+module.exports = PouchSchema

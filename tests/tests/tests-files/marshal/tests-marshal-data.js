@@ -1,10 +1,8 @@
-import describe from 'tests/tests/unit-testing/describe';
-import MarshalData from "src/marshal/data/marshal-data";
-import MarshalValidationPreSet from "src/marshal/fields/marshal-validation-pre-set"
-
-import BN from 'bn.js';
-import TestsHelper from "tests/tests/unit-testing/tests-helper";
-import BufferReader from "src/helpers/buffers/buffer-reader";
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const MarshalData = require.main.require("./src/marshal/data/marshal-data");
+const BN = require('bn.js');
+const TestsHelper = require.main.require("./tests/tests/unit-testing/tests-helper");
+const BufferReader = require.main.require("./src/helpers/buffers/buffer-reader");
 
 /**
  *
@@ -12,7 +10,7 @@ import BufferReader from "src/helpers/buffers/buffer-reader";
  *
  */
 
-export default function run () {
+module.exports = function run () {
 
     describe("Marshal Data", {
 

@@ -1,4 +1,4 @@
-import sanitizeHtml from "sanitize-html";
+const sanitizeHtml = require("sanitize-html");
 
 class StringHelper {
 
@@ -161,4 +161,4 @@ class StringHelper {
 }
 
 
-export default new StringHelper();
+module.exports = new StringHelper();

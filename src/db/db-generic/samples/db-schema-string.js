@@ -1,6 +1,6 @@
-import DBSchema from "../db-schema";
+const DBSchema = require( "../db-schema" );
 
-export default class DBSchemaString extends DBSchema {
+module.exports = class DBSchemaString extends DBSchema {
 
     constructor(scope, schema,  data, type, creationOptions){
 

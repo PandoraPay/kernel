@@ -1,7 +1,7 @@
-import Helper from "src/helpers/helper"
-import NetworkTypeEnum from "bin/argv/modules/network-type-enum";
+const Helper = require.main.require( "./src/helpers/helper" )
+const NetworkTypeEnum = require.main.require("./bin/argv/modules/network-type-enum");
 
-export default (argv) => Helper.merge( argv, {
+module.exports = (argv) => Helper.merge( argv, {
 
     dbPublic: {
 

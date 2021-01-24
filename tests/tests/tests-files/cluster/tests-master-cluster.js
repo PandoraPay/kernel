@@ -1,9 +1,9 @@
-import {asyncTimeout} from "src/helpers/async-interval"
-import describe from 'tests/tests/unit-testing/describe';
-import MasterCluster from "src/cluster/master-cluster"
-import Helper from "src/helpers/helper";
+const {asyncTimeout} = require.main.require("./src/helpers/async-interval")
+const describe = require.main.require( './tests/tests/unit-testing/describe');
+const MasterCluster = require.main.require("./src/cluster/master-cluster")
+const Helper = require.main.require( "./src/helpers/helper");
 
-export default function run (){
+module.exports = function run (){
 
 
     describe("master cluster", {

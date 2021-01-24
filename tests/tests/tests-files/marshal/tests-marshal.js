@@ -1,14 +1,15 @@
-import describe from 'tests/tests/unit-testing/describe';
-import Marshal from "src/marshal/marshal";
-import MarshalTests from "tests/tests/tests-files/marshal/marshal-tests"
-import BN from "bn.js"
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const Marshal = require.main.require("./src/marshal/marshal");
+const MarshalTests = require.main.require("./tests/tests/tests-files/marshal/marshal-tests")
+const BN = require("bn.js")
+
 /**
  *
  * UNIT TESTING FOR Marshal / Unmarshal
  *
  */
 
-export default function run () {
+module.exports = function run () {
     
     describe("Marshal", {
 

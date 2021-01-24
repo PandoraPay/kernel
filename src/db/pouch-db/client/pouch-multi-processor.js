@@ -1,7 +1,7 @@
-import PouchCommands from "./pouch-commands"
-import GenericMultiProcessor from "./../../db-generic/client/generic-multi-processor"
+const PouchCommands = require( "./pouch-commands" )
+const GenericMultiProcessor = require( "./../../db-generic/client/generic-multi-processor" )
 
-export default class PouchMultiProcessor extends GenericMultiProcessor{
+module.exports = class PouchMultiProcessor extends GenericMultiProcessor{
 
     get _commands(){
         return PouchCommands

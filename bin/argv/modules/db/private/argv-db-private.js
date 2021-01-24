@@ -1,9 +1,9 @@
 // import ArgvRedisDB from "./modules/argv-redis-db";
 // import ArgvCouchDB from "./modules/argv-couch-db"
 
-import ArgvPouchDB from "./modules/argv-pouch-db"
+const ArgvPouchDB = require( "./modules/argv-pouch-db")
 
-export default{
+module.exports ={
 
     //possible answers: [ "couch", "pouch", "redis", "custom"]
     selectedDB: "pouch",

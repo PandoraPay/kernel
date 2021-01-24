@@ -1,10 +1,11 @@
-import Marshal from "./../marshal"
-import Exception from "src/helpers/exception";
-import StringHelper from "src/helpers/string-helper";
-import BN from "bn.js"
-import MarshalHelper from "../helpers/marshal-helper";
+const BN  = require("bn.js")
+const Exception  = require.main.require( "./src/helpers/exception");
+const StringHelper  = require.main.require( "./src/helpers/string-helper");
 
-export default class MarshalValidationPreProcessing{
+const Marshal  = require( "./../marshal")
+const MarshalHelper  = require("../helpers/marshal-helper");
+
+module.exports = class MarshalValidationPreProcessing{
 
     static preprocessing_bigNumber(value, schemaField){
         if (typeof value === "string" || typeof value === "number") value = new BN(value);

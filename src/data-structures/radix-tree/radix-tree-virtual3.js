@@ -1,13 +1,14 @@
-import RadixTree from "./radix-tree";
-import RadixTreeNode from "./radix-tree-node";
-import RadixTreeNodeTypeEnum from "./radix-tree-node-type-enum";
-import Exception from "../../helpers/exception";
+const Exception = require.main.require("./src/helpers/exception");
+
+const RadixTree = require( "./radix-tree" );
+const RadixTreeNode = require( "./radix-tree-node");
+const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum");
 
 /**
  * IT IS NOT WORKING
  */
 
-export default class RadixTreeVirtual3 extends RadixTree{
+module.exports = class RadixTreeVirtual3 extends RadixTree{
 
     constructor(scope, schema, data, type, creationOptions) {
 

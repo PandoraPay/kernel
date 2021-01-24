@@ -1,1 +1,1 @@
-export default scope => scope.logger.error("Tests", "No Tests Files")
+module.exports = scope => scope.logger.error("Tests", "No Tests Files")

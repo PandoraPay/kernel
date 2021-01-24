@@ -1,4 +1,4 @@
-import Exception from "src/helpers/exception"
+const Exception = require.main.require("./src/helpers/exception");
 
 class GenericLock {
 
@@ -104,4 +104,4 @@ class GenericLock {
 
 }
 
-export default GenericLock;
+module.exports = GenericLock;

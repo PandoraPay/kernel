@@ -1,14 +1,15 @@
-import describe from 'tests/tests/unit-testing/describe';
-import MarshalTests from "tests/tests/tests-files/marshal/marshal-tests"
-import SchemaTests from "tests/tests/tests-files/marshal/tests-schema"
-import Helper from "src/helpers/helper"
+const describe = require.main.require( './tests/tests/unit-testing/describe');
+const MarshalTests = require.main.require( "./tests/tests/tests-files/marshal/marshal-tests")
+const SchemaTests = require.main.require( "./tests/tests/tests-files/marshal/tests-schema")
+const Helper = require.main.require( "./src/helpers/helper")
+
 /**
  *
  * UNIT TESTING FOR REDIS
  *
  */
 
-export default async function run ( dbType ) {
+module.exports = async function run ( dbType ) {
 
     let masterCluster;
 

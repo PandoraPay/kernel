@@ -1,4 +1,4 @@
-export default class ExtendableError extends Error {
+module.exports = class ExtendableError extends Error {
 
     constructor(name='', message='', data, level=0) {
 

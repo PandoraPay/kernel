@@ -1,5 +1,5 @@
-import { keccak256 } from 'js-sha3';
-import sha256 from 'sha256';
+const { keccak256 } = require('js-sha3');
+const sha256 = require( 'sha256');
 
 class CryptoHelper{
 
@@ -30,4 +30,4 @@ class CryptoHelper{
 
 }
 
-export default CryptoHelper;
+module.exports = CryptoHelper;

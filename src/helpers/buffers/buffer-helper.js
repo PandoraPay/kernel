@@ -1,5 +1,5 @@
-var randomBytes = require('randombytes');
-import isArrayBuffer from 'is-array-buffer';
+const randomBytes = require('randombytes');
+const isArrayBuffer = require('is-array-buffer');
 
 class BufferHelper{
 
@@ -96,4 +96,4 @@ class BufferHelper{
 
 
 
-export default new BufferHelper();
+module.exports = new BufferHelper();

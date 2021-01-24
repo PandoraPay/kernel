@@ -1,85 +1,86 @@
-import BN from 'bn.js';
-import BigNumber from "bignumber.js";
+const BN = require('bn.js');
+const BigNumber = require("bignumber.js");
+const { keccak256 } = require('js-sha3');
+const sha256 = require( 'sha256');
 
-import AsyncEvents from "async-events";
-import BufferReader from "src/helpers/buffers/buffer-reader";
+const AsyncEvents = require("async-events");
 
-import Logger from "src/helpers/logger/logger";
-import Readline from "src/helpers/readline/readline";
-import StringHelper from "src/helpers/string-helper";
-import Exception from "src/helpers/exception";
-import ArrayHelper from "src/helpers/array-helper";
-import BufferHelper from "src/helpers/buffers/buffer-helper";
-import Helper from "src/helpers/helper";
-import CryptoHelper from "src/helpers/crypto/crypto-helper";
-import Base58 from "src/helpers/base58-helper";
-import Events from "src/helpers/events/events";
+const BufferReader = require("./src/helpers/buffers/buffer-reader");
 
-import Argv from "./bin/argv/argv";
-import App from 'src/app';
+const Logger = require( "./src/helpers/logger/logger");
+const Readline = require( "./src/helpers/readline/readline");
+const StringHelper = require( "./src/helpers/string-helper");
+const Exception = require( "./src/helpers/exception");
+const ArrayHelper = require( "./src/helpers/array-helper");
+const BufferHelper = require( "./src/helpers/buffers/buffer-helper");
+const Helper = require( "./src/helpers/helper");
+const CryptoHelper = require( "./src/helpers/crypto/crypto-helper");
+const Base58 = require( "./src/helpers/base58-helper");
+const Events = require( "./src/helpers/events/events");
 
-import Marshal from "src/marshal/marshal";
-import MarshalData from "src/marshal/data/marshal-data";
-import MarshalFields from "src/marshal/fields/marshal-fields";
-import MarshalValidation from "src/marshal/fields/marshal-validation";
-import UnmarshalFields from "src/marshal/fields/unmarshal-fields";
-import MarshalValidationPreProcessing from "src/marshal/fields/marshal-validation-pre-processing";
-import MarshalValidationPreset from "src/marshal/fields/marshal-validation-pre-set";
+const Argv = require( "./bin/argv/argv");
+const App = require( './src/app');
 
-import DBSchema from "src/db/db-generic/db-schema";
-import DBSchemaBuffer from "src/db/db-generic/samples/db-schema-buffer";
-import DBSchemaBufferBig from "src/db/db-generic/samples/db-schema-buffer-big";
-import DBSchemaBufferUnique from "src/db/db-generic/samples/db-schema-buffer-unique";
-import DBSchemaNumber from "src/db/db-generic/samples/db-schema-number";
-import DBSchemaHash from "src/db/db-generic/samples/db-schema-hash";
-import DBSchemaString from "src/db/db-generic/samples/db-schema-string";
-import DBSchemaBoolean from "src/db/db-generic/samples/db-schema-boolean";
+const Marshal = require( "./src/marshal/marshal");
+const MarshalData = require( "./src/marshal/data/marshal-data");
+const MarshalFields = require( "./src/marshal/fields/marshal-fields");
+const MarshalValidation = require( "./src/marshal/fields/marshal-validation");
+const UnmarshalFields = require( "./src/marshal/fields/unmarshal-fields");
+const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-validation-pre-processing");
+const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
-import ClientsCluster from "src/cluster/clients/clients-cluster";
-import DBSchemaHelper from "src/db/db-generic/db-schema-helper";
-import DBConstructor from "src/db/db-constructor";
+const DBSchema = require( "./src/db/db-generic/db-schema");
+const DBSchemaBuffer = require( "./src/db/db-generic/samples/db-schema-buffer");
+const DBSchemaBufferBig = require( "./src/db/db-generic/samples/db-schema-buffer-big");
+const DBSchemaBufferUnique = require( "./src/db/db-generic/samples/db-schema-buffer-unique");
+const DBSchemaNumber = require( "./src/db/db-generic/samples/db-schema-number");
+const DBSchemaHash = require( "./src/db/db-generic/samples/db-schema-hash");
+const DBSchemaString = require( "./src/db/db-generic/samples/db-schema-string");
+const DBSchemaBoolean = require( "./src/db/db-generic/samples/db-schema-boolean");
 
-import * as AsyncInterval from "src/helpers/async-interval";
+const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
+const DBSchemaHelper = require( "./src/db/db-generic/db-schema-helper");
+const DBConstructor = require( "./src/db/db-constructor");
 
-import { keccak256 } from 'js-sha3';
+const AsyncInterval = require( "./src/helpers/async-interval");
 
-import describe from 'tests/tests/unit-testing/describe';
-import describeList from 'tests/tests/unit-testing/describe-list';
-import TestsHelper from "tests/tests/unit-testing/tests-helper";
+const describe = require( './tests/tests/unit-testing/describe');
+const describeList = require( './tests/tests/unit-testing/describe-list');
+const TestsHelper = require( "./tests/tests/unit-testing/tests-helper");
 
-import TestsFiles from "tests/tests/tests-index";
+const TestsFiles = require( "./tests/tests/tests-index");
 
-import MerkleTree from "src/data-structures/merkle-tree/merkle-tree";
-import MerkleTreeNode from "src/data-structures/merkle-tree/merkle-tree-node";
-import MerkleTreeNodeTypeEnum from "src/data-structures/merkle-tree/merkle-tree-node-type-enum";
-import MerkleTreeRoot from "src/data-structures/merkle-tree/merkle-tree-root";
+const MerkleTree = require( "./src/data-structures/merkle-tree/merkle-tree");
+const MerkleTreeNode = require( "./src/data-structures/merkle-tree/merkle-tree-node");
+const MerkleTreeNodeTypeEnum = require( "./src/data-structures/merkle-tree/merkle-tree-node-type-enum");
+const MerkleTreeRoot = require( "./src/data-structures/merkle-tree/merkle-tree-root");
 
-import RadixTree from "src/data-structures/radix-tree/radix-tree";
-import RadixTreeVirtual3 from "src/data-structures/radix-tree/radix-tree-virtual3";
-import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual";
-import RadixTreeNode from "src/data-structures/radix-tree/radix-tree-node";
-import RadixTreeRoot from "src/data-structures/radix-tree/radix-tree-root";
-import RadixTreeNodeTypeEnum from "src/data-structures/radix-tree/radix-tree-node-type-enum";
+const RadixTree = require( "./src/data-structures/radix-tree/radix-tree");
+const RadixTreeVirtual3 = require( "./src/data-structures/radix-tree/radix-tree-virtual3");
+const RadixTreeVirtual = require( "./src/data-structures/radix-tree/radix-tree-virtual");
+const RadixTreeNode = require( "./src/data-structures/radix-tree/radix-tree-node");
+const RadixTreeRoot = require( "./src/data-structures/radix-tree/radix-tree-root");
+const RadixTreeNodeTypeEnum = require( "./src/data-structures/radix-tree/radix-tree-node-type-enum");
 
-import HashMap from "src/data-structures/hash-map/hash-map";
-import HashVirtualMap from "src/data-structures/hash-map/hash-virtual-map";
-import HashMapElement from "src/data-structures/hash-map/hash-map-element";
+const HashMap = require( "./src/data-structures/hash-map/hash-map");
+const HashVirtualMap = require( "./src/data-structures/hash-map/hash-virtual-map");
+const HashMapElement = require( "./src/data-structures/hash-map/hash-map-element");
 
-import NetworkTypeEnum from "./bin/argv/modules/network-type-enum";
+const NetworkTypeEnum = require( "./bin/argv/modules/network-type-enum");
 
-import HeartBeat from "src/heart-beat/heart-beat";
-import BansManager from "src/helpers/bans-manager/bans-manager";
-import EnumHelper from "src/helpers/enum-helper";
-import NumberHelper from "src/helpers/number-helper";
+const HeartBeat = require( "./src/heart-beat/heart-beat");
+const BansManager = require( "./src/helpers/bans-manager/bans-manager");
+const EnumHelper = require( "./src/helpers/enum-helper");
+const NumberHelper = require( "./src/helpers/number-helper");
 
-import MasterCluster from "src/cluster/master-cluster";
-import BrowserCluster from "src/cluster/browser-cluster";
+const MasterCluster = require( "./src/cluster/master-cluster");
+const BrowserCluster = require( "./src/cluster/browser-cluster");
 
 // only supported for node.js
 const sticky = BROWSER ? undefined : require('sticky-session').default;
-const HttpServer = BROWSER ? undefined : require("src/cluster/server/http-server").default;
-const ServerCluster = BROWSER ? undefined : require("src/cluster/server/server-cluster").default;
-const RedisDB = BROWSER ? undefined : require( "src/db/redis-db/redis-db" ).default;
+const HttpServer = BROWSER ? undefined : require("./src/cluster/server/http-server");
+const ServerCluster = BROWSER ? undefined : require("./src/cluster/server/server-cluster");
+const RedisDB = BROWSER ? undefined : require( "./src/db/redis-db/redis-db" );
 
 const library = {
 
@@ -185,6 +186,7 @@ const library = {
             CryptoHelper,
             fcts: {
                 keccak256,
+                sha256,
             }
         },
 
@@ -217,4 +219,4 @@ if (typeof global !== "undefined"){
     global.kernel = library;
 }
 
-export default library;
+module.exports = library;

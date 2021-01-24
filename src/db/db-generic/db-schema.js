@@ -1,9 +1,9 @@
-import Marshal from "src/marshal/marshal"
-import Exception from "src/helpers/exception";
-import Helper from "src/helpers/helper"
-import MarshalData from "src/marshal/data/marshal-data"
+const Marshal  = require.main.require( "./src/marshal/marshal")
+const Exception  = require.main.require( "./src/helpers/exception");
+const Helper  = require.main.require( "./src/helpers/helper")
+const MarshalData  = require.main.require( "./src/marshal/data/marshal-data")
 
-export default class DBSchema extends Marshal{
+module.exports = class DBSchema extends Marshal{
 
     constructor(scope, schema,  data, type, creationOptions){
 

@@ -1,8 +1,8 @@
-import MarshalData from "../data/marshal-data";
-import Exception from "src/helpers/exception";
-import MarshalHelper from "./../helpers/marshal-helper";
+const MarshalData = require(  "../data/marshal-data");
+const Exception = require.main.require( "./src/helpers/exception");
+const MarshalHelper = require( "./../helpers/marshal-helper");
 
-export default class MarshalFields {
+module.exports = class MarshalFields {
 
     /**
      * BIG NUMBER

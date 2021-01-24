@@ -1,8 +1,8 @@
-import describe from 'tests/tests/unit-testing/describe';
-import TestsHelper from "tests/tests/unit-testing/tests-helper"
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const TestsHelper = require.main.require("./tests/tests/unit-testing/tests-helper");
 
-import HashMap from "src/data-structures/hash-map/hash-map"
-import HashMapElement from "src/data-structures/hash-map/hash-map-element"
+const HashMap = require.main.require("./src/data-structures/hash-map/hash-map");
+const HashMapElement = require.main.require("./src/data-structures/hash-map/hash-map-element");
 
 /**
  *
@@ -10,7 +10,7 @@ import HashMapElement from "src/data-structures/hash-map/hash-map-element"
  *
  */
 
-export default async function run (hashmap, name, selectedDB) {
+module.exports = async function run (hashmap, name, selectedDB) {
 
     const  count = selectedDB ===  "couch" ? 500 : 10000;
     const ids = TestsHelper.randomBuffers( 32, count).map( id => id.toString("hex") );

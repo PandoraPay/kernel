@@ -1,8 +1,8 @@
-import ArgvRedisDB from "./modules/argv-redis-db";
-import ArgvPouchDB from "./modules/argv-pouch-db"
-import ArgvCouchDB from "./modules/argv-couch-db"
+const ArgvRedisDB = require("./modules/argv-redis-db");
+const ArgvPouchDB = require( "./modules/argv-pouch-db")
+const ArgvCouchDB = require("./modules/argv-couch-db")
 
-export default{
+module.exports ={
 
     //possible answers: [ "couch", "pouch", "redis", "custom"]
 
@@ -10,7 +10,7 @@ export default{
      * REDIS is not supported as it is not memory intensive
      */
 
-    selectedDB: BROWSER  ? "pouch" : "couch",
+    selectedDB: BROWSER ? "pouch" : "couch",
     //selectedDB: "pouch" ,
 
     create: true,

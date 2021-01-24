@@ -1,9 +1,9 @@
-import NetworkTypeEnum from "./network-type-enum"
+const NetworkTypeEnum = require("./network-type-enum")
 
 const DATE_ORIGIN  = new Date("September 21, 2015 11:13:00");
 const DATE_ORIGIN_SECONDS  = Math.floor( DATE_ORIGIN / 1000 ) ;
 
-export default{
+module.exports ={
 
     applicationName: "COBOLT",
     applicationShort: "COB",

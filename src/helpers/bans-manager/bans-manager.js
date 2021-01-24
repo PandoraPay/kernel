@@ -2,7 +2,7 @@
  * BansManager facilitates methods to ban peers and data 
  */
 
-export default class BansManager {
+module.exports = class BansManager {
 
     constructor(scope){
 

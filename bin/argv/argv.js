@@ -1,17 +1,17 @@
-import ArgvBase from "./argv-base"
-import ArgvLogger from './modules/argv-logger';
-import ArgvSettings from "./modules/argv-settings";
-import ArgvTests from "./modules/tests/argv-tests"
-import ArgvDebug from "./modules/argv-debug"
+const ArgvBase = require( "./argv-base")
+const ArgvLogger = require( './modules/argv-logger');
+const ArgvSettings = require( "./modules/argv-settings");
+const ArgvTests = require( "./modules/tests/argv-tests")
+const ArgvDebug = require( "./modules/argv-debug")
 
-import ArgvDBPublic from "./modules/db/public/argv-db-public"
-import ArgvDBPrivate from "./modules/db/private/argv-db-private"
+const ArgvDBPublic = require( "./modules/db/public/argv-db-public")
+const ArgvDBPrivate = require( "./modules/db/private/argv-db-private")
 
-import ArgvMasterCluster from "./modules/master-cluster/argv-master-cluster"
-import ArgvHeartBeat from "./modules/heart-beat/argv-heart-beat"
-import ArgvBansManager from "./modules/bans-manager/argv-bans-manager"
+const ArgvMasterCluster = require( "./modules/master-cluster/argv-master-cluster")
+const ArgvHeartBeat = require( "./modules/heart-beat/argv-heart-beat")
+const ArgvBansManager = require( "./modules/bans-manager/argv-bans-manager")
 
-import Helper from "src/helpers/helper"
+const Helper = require.main.require( "./src/helpers/helper")
 
 /**
  *
@@ -19,7 +19,7 @@ import Helper from "src/helpers/helper"
  *
  */
 
-export default (argv) => Helper.merge( argv, {
+module.exports = (argv) => Helper.merge( argv, {
 
     ...ArgvBase,
 

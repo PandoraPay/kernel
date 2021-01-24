@@ -1,10 +1,10 @@
-import Helper from "src/helpers/helper";
-import DBSchema from "../db-schema";
-import CryptoHelper from "src/helpers/crypto/crypto-helper";
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema = require( "../db-schema");
+const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
 
-import DBSchemaBuffer from "./db-schema-buffer";
+const DBSchemaBuffer = require( "./db-schema-buffer" );
 
-export default class DBSchemaBufferBig extends DBSchemaBuffer {
+module.exports = class DBSchemaBufferBig extends DBSchemaBuffer {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 

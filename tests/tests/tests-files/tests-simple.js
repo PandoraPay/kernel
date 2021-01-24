@@ -1,7 +1,7 @@
-import describe from 'tests/tests/unit-testing/describe';
-import {asyncTimeout} from "src/helpers/async-interval"
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const {asyncTimeout} = require.main.require("./src/helpers/async-interval")
 
-export default function run () {
+module.exports = function run () {
 
     describe("Simple test 1", {
 

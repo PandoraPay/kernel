@@ -1,4 +1,4 @@
-import LoggerEnum from "src/helpers/logger/logger-enum";
+const LoggerEnum = require.main.require("./src/helpers/logger/logger-enum");
 
 const path = require('path');
 
@@ -8,7 +8,7 @@ const month = dateObj.getUTCMonth() + 1; //months from 1-12
 const day = dateObj.getUTCDate();
 const year = dateObj.getUTCFullYear();
 
-export default {
+module.exports = {
 
 	fileEcho: true,
 	path: 'build/logs',

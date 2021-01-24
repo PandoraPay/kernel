@@ -1,19 +1,14 @@
 /**
  * pouchdb library and install find plugin
  */
+const PouchDB = require('pouchdb')
+const Exception = require.main.require("./src/helpers/exception");
+const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
+const Helper = require.main.require( "./src/helpers/helper");
 
-import PouchMultiProcessor from "./pouch-multi-processor";
-
-import PouchDB from 'pouchdb'
-import PouchDBFind from 'pouchdb-find';
-
-PouchDB.plugin( PouchDBFind );
-
-import PouchCommands from "./pouch-commands"
-import Exception from "src/helpers/exception";
-import GenericClient from "../../db-generic/client/generic-client"
-import BufferHelper from "src/helpers/buffers/buffer-helper"
-import Helper from "src/helpers/helper";
+const PouchMultiProcessor = require( "./pouch-multi-processor");
+const PouchCommands = require( "./pouch-commands")
+const GenericClient = require( "../../db-generic/client/generic-client")
 
 class PouchClient extends GenericClient{
 
@@ -67,7 +62,7 @@ class PouchClient extends GenericClient{
          *  check if it will fail to Level DB
          */
 
-        if ( ! BROWSER ) {
+        if ( !BROWSER ) {
 
             const workerId = typeof process.env.SLAVE_INDEX !== "undefined" ? Number.parseInt( process.env.SLAVE_INDEX) : "master";
 
@@ -338,4 +333,4 @@ class PouchClient extends GenericClient{
 
 }
 
-export default PouchClient;
+module.exports = PouchClient;

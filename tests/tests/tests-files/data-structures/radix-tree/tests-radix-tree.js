@@ -1,7 +1,7 @@
-import describe from 'tests/tests/unit-testing/describe';
-import TestsHelper from "tests/tests/unit-testing/tests-helper"
-import RadixTree from "src/data-structures/radix-tree/radix-tree"
-import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual";
+const describe = require.main.require( './tests/tests/unit-testing/describe');
+const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
+const RadixTree = require.main.require( "./src/data-structures/radix-tree/radix-tree")
+const RadixTreeVirtual = require.main.require( "./src/data-structures/radix-tree/radix-tree-virtual");
 
 /**
  *
@@ -9,7 +9,7 @@ import RadixTreeVirtual from "src/data-structures/radix-tree/radix-tree-virtual"
  *
  */
 
-export default async function run () {
+module.exports = async function run () {
 
     const radixTestDemo = [ "romane", "romanus", "romulus", "rubens", "ruber","rubicon","rubicundus", "rubicundo", "rubicundua"];
     let radixTest = radixTestDemo.slice(0);

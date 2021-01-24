@@ -1,4 +1,4 @@
-export default class GenericMultiProcessor{
+module.exports = class GenericMultiProcessor{
 
     constructor( scope, client ){
 

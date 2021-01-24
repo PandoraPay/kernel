@@ -1,7 +1,7 @@
-import DBSchema from "../db-schema";
-import Helper from "src/helpers/helper"
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema = require( "../db-schema");
 
-export default class DBSchemaHash extends DBSchema {
+module.exports = class DBSchemaHash extends DBSchema {
 
     constructor(scope, schema,  data, type, creationOptions){
 

@@ -1,4 +1,4 @@
-export default class ArgvProcessor {
+module.exports = class ArgvProcessor {
 
     static processArgs (argv, parents = []) {
 

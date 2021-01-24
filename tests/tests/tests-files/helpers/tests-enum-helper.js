@@ -1,7 +1,7 @@
-import EnumHelper from "src/helpers/enum-helper"
-import describe from 'tests/tests/unit-testing/describe';
+const EnumHelper = require.main.require("./src/helpers/enum-helper")
+const describe = require.main.require('./tests/tests/unit-testing/describe');
 
-export default async function run(){
+module.exports = async function run(){
 
     describe("Tests Enum Helper", {
 

@@ -1,7 +1,7 @@
-import Exception from "src/helpers/exception";
-import Helper from "src/helpers/helper"
+const Exception = require.main.require("./src/helpers/exception");
+const Helper = require.main.require( "./src/helpers/helper");
 
-export default class DBSchemaHelper{
+module.exports = class DBSchemaHelper{
 
     static onlyIds( schemaClass ){
 

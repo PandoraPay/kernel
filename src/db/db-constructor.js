@@ -1,9 +1,9 @@
-import PouchDB from "./pouch-db/pouch-db";
+const PouchDB = require( "./pouch-db/pouch-db");
 
-import Exception from "src/helpers/exception";
-import Helper from "src/helpers/helper"
+const Exception = require.main.require( "./src/helpers/exception");
+const Helper = require.main.require( "./src/helpers/helper")
 
-const RedisDB = BROWSER ? undefined : require( "./redis-db/redis-db" ).default;
+const RedisDB = BROWSER ? undefined : require( "./redis-db/redis-db" );
 
 class DBConstructor{
 
@@ -114,4 +114,4 @@ class DBConstructor{
 
 }
 
-export default new DBConstructor();
+module.exports = new DBConstructor();

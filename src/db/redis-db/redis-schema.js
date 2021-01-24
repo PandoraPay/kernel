@@ -1,7 +1,7 @@
-import DBSchema from "../db-generic/db-schema";
-import Exception from "src/helpers/exception";
+const DBSchema = require( "../db-generic/db-schema" );
+const Exception = require.main.require("./src/helpers/exception");
 
-export default class RedisSchema extends DBSchema{
+module.exports = class RedisSchema extends DBSchema{
 
     /**
      * Delete from Redis Database. It works to delete Buffers, Hex, JASON and Objects

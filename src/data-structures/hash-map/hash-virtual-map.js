@@ -1,10 +1,11 @@
-import DBSchema from "src/db/db-generic/db-schema"
-import HashMap from "./hash-map"
-import Exception from "src/helpers/exception";
-import HashMapElement from "./hash-map-element";
-import ArrayHelper from "../../helpers/array-helper";
+const DBSchema = require.main.require("./src/db/db-generic/db-schema")
+const Exception = require.main.require("./src/helpers/exception");
 
-export default class HashVirtualMap extends HashMap {
+const HashMap = require("./hash-map")
+const HashMapElement = require( "./hash-map-element");
+const ArrayHelper = require( "../../helpers/array-helper");
+
+module.exports = class HashVirtualMap extends HashMap {
 
     constructor(scope, schema, data, type, creationOptions) {
 

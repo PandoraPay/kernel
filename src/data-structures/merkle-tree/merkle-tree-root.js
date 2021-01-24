@@ -1,8 +1,8 @@
-import Helper from "src/helpers/helper"
-import MerkleTreeNode from "./merkle-tree-node";
-import MerkleTreeNodeTypeEnum from "./merkle-tree-node-type-enum";
+const Helper = require.main.require( "./src/helpers/helper");
+const MerkleTreeNode = require( "./merkle-tree-node");
+const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum");
 
-export default class MerkleTreeRoot extends MerkleTreeNode {
+module.exports = class MerkleTreeRoot extends MerkleTreeNode {
     
     constructor(scope, schema,  data, type, creationOptions ){
 

@@ -2,4 +2,4 @@ class DescribeList {
 
 }
 
-export default new DescribeList();
+module.exports = new DescribeList();

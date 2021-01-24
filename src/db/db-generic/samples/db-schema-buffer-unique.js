@@ -1,7 +1,7 @@
-import Helper from "src/helpers/helper";
-import DBSchemaBuffer from "./db-schema-buffer";
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchemaBuffer = require( "./db-schema-buffer");
 
-export default class DBSchemaBufferUnique extends DBSchemaBuffer {
+module.exports = class DBSchemaBufferUnique extends DBSchemaBuffer {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 

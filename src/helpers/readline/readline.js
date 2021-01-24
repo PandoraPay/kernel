@@ -1,3 +1,3 @@
-const Readline  = require ( BROWSER ? './readline-browser' : './readline-node').default;
+const Readline  = require ( BROWSER ? './readline-browser' : './readline-node');
 
-export default Readline;
+module.exports = Readline;

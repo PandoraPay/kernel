@@ -1,15 +1,14 @@
-import describe from 'tests/tests/unit-testing/describe';
-import DBConstructor from "src/db/db-constructor";
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const DBConstructor = require.main.require( "./src/db/db-constructor");
+const cluster = require.main.require( './src/cluster/cluster');
 
-import TestsDB from "./../universal/tests-db"
-import TestsDBBenchmark from "../universal/tests-db-benchmark";
-import TestsDBMulti from "../universal/tests-db-multi";
+const TestsDB = require( "./../universal/tests-db")
+const TestsDBBenchmark = require( "../universal/tests-db-benchmark");
+const TestsDBMulti = require( "../universal/tests-db-multi");
 
-import Helper from "src/helpers/helper";
+const Helper = require.main.require( "./src/helpers/helper");
 
-import TestsMerkleTreeDB from "../../data-structures/merkle-tree/tests-merkle-tree-db"
-
-import cluster from 'src/cluster/cluster';
+const TestsMerkleTreeDB = require( "../../data-structures/merkle-tree/tests-merkle-tree-db")
 
 /**
  *
@@ -17,7 +16,7 @@ import cluster from 'src/cluster/cluster';
  *
  */
 
-export default async function run () {
+module.exports = async function run () {
 
 
     describe("Redis Test", {

@@ -1,7 +1,7 @@
-import Marshal from "src/marshal/marshal";
-import DBSchema from "src/db/db-generic/db-schema";
-import BN from "bn.js"
-import DBSchemaBuffer from "src/db/db-generic/samples/db-schema-buffer";
+const DBSchema = require.main.require("./src/db/db-generic/db-schema");
+const DBSchemaBuffer = require.main.require("./src/db/db-generic/samples/db-schema-buffer");
+
+const BN = require("bn.js")
 
 class TestClass1 extends DBSchema{
 
@@ -195,7 +195,7 @@ class TestClassBuffer extends DBSchema{
 
 
 
-export default {
+module.exports = {
 
     TestClass1: TestClass1,
 

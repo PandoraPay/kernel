@@ -1,15 +1,17 @@
 const redis = require("redis");
 const bluebird = require("bluebird");
+
+const Events = require.main.require( "./src/helpers/events/events")
+const Exception = require.main.require("./src/helpers/exception");
+
+const RedisMultiProcessor = require( "./redis-multi-processor")
+const RedisCommands = require("./redis-commands")
+const GenericClient = require( "../../db-generic/client/generic-client");
+
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
-import RedisMultiProcessor from "./redis-multi-processor"
-import RedisCommands from "./redis-commands"
-import Events from "src/helpers/events/events"
-import GenericClient from "../../db-generic/client/generic-client";
-import Exception from "src/helpers/exception";
-
-export default class RedisClient extends GenericClient{
+module.exports = class RedisClient extends GenericClient{
 
     constructor(scope){
 

@@ -1,18 +1,18 @@
-import MarshalBase from "./marshal-base";
+const Exception = require.main.require( "./src/helpers/exception");
+const Helper = require.main.require( "./src/helpers/helper");
 
-import Exception from "src/helpers/exception";
+const MarshalBase = require( "./marshal-base");
 
-import Helper from "src/helpers/helper";
-import MarshalValidation from "./fields/marshal-validation";
-import MarshalValidationPreProcessing from "./fields/marshal-validation-pre-processing";
-import MarshalValidationPreSet from "./fields/marshal-validation-pre-set";
-import MarshalFields from "./fields/marshal-fields";
+const MarshalValidationPreProcessing = require( "./fields/marshal-validation-pre-processing");
+const MarshalValidationPreSet = require( "./fields/marshal-validation-pre-set");
+const MarshalFields = require( "./fields/marshal-fields");
 
-import UnmarshalFields from "./fields/unmarshal-fields";
+const UnmarshalFields = require( "./fields/unmarshal-fields");
 
-import MarshalHelper from "./helpers/marshal-helper";
-import BufferReader from "../helpers/buffers/buffer-reader";
+const MarshalHelper = require( "./helpers/marshal-helper");
+const BufferReader = require( "../helpers/buffers/buffer-reader");
 
+let MarshalValidation = require( "./fields/marshal-validation");
 
 /**
  *
@@ -27,7 +27,7 @@ import BufferReader from "../helpers/buffers/buffer-reader";
  */
 
 
-export default class Marshal extends MarshalBase {
+class Marshal extends MarshalBase {
 
     constructor(scope, schema = {}, data, type, creationOptions) {
 
@@ -524,3 +524,7 @@ export default class Marshal extends MarshalBase {
     }
 
 }
+
+MarshalValidation = MarshalValidation(Marshal);
+
+module.exports = Marshal;

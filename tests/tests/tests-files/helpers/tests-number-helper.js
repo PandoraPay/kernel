@@ -1,9 +1,9 @@
-import NumberHelper from "src/helpers/number-helper"
-import BufferReader from "src/helpers/buffers/buffer-reader"
+const NumberHelper = require.main.require("./src/helpers/number-helper")
+const BufferReader = require.main.require("./src/helpers/buffers/buffer-reader")
 
-import describe from 'tests/tests/unit-testing/describe';
+const describe = require.main.require('./tests/tests/unit-testing/describe');
 
-export default async function run(){
+module.exports = async function run(){
 
     describe("Tests Number Helper", {
 

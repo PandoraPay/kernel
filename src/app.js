@@ -1,20 +1,20 @@
-import AsyncEvents from "async-events";
+const AsyncEvents = require( "async-events");
 
-import Logger from "./helpers/logger/logger";
-import Argv from "bin/argv/argv";
-import Readline from "./helpers/readline/readline";
-import DBConstructor from "./db/db-constructor";
+const Argv = require.main.require("./bin/argv/argv");
+const Tests = require.main.require( './tests/tests/tests-index');
+const RunTests = require.main.require( "./tests/tests/run-tests");
 
-import Tests from 'tests/tests/tests-index';
-import RunTests from "tests/tests/run-tests";
+const Logger = require( "./helpers/logger/logger");
+const Readline = require( "./helpers/readline/readline");
+const DBConstructor = require( "./db/db-constructor");
 
-import MasterCluster from "./cluster/master-cluster";
-import CommandLineInterface from "./cli/command-line-interface";
-import HeartBeat from "./heart-beat/heart-beat";
-import BansManager from "./helpers/bans-manager/bans-manager";
+const MasterCluster = require( "./cluster/master-cluster");
+const CommandLineInterface = require( "./cli/command-line-interface");
+const HeartBeat = require( "./heart-beat/heart-beat");
+const BansManager = require( "./helpers/bans-manager/bans-manager");
 
-import Events from "./helpers/events/events";
-import Helper from "src/helpers/helper";
+const Events = require( "./helpers/events/events");
+const Helper = require( "./helpers/helper");
 
 /**
  *
@@ -25,7 +25,7 @@ import Helper from "src/helpers/helper";
  * @returns {Promise.<*>}
  */
 
-export default class App{
+module.exports = class App{
 
     constructor(scope = {}){
 

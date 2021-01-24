@@ -74,4 +74,4 @@ class MarshalHelper{
 
 }
 
-export default new MarshalHelper()
+module.exports = new MarshalHelper()

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     NETWORK_MAIN_NET: 0,
     

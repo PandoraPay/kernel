@@ -1,7 +1,7 @@
-import TestsNumberHelper from "./tests-number-helper"
-import TestsEnumHelper from "./tests-enum-helper"
+const TestsNumberHelper = require("./tests-number-helper")
+const TestsEnumHelper = require("./tests-enum-helper")
 
-export default async function run(){
+module.exports = async function run(){
 
     await TestsNumberHelper();
     await TestsEnumHelper();

@@ -1,7 +1,7 @@
-import describe from 'tests/tests/unit-testing/describe';
-import TestsHelper from "tests/tests/unit-testing/tests-helper"
-import MerkleTree from "src/data-structures/merkle-tree/merkle-tree"
-import CryptoHelper from "src/helpers/crypto/crypto-helper";
+const describe = require.main.require('./tests/tests/unit-testing/describe');
+const TestsHelper = require.main.require( "./tests/tests/unit-testing/tests-helper")
+const MerkleTree = require.main.require( "./src/data-structures/merkle-tree/merkle-tree")
+const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
 
 /**
  *
@@ -9,7 +9,7 @@ import CryptoHelper from "src/helpers/crypto/crypto-helper";
  *
  */
 
-export default async function run () {
+module.exports = async function run () {
 
     const basicTest = async function (tree, data, length) {
 

@@ -1,10 +1,12 @@
-import Marshal from "./../marshal"
-import Exception from "src/helpers/exception";
-import BN from "bn.js"
-import MarshalHelper from "./../helpers/marshal-helper"
-import MarshalFields from "./marshal-fields";
+const BN = require( "bn.js")
+const Exception = require.main.require( "./src/helpers/exception");
 
-export default class MarshalValidation{
+const MarshalHelper = require( "./../helpers/marshal-helper")
+const MarshalFields = require( "./marshal-fields");
+
+let Marshal;
+
+class MarshalValidation {
 
     static validate_bigNumber(value, schemaField){
 
@@ -94,3 +96,7 @@ export default class MarshalValidation{
 
 }
 
+module.exports = (obj)=>{
+    Marshal = obj;
+    return MarshalValidation;
+}

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     
     MERKLE_TREE_NODE: 0,
     MERKLE_TREE_LEAF: 1,

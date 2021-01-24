@@ -1,14 +1,13 @@
-import Helper from "src/helpers/helper"
-import DBSchema from "src/db/db-generic/db-schema"
-import Exception from "src/helpers/exception"
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema = require.main.require("./src/db/db-generic/db-schema")
+const Exception = require.main.require("./src/helpers/exception");
+const DBSchemaBuffer = require.main.require( "./src/db/db-generic/samples/db-schema-buffer" );
+const DBSchemaString = require.main.require("./src/db/db-generic/samples/db-schema-string");
+const CryptoHelper = require.main.require( "./src/helpers/crypto/crypto-helper");
 
-import RadixTreeNodeTypeEnum from "./radix-tree-node-type-enum"
+const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
 
-import DBSchemaBuffer from "src/db/db-generic/samples/db-schema-buffer";
-import DBSchemaString from "src/db/db-generic/samples/db-schema-string";
-import CryptoHelper from "src/helpers/crypto/crypto-helper";
-
-export default class RadixTreeNode extends DBSchema {
+module.exports = class RadixTreeNode extends DBSchema {
 
     constructor(scope, schema,  data, type, creationOptions){
 

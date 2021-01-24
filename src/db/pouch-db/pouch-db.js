@@ -3,11 +3,9 @@
  * The pouchdb should not store complex objects as it is not optimized for multiple blobs
  */
 
-import GenericDatabase from "../db-generic/generic-database";
-
-import PouchSchema from "./pouch-schema"
-
-import PouchClient from "./client/pouch-client"
+const GenericDatabase = require( "../db-generic/generic-database");
+const PouchSchema = require( "./pouch-schema")
+const PouchClient = require( "./client/pouch-client")
 
 class PouchDB extends GenericDatabase{
 
@@ -63,4 +61,4 @@ class PouchDB extends GenericDatabase{
 
 }
 
-export default PouchDB
+module.exports = PouchDB

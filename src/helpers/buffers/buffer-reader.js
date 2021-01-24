@@ -1,6 +1,6 @@
-import StringHelper from "../string-helper"
+const StringHelper = require("../string-helper")
 
-export default class BufferReader{
+module.exports = class BufferReader{
 
     static create(buffer){
 

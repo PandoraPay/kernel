@@ -1,4 +1,4 @@
-import describeList from "./describe-list";
+const describeList = require("./describe-list");
 
-export default (...args) =>  describeList.describe( ...args ) ;
+module.exports = (...args) =>  describeList.describe( ...args ) ;
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
-import Exception from "src/helpers/exception";
+const Exception = require.main.require("./src/helpers/exception");
 
-export default class Helper{
+module.exports = class Helper{
 
     static sleep (time) {
         return new Promise(resolve => setTimeout( resolve, time));
@@ -146,7 +146,7 @@ export default class Helper{
 
     static createDirectory(path){
 
-        if (BROWSER)
+        if ( BROWSER )
             return;
 
         try {

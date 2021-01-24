@@ -1,8 +1,8 @@
-import Exception from "../helpers/exception";
+const Exception = require.main.require("./src/helpers/exception");
 
 const enums = [];
 
-export default class EnumHelper {
+module.exports = class EnumHelper {
 
     static validateEnum(value, enumeration){
         

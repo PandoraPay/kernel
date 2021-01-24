@@ -1,4 +1,4 @@
-export default class ReadlineBrowser {
+module.exports = class ReadlineBrowser {
 
     constructor(scope){
 

@@ -1,9 +1,9 @@
-import Helper from "src/helpers/helper"
-import DBSchema from "src/db/db-generic/db-schema"
-import RadixTreeNode from "./radix-tree-node"
-import RadixTreeNodeTypeEnum from "./radix-tree-node-type-enum";
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema = require.main.require("./src/db/db-generic/db-schema")
+const RadixTreeNode = require("./radix-tree-node")
+const RadixTreeNodeTypeEnum = require("./radix-tree-node-type-enum");
 
-export default class RadixTreeRoot extends RadixTreeNode {
+module.exports = class RadixTreeRoot extends RadixTreeNode {
 
     constructor(scope, schema,  data, type, creationOptions ){
 

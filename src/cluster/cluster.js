@@ -1,6 +1,3 @@
-let cluster;
+const cluster = require(  BROWSER ? './browser-cluster' : 'cluster' );
 
-if (BROWSER) cluster = require('./browser-cluster').default;
-else cluster = require('cluster');
-
-export default cluster;
+module.exports = cluster;

@@ -1,11 +1,11 @@
-import ArgvClientsMasterCluster from "./clients/argv-clients-cluster"
-import ArgvServerMasterCluster from "./server/argv-server-cluster"
+const ArgvClientsMasterCluster = require( "./clients/argv-clients-cluster")
+const ArgvServerMasterCluster = require( "./server/argv-server-cluster")
 
 /**
  * Arguments for Master Cluster
  */
 
-export default {
+module.exports = {
 
     /**
      * This enables/disables Client/Server Clusters entirely
@@ -45,7 +45,7 @@ export default {
 
     _initArgv(){
 
-        if (!BROWSER && this.instances === 0){
+        if ( !BROWSER && this.instances === 0){
             const os = require('os');
             this.instances = os.cpus().length;
         }

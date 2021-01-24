@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     /**
      * CouchDB - requires installation (see installation-database.md)

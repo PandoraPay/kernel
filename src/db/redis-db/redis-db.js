@@ -1,11 +1,12 @@
-import GenericDatabase from "../db-generic/generic-database";
-import RedisSchema from "./redis-schema";
-import Exception from "src/helpers/exception";
+const Exception = require.main.require("./src/helpers/exception");
 
-import RedisClient from "./client/redis-client"
-import ArrayHelper from "../../helpers/array-helper";
+const GenericDatabase = require( "../db-generic/generic-database");
+const RedisSchema = require( "./redis-schema");
 
-export default class RedisDB extends GenericDatabase{
+const RedisClient = require( "./client/redis-client")
+const ArrayHelper = require( "../../helpers/array-helper");
+
+module.exports = class RedisDB extends GenericDatabase{
 
     constructor(scope){
 

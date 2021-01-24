@@ -1,6 +1,3 @@
-import DBSchema from "src/db/db-generic/db-schema";
-import MarshalTests from "./marshal-tests"
-
 const tests = {
 
     simpleUnique:{
@@ -26,7 +23,7 @@ const tests = {
 
 };
 
-export default {
+module.exports = {
 
     ...tests,
 

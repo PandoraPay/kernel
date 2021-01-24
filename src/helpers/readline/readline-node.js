@@ -1,6 +1,6 @@
 const readline = require('readline');
 
-export default class ReadlineNode {
+module.exports = class ReadlineNode {
 
     constructor( scope ){
 

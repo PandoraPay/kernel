@@ -1,9 +1,10 @@
-import Base58 from "../helpers/base58-helper";
-import StringHelper from "../helpers/string-helper";
-import Exception from "../helpers/exception";
-import BufferReader from "../helpers/buffers/buffer-reader";
-import BN from "bn.js";
-import MarshalHelper from "./helpers/marshal-helper";
+const BN = require( "bn.js");
+
+const Base58 = require( "../helpers/base58-helper");
+const StringHelper = require( "../helpers/string-helper");
+const Exception = require( "../helpers/exception");
+const BufferReader = require( "../helpers/buffers/buffer-reader");
+const MarshalHelper = require( "./helpers/marshal-helper");
 
 const defaultValues = {
 
@@ -19,7 +20,7 @@ const defaultValues = {
 
 const defaultValuesExist = {number: true, string: true, array: true, boolean: true, buffer: true, object: true, bigNumber: true};
 
-export default class MarshalBase{
+module.exports = class MarshalBase{
 
     constructor(scope, schema = {}, data, creationOptions = {}) {
 

@@ -1,11 +1,11 @@
-import { setAsyncInterval, clearAsyncInterval } from "src/helpers/async-interval"
-import Exception from "src/helpers/exception";
+const { setAsyncInterval, clearAsyncInterval } = require.main.require("./src/helpers/async-interval")
+const Exception = require.main.require("./src/helpers/exception");
 
 /**
  * To avoid linear growth with the number of data, the heart beat was introduced.
  */
 
-export default class HeartBeat {
+module.exports = class HeartBeat {
 
     constructor(scope){
 

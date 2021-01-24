@@ -1,19 +1,18 @@
-import ExtendableError from "../exception";
-
 const fs = require('fs');
 const util = require('util');
 const child_process = require('child_process');
 const path = require('path');
 
-import Helper from "src/helpers/helper"
-import BufferHelper from "src/helpers/buffers/buffer-helper"
+const Exception = require("../exception");
+const Helper = require.main.require("./src/helpers/helper")
+const BufferHelper = require.main.require("./src/helpers/buffers/buffer-helper")
 
 /**
     Scope
             argv
 **/
 
-export default class Logger{
+module.exports = class Logger{
 
     constructor( scope ){
 
@@ -72,7 +71,7 @@ export default class Logger{
 
         try{
 
-            if (message instanceof ExtendableError){
+            if (message instanceof Exception){
                 log.message = message.stack;
                 log.data = data || message.data;
             } else
@@ -89,7 +88,7 @@ export default class Logger{
 
             if (data){
 
-                if (data instanceof ExtendableError){
+                if (data instanceof Exception){
 
                     log.message += "  "+JSON.stringify( this._snipFragileData( BufferHelper.convertAllBuffersToHex( data.data ) ) );
                     log.data = data.stack;

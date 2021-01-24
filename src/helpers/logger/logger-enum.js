@@ -1,5 +1,5 @@
 
-export default {
+module.exports = {
 	
 	loggerLevels: {
         none: 99,

@@ -2,7 +2,7 @@
  * Arguments for Clients Cluster
  */
 
-export default {
+module.exports = {
 
 
 

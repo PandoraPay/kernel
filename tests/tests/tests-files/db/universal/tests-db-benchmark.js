@@ -1,6 +1,6 @@
-import describe from 'tests/tests/unit-testing/describe';
-import MarshalTests from "tests/tests/tests-files/marshal/marshal-tests"
-import DBSchema from "src/db/db-generic/db-schema";
+const describe = require.main.require( './tests/tests/unit-testing/describe');
+const MarshalTests = require.main.require( "./tests/tests/tests-files/marshal/marshal-tests")
+const DBSchema = require.main.require( "./src/db/db-generic/db-schema");
 
 /**
  *
@@ -8,7 +8,7 @@ import DBSchema from "src/db/db-generic/db-schema";
  *
  */
 
-export default async function run ( dbType) {
+module.exports = async function run ( dbType) {
 
     const TEST1 = (dbType === "CouchDB" ?  300 : 20001);
 

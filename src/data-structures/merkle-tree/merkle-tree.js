@@ -1,9 +1,9 @@
-import Helper from "src/helpers/helper"
-import DBSchema from "src/db/db-generic/db-schema"
-import Exception from "src/helpers/exception";
-import MerkleTreeRoot from "./merkle-tree-root";
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema  = require.main.require( "./src/db/db-generic/db-schema")
+const Exception  = require.main.require("./src/helpers/exception");
+const MerkleTreeRoot  = require("./merkle-tree-root");
 
-export default class MerkleTree extends DBSchema {
+module.exports = class MerkleTree extends DBSchema {
     
     constructor(scope, schema,  data, type, creationOptions){
         

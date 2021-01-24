@@ -1,12 +1,13 @@
-import Helper from "src/helpers/helper"
-import DBSchema from "src/db/db-generic/db-schema"
-import MarshalFields from "../../marshal/fields/marshal-fields";
-import Exception from "src/helpers/exception"
+const Helper = require.main.require( "./src/helpers/helper");
+const DBSchema = require.main.require( "./src/db/db-generic/db-schema")
+const Exception = require.main.require("./src/helpers/exception");
 
-import MerkleTreeNodeTypeEnum from "./merkle-tree-node-type-enum"
-import CryptoHelper from "../../helpers/crypto/crypto-helper";
+const MarshalFields = require( "../../marshal/fields/marshal-fields");
 
-export default class MerkleTreeNode extends DBSchema {
+const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum")
+const CryptoHelper = require("../../helpers/crypto/crypto-helper");
+
+module.exports = class MerkleTreeNode extends DBSchema {
 
     constructor(scope, schema,  data, type, creationOptions){
 

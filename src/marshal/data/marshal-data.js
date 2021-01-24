@@ -1,8 +1,9 @@
-import Exception from "src/helpers/exception"
-import StringHelper from "src/helpers/string-helper";
-import BN from 'bn.js';
+const BN = require(  'bn.js');
 
-export default class MarshalData{
+const Exception = require.main.require( "./src/helpers/exception")
+const StringHelper = require.main.require( "./src/helpers/string-helper");
+
+module.exports = class MarshalData{
 
     /**
      * Strings
