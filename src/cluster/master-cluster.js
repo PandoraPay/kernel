@@ -94,17 +94,22 @@ export default class MasterCluster extends AsyncEvents {
         this.isMaster = isMaster;
         this.isWorker = !isMaster;
 
-        const workerId = isMaster ? 'master' : Number.parseInt( process.env.SLAVE_INDEX);
+        this.startedPromise = new Promise( resolve => {
+            this._startedPromiseResolver = resolve;
+        });
+
+        let workerId;
+
+        if (!BROWSER) {
+            workerId = isMaster ? 'master' : Number.parseInt(process.env.SLAVE_INDEX);
+            if (!isMaster ) process.index = "master";
+        } else {
+            this._startedPromiseResolver(true);
+        }
 
         this.workerName = isMaster ? "master" : "worker" + workerId;
         this.workerId = workerId;
 
-        if (!isMaster)
-            process.index = "master";
-
-        this.startedPromise = new Promise( resolve => {
-            this._startedPromiseResolver = resolve;
-        });
 
         if ( isMaster )
             await this._scope.db.client.lockDeleteAll();
@@ -231,15 +236,11 @@ export default class MasterCluster extends AsyncEvents {
 
         if (this.isWorker) {
 
-            //this._scope.logger.info(this, 'sendReadyWorker sending' );
-
             this.on("ready-master", ()=>{
-                //this._scope.logger.info(this, 'ready-master received' );
                 this._startedPromiseResolver(true);
             })
 
             await this.sendReadyWorker();
-            //this._scope.logger.info(this, 'sendReadyWorker received' );
         }
 
     }
