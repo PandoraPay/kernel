@@ -76,6 +76,8 @@ const NumberHelper = require( "./src/helpers/number-helper");
 const MasterCluster = require( "./src/cluster/master-cluster");
 const BrowserCluster = require( "./src/cluster/browser-cluster");
 
+const cluster = require('./src/cluster/cluster')
+
 // only supported for node.js
 const sticky = BROWSER ? undefined : require('sticky-session').default;
 const HttpServer = BROWSER ? undefined : require("./src/cluster/server/http-server");
@@ -151,6 +153,7 @@ const library = {
         HttpServer,
 
         sticky,
+        cluster,
     },
 
     utils: {

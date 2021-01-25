@@ -1,7 +1,7 @@
 /**
  * pouchdb library and install find plugin
  */
-const PouchDB = require('pouchdb')
+const PouchDB = require('pouchdb').default
 const Exception = require("../../../helpers/exception");
 const BufferHelper = require("../../../helpers/buffers/buffer-helper")
 const Helper = require( "../../../helpers/helper");
