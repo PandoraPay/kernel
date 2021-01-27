@@ -21,23 +21,23 @@ module.exports = {
 
     tests: async scope =>{
 
-        await TestsHashMap(scope);
-
-        await TestsRadixTree(scope);
-
-        await TestsMerkleTree();
-
-        //await TestsRedis();
-
-        await TestsHelpers( );
-
+        // await TestsHashMap(scope);
+        //
+        // await TestsRadixTree(scope);
+        //
+        // await TestsMerkleTree();
+        //
+        // //await TestsRedis();
+        //
+        // await TestsHelpers( );
+        //
         await TestsMarshalData();
 
         await TestsMarshal( );
 
         await TestsSimple( );
 
-        await TestsMasterCluster( );
+        //await TestsMasterCluster( );
 
         await TestsCouch();
         await TestsPouch();

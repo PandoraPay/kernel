@@ -1,6 +1,6 @@
 const describe = require( '../../../unit-testing/describe');
 const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
-const DBSchema = require( "../../../../../src/db/db-generic/db-schema");
+const DBMarshal = require( "../../../../../src/db/db-generic/db-marshal");
 const Helper = require( "../../../../../src/helpers/helper");
 
 /**
@@ -13,7 +13,7 @@ module.exports = async function run ( dbType) {
 
     const TEST1 = dbType === "CouchDB" ?  300 : 10001;
 
-    class classSchema extends DBSchema {
+    class classSchema extends DBMarshal {
         constructor(scope, sc={}, data, type, onlyFields, emptyObject){
             super(scope, {...MarshalTests.schemaSimple}, data, type, onlyFields, emptyObject);
         }

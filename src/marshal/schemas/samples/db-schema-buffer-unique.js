@@ -1,7 +1,7 @@
 const Helper = require( "../../../helpers/helper");
-const DBSchemaBuffer = require( "./db-schema-buffer");
+const {SchemaBuildBufferClass} = require( "./db-schema-build-buffer");
 
-module.exports = class DBSchemaBufferUnique extends DBSchemaBuffer {
+module.exports = class DBSchemaBufferUnique extends SchemaBuildBufferClass {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 

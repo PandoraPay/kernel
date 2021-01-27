@@ -1,4 +1,4 @@
-const DBSchema = require("../../db/db-generic/db-schema")
+const DBMarshal = require("../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
 
 const HashMap = require("./hash-map")
@@ -67,7 +67,7 @@ module.exports = class HashVirtualMap extends HashMap {
         if (data instanceof HashMapElement === false)
             element = this._createSchemaObject({
                 id: id,
-                data: data instanceof DBSchema ? data.toBuffer() : data,
+                data: data instanceof DBMarshal ? data.toBuffer() : data,
             }, "object", "element"); //data is provided
 
         if (this._hasCache(id)) this._deleteCache(id);
@@ -118,7 +118,7 @@ module.exports = class HashVirtualMap extends HashMap {
 
             const element = this._createSchemaObject({
                 id: id,
-                data: out.data instanceof DBSchema ? out.data.toBuffer() : out.data,
+                data: out.data instanceof DBMarshal ? out.data.toBuffer() : out.data,
             }, "object", "element"); //data is provided
 
             this._virtual[id] = {
@@ -170,7 +170,7 @@ module.exports = class HashVirtualMap extends HashMap {
         if (data instanceof HashMapElement === false)
             element = this._createSchemaObject({
                 id: id,
-                data: data instanceof DBSchema ? data.toBuffer() : data,
+                data: data instanceof DBMarshal ? data.toBuffer() : data,
             }, "object", "element",  ); //data is provided
 
         if ( this._hasCache(id) ) this._deleteCache(id);

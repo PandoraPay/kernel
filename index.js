@@ -29,17 +29,16 @@ const UnmarshalFields = require( "./src/marshal/fields/unmarshal-fields");
 const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-validation-pre-processing");
 const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
-const DBSchema = require( "./src/db/db-generic/db-schema");
-const DBSchemaBuffer = require( "./src/db/db-generic/samples/db-schema-buffer");
-const DBSchemaBufferBig = require( "./src/db/db-generic/samples/db-schema-buffer-big");
-const DBSchemaBufferUnique = require( "./src/db/db-generic/samples/db-schema-buffer-unique");
-const DBSchemaNumber = require( "./src/db/db-generic/samples/db-schema-number");
-const DBSchemaHash = require( "./src/db/db-generic/samples/db-schema-hash");
-const DBSchemaString = require( "./src/db/db-generic/samples/db-schema-string");
-const DBSchemaBoolean = require( "./src/db/db-generic/samples/db-schema-boolean");
+const DBMarshal = require( "./src/db/db-generic/db-marshal");
+const DBSchemaBuffer = require( "./src/marshal/schemas/samples/db-schema-build-buffer");
+const DBSchemaBufferBig = require( "./src/marshal/schemas/samples/db-schema-buffer-big");
+const DBSchemaBufferUnique = require( "./src/marshal/schemas/samples/db-schema-buffer-unique");
+const DBSchemaNumber = require( "./src/marshal/schemas/samples/db-schema-number");
+const DBSchemaString = require( "./src/marshal/schemas/samples/db-schema-string");
+const DBSchemaBoolean = require( "./src/marshal/schemas/samples/db-schema-boolean");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
-const DBSchemaHelper = require( "./src/db/db-generic/db-schema-helper");
+const DBMarshalHelper = require( "./src/db/db-generic/db-marshal-helper");
 const DBConstructor = require( "./src/db/db-constructor");
 
 const AsyncInterval = require( "./src/helpers/async-interval");
@@ -99,20 +98,19 @@ const library = {
         MarshalValidationPreProcessing,
 
         db:{
-            DBSchema,
+            DBMarshal,
             RedisDB,
 
             samples:{
                 DBSchemaBuffer,
                 DBSchemaBufferUnique,
                 DBSchemaBufferBig,
-                DBSchemaHash,
                 DBSchemaNumber,
                 DBSchemaString,
                 DBSchemaBoolean,
             },
 
-            DBSchemaHelper,
+            DBMarshalHelper,
             DBConstructor,
 
         },

@@ -1,5 +1,5 @@
 const Helper = require( "../../helpers/helper");
-const DBSchema = require( "../../db/db-generic/db-schema")
+const DBMarshal = require( "../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
 
 const MarshalFields = require( "../../marshal/fields/marshal-fields");
@@ -7,7 +7,7 @@ const MarshalFields = require( "../../marshal/fields/marshal-fields");
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum")
 const CryptoHelper = require("../../helpers/crypto/crypto-helper");
 
-module.exports = class MerkleTreeNode extends DBSchema {
+module.exports = class MerkleTreeNode extends DBMarshal {
 
     constructor(scope, schema,  data, type, creationOptions){
 
@@ -68,7 +68,7 @@ module.exports = class MerkleTreeNode extends DBSchema {
                 children:{
                     
                     type: "array",
-                    classObject: MerkleTreeNode,
+                    schemaClass: MerkleTreeNode,
                     
                     minSize: 0,
                     maxSize(){

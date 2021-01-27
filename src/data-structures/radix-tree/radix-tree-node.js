@@ -1,13 +1,13 @@
 const Helper = require( "../../helpers/helper");
-const DBSchema = require("../../db/db-generic/db-schema")
+const DBMarshal = require("../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
-const DBSchemaBuffer = require( "../../db/db-generic/samples/db-schema-buffer" );
-const DBSchemaString = require("../../db/db-generic/samples/db-schema-string");
+const DBSchemaBuffer = require( "../../marshal/schemas/samples/db-schema-build-buffer" );
+const DBSchemaString = require("../../marshal/schemas/samples/db-schema-string");
 const CryptoHelper = require( "../../helpers/crypto/crypto-helper");
 
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
 
-module.exports = class RadixTreeNode extends DBSchema {
+module.exports = class RadixTreeNode extends DBMarshal {
 
     constructor(scope, schema,  data, type, creationOptions){
 
@@ -121,7 +121,7 @@ module.exports = class RadixTreeNode extends DBSchema {
                 childrenLabels: {
 
                     type: "array",
-                    classObject: DBSchemaString,
+                    schemaClass: DBSchemaString,
 
                     fixedBytes(){ return this.childrenCount },
 
@@ -136,7 +136,7 @@ module.exports = class RadixTreeNode extends DBSchema {
                 childrenHashes:{
 
                     type: "array",
-                    classObject: DBSchemaBuffer,
+                    schemaClass: DBSchemaBuffer,
 
                     fixedBytes(){ return this.childrenCount; },
 

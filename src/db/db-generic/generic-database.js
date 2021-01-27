@@ -4,7 +4,7 @@
 
 const Exception = require( "../../helpers/exception")
 const Marshal = require("../../marshal/marshal");
-const DBSchema = require("./db-schema");
+const DBMarshal = require("./db-marshal");
 
 module.exports = class GenericDatabase{
 
@@ -37,15 +37,13 @@ module.exports = class GenericDatabase{
 
         if (typeof schema  === "function"  && schema.prototype) {
 
-            if (schema.prototype instanceof DBSchema){
-                let obj = new schema( {...this._scope, db: this}, undefined, undefined, undefined, creationOptions );
+            if (schema.prototype instanceof DBMarshal){
+                const obj = new schema( {...this._scope, db: this}, undefined, undefined, undefined, creationOptions );
                 this._scope.schema.exportDatabaseSchemaMethods( obj );
                 return obj;
             }
-
-
-            if (schema.prototype instanceof Marshal)
-                throw new Exception(this, "schema is a marshal not a DBSchema");
+            else
+                throw new Exception(this, "schema is a marshal not a DBMarshal");
 
         }
 

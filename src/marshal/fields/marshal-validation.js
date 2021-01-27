@@ -2,9 +2,6 @@ const BN = require( "bn.js")
 const Exception = require( "../../helpers/exception");
 
 const MarshalHelper = require( "./../helpers/marshal-helper")
-const MarshalFields = require( "./marshal-fields");
-
-let Marshal;
 
 class MarshalValidation {
 
@@ -38,7 +35,7 @@ class MarshalValidation {
         if ( !Array.isArray(value) ) throw "Value is not an array";
 
         for (let it=0; it<value.length; it++ ) {
-            if (! (value[it] instanceof Marshal) ) throw "Object in array is not a marshaling object";
+            if (typeof value[it] !== "object" || !value[it].__isMarshal) throw "Object in array is not a marshaling object"
             if (! value[it].validate() ) throw "Object in array is not valid";
         }
 
@@ -75,7 +72,7 @@ class MarshalValidation {
             if (emptyAllowed) return true;
         }
 
-        if (!(value instanceof Marshal)) throw "Object is not a marshaling object";
+        if (typeof value !== "object" || !value.__isMarshal) throw "Object is not a marshaling object";
         if (! value.validate()) throw "Object was not validated";
     }
 
@@ -96,7 +93,5 @@ class MarshalValidation {
 
 }
 
-module.exports = (obj)=>{
-    Marshal = obj;
-    return MarshalValidation;
-}
+
+module.exports = MarshalValidation;

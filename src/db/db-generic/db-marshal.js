@@ -1,9 +1,10 @@
 const Marshal  = require( "./../../marshal/marshal")
+
 const Exception  = require( "../../helpers/exception");
 const Helper  = require( "../../helpers/helper")
 const MarshalData  = require( "./../../marshal/data/marshal-data")
 
-module.exports = class DBSchema extends Marshal{
+module.exports = class DBMarshal extends Marshal{
 
     constructor(scope, schema,  data, type, creationOptions){
 
@@ -13,102 +14,6 @@ module.exports = class DBSchema extends Marshal{
         this._importMethodsFromDatabaseSchema();
 
     }
-
-    _createSchema(data, type,  creationOptions){
-
-        this._schema = this._schema || {};
-
-        this._schema = Helper.merge( {
-
-                fields: {
-                    table: {
-                        type: "string",
-                        default: "obj",
-                        fixedBytes: 3,
-                        skipMarshal: true,
-                        skipSaving: true,
-                        skipHashing: true,
-                        presetDisabled: true,
-                        position: 10000,
-                    },
-                    id: {
-                        type: "string",
-                        default(schemaField) {
-                            const fixedBytes = this.checkValue( schemaField.fixedBytes, "fixedBytes");
-                            if (fixedBytes !== undefined) return MarshalData.makeId( fixedBytes );
-
-                            const maxSize = this.checkValue( schemaField.maxSize, "maxSize");
-                            return MarshalData.makeId( maxSize );
-                        },
-                        fixedBytes: 20,
-                        skipMarshal: true,
-                        skipSaving: true,
-                        skipHashing: true,
-                        presetDisabled: true,
-                        unique: true,
-                        position: 10002,
-                    }
-                },
-
-                saving: {
-                    enabled: true,
-                    indexable: false,
-                    indexableById: true,
-
-                    //type: undefined,
-
-                    saveInfixParentTable: true,
-                    //saveInfixParentId: false,
-
-                    //skipSavingAsItWasNotLoaded: false,
-
-                    //todo
-                    //storeDataNotId: false,
-                }
-            },
-            this._schema, false);
-
-        if (!super._createSchema.call(this, data, type,  creationOptions))
-            return false;
-
-        this._schema.fieldsWithUniques = {}; this._schema.fieldsWithUniquesLength = 0;
-
-        for (const key in this._schema.fields)
-            if (this._schema.fields[key].unique){ this._schema.fieldsWithUniques[key] = this._schema.fields[key].unique; this._schema.fieldsWithUniquesLength++; }
-
-
-        return true;
-    }
-
-
-
-    _fillDefaultValues(fieldName, schemaField){
-
-        super._fillDefaultValues.call(this, fieldName, schemaField);
-
-        /**
-         * unique
-         * uniqueGlobal
-         */
-
-    }
-
-    validateField(name, value, schemaField){
-
-
-        if (!super.validateField.call(this, name, value, schemaField))
-            throw new Exception(this, "Marshal failed", {name});
-
-        if ( value === undefined) value = this[name];
-        if ( !schemaField ) schemaField = this._schema.fields[name];
-
-
-
-        return true;
-
-    }
-
-
 
     /**
      * Delete from Database. The method should be overwritten by Database schema connector.
@@ -493,20 +398,20 @@ module.exports = class DBSchema extends Marshal{
 
     /**
      * Used to export methods to new instances
-     * @param schemaObject
+     * @param schemaClass
      */
 
-    static exportDatabaseSchemaMethods(schemaObject){
+    static exportDatabaseSchemaMethods( marshalObject){
 
-        schemaObject.save = this.prototype.save.bind(schemaObject);
-        schemaObject.load =  this.prototype.load.bind(schemaObject);
-        schemaObject._loaded =  this.prototype._loaded.bind(schemaObject);
-        schemaObject.lock =  this.prototype.lock.bind(schemaObject);
-        schemaObject.delete = this.prototype.delete.bind(schemaObject);
+        marshalObject.save = this.prototype.save.bind(marshalObject);
+        marshalObject.load =  this.prototype.load.bind(marshalObject);
+        marshalObject._loaded =  this.prototype._loaded.bind(marshalObject);
+        marshalObject.lock =  this.prototype.lock.bind(marshalObject);
+        marshalObject.delete = this.prototype.delete.bind(marshalObject);
 
-        schemaObject._saveMiddleware = this.prototype._saveMiddleware.bind(schemaObject);
-        schemaObject._getMiddleware = this.prototype._getMiddleware.bind(schemaObject);
-        schemaObject._deleteMiddleware = this.prototype._deleteMiddleware.bind(schemaObject);
+        marshalObject._saveMiddleware = this.prototype._saveMiddleware.bind(marshalObject);
+        marshalObject._getMiddleware = this.prototype._getMiddleware.bind(marshalObject);
+        marshalObject._deleteMiddleware = this.prototype._deleteMiddleware.bind(marshalObject);
 
     }
 
@@ -533,5 +438,8 @@ module.exports = class DBSchema extends Marshal{
 
     }
 
+    get getMarshalClass(){
+        return DBMarshal;
+    }
 
 }

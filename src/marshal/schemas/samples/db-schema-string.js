@@ -1,19 +1,21 @@
-const DBSchema = require( "../db-schema" );
+const DBMarshal = require( "../../../db/db-generic/db-marshal" );
 
-module.exports = class DBSchemaNumber extends DBSchema {
+module.exports = class DBSchemaString extends DBMarshal {
 
     constructor(scope, schema,  data, type, creationOptions){
 
         super(scope, {
+
             fields: {
-                number: {
-                    type: "number",
-                    fixedBytes: 7,
+                string: {
+                    type: "string",
+                    minSize:0,
+                    maxSize: 255,
                 }
             },
-            options:{
-                returnOnlyField: "number",
 
+            options:{
+                returnOnlyField: "string",
                 hashing: {
 
                     enabled: true,
@@ -22,7 +24,6 @@ module.exports = class DBSchemaNumber extends DBSchema {
                     fct: (a)=>a,
 
                 },
-
             }
         },  data, type, creationOptions);
 

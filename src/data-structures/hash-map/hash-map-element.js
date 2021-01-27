@@ -1,8 +1,8 @@
-const DBSchema = require( "../../db/db-generic/db-schema" );
+const DBMarshal = require( "../../db/db-generic/db-marshal" );
 const Helper = require( "../../helpers/helper");
 const Exception = require("../../helpers/exception");
 
-module.exports = class HashMapElement extends DBSchema {
+module.exports = class HashMapElement extends DBMarshal {
 
     constructor(scope, schema, data, type, creationOptions) {
 

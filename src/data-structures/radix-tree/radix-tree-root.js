@@ -1,5 +1,5 @@
 const Helper = require( "../../helpers/helper");
-const DBSchema = require("../../db/db-generic/db-schema")
+const DBMarshal = require("../../db/db-generic/db-marshal")
 const RadixTreeNode = require("./radix-tree-node")
 const RadixTreeNodeTypeEnum = require("./radix-tree-node-type-enum");
 

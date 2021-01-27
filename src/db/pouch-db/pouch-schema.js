@@ -1,8 +1,8 @@
-const DBSchema = require( "../db-generic/db-schema");
+const DBMarshal = require( "../db-generic/db-marshal");
 const Exception = require( "../../helpers/exception");
 const BufferHelper = require( "../../helpers/buffers/buffer-helper");
 
-class PouchSchema extends DBSchema{
+class PouchSchema extends DBMarshal{
 
     async _saveMiddleware(infix, table, id, db, data, type, multi){
 

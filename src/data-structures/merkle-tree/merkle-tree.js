@@ -1,9 +1,9 @@
 const Helper = require( "../../helpers/helper");
-const DBSchema  = require( "../../db/db-generic/db-schema")
+const DBMarshal  = require( "../../db/db-generic/db-marshal")
 const Exception  = require("../../helpers/exception");
 const MerkleTreeRoot  = require("./merkle-tree-root");
 
-module.exports = class MerkleTree extends DBSchema {
+module.exports = class MerkleTree extends DBMarshal {
     
     constructor(scope, schema,  data, type, creationOptions){
         
@@ -41,7 +41,7 @@ module.exports = class MerkleTree extends DBSchema {
 
                 root:{
                     type: "object",
-                    classObject: MerkleTreeRoot,
+                    schemaClass: MerkleTreeRoot,
 
                     setEvent(root){
                         this._leaves = undefined;

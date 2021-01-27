@@ -1,10 +1,7 @@
 const Helper = require( "../../../helpers/helper");
-const DBSchema = require( "../db-schema");
-const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
+const DBMarshal = require( "../../../db/db-generic/db-marshal" );
 
-const DBSchemaBuffer = require( "./db-schema-buffer" );
-
-module.exports = class DBSchemaBufferBig extends DBSchemaBuffer {
+module.exports = class DBSchemaBoolean extends DBMarshal {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 
@@ -12,19 +9,17 @@ module.exports = class DBSchemaBufferBig extends DBSchemaBuffer {
 
             fields: {
                 buffer: {
-                    fixedBytes: undefined,
-                    minSize: 1,
-                    maxSize: 65535
+                    type: "boolean",
+                    default: false,
                 }
             },
-
             options:{
-                returnOnlyField: "buffer",
+                returnOnlyField: "boolean",
                 hashing: {
                     enabled: true,
                     parentHashingPropagation: true,
 
-                    fct: CryptoHelper.dkeccak256,
+                    fct: (a) => a,
                 }
             },
 

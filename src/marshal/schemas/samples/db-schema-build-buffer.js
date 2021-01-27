@@ -1,11 +1,12 @@
 const Helper = require( "../../../helpers/helper");
-const DBSchema = require( "../db-schema");
 
-module.exports = class DBSchemaBuffer extends DBSchema {
+const SchemaMarshal = require( "../schema-build");
 
-    constructor(scope, schema = {},  data, type, creationOptions){
+class SchemaMarshalBuild extends SchemaMarshal {
 
-        super(scope, Helper.merge( {
+    constructor( options = {} ){
+
+        super( Helper.merge( {
 
                 fields: {
                     buffer: {
@@ -24,8 +25,13 @@ module.exports = class DBSchemaBuffer extends DBSchema {
                     }
                 },
 
-            }, schema, false),  data, type, creationOptions);
+            }, options, true) );
 
     }
 
+}
+
+module.exports = {
+    SchemaBuildBufferClass: SchemaMarshalBuild,
+    SchemaBuildBuffer: new SchemaMarshalBuild(),
 }

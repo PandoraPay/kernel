@@ -1,33 +1,27 @@
 const BN = require( "bn.js");
 
+const SchemaMarshal = require('./schemas/schema-build')
+
 const Base58 = require( "../helpers/base58-helper");
 const StringHelper = require( "../helpers/string-helper");
 const Exception = require( "../helpers/exception");
 const BufferReader = require( "../helpers/buffers/buffer-reader");
 const MarshalHelper = require( "./helpers/marshal-helper");
 
-const defaultValues = {
-
-    number: minSize => minSize,
-    bigNumber: minSize => new BN( minSize ),
-    string:  minSize => Array( minSize + 1 ).join('X') ,
-    buffer:  minSize => Buffer.alloc( minSize ),
-    array:  () =>[] ,
-    boolean: () => false,
-    object: () => undefined,
-
-};
-
 const defaultValuesExist = {number: true, string: true, array: true, boolean: true, buffer: true, object: true, bigNumber: true};
 
 module.exports = class MarshalBase{
 
-    constructor(scope, schema = {}, data, creationOptions = {}) {
+    constructor(scope, schema, data, creationOptions = {}) {
 
         this._scope = {
             ...scope,
             ...creationOptions.scope||{},
         };
+
+        this.__isMarshal = true;
+
+        if (!schema || schema instanceof SchemaMarshal === false) throw "schema is not defined or invalid";
 
         this._schema = schema;
 
@@ -235,77 +229,6 @@ module.exports = class MarshalBase{
 
     }
 
-    /**
-     * Fill with default Values
-     * @param fieldName
-     * @param schemaField
-     * @private
-     */
-    _fillDefaultValues(fieldName, schemaField) {
-
-        if (!schemaField.minSize)
-            schemaField.minSize = function() {
-
-                if (schemaField.type === "number") return 0;
-                if (schemaField.type === "bigNumber") return new BN(0);
-
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") return 0;
-
-            };
-
-        if (!schemaField.maxSize)
-            schemaField.maxSize = function(){
-
-                if (schemaField.type === "number") return Number.MAX_SAFE_INTEGER;
-                if ( schemaField.type === "bigNumber" ) return new BN("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
-
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") return 255;
-
-            };
-
-        if (!schemaField.fixedBytes)
-            schemaField.fixedBytes = function () {
-
-                if (schemaField.type === "number")
-                    if ( this.checkValue( schemaField.maxSize, "maxSize") <= 255) return 1;
-
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") {
-                    const minSize = this.checkValue(schemaField.minSize, "minSize");
-                    if ( minSize === this.checkValue(schemaField.maxSize, "maxSize")) return minSize;
-                }
-
-            };
-
-        if (!schemaField.specifyLength)
-            schemaField.specifyLength = function () {
-
-                if (schemaField.type === "string") return true; //strings are utf-8 so it will be variable based on the characters stored...
-
-                const fixedBytes = this.checkValue(schemaField.fixedBytes, "fixedBytes");
-                if (fixedBytes) return false;
-
-                return true;
-
-            };
-
-        if (!schemaField.emptyAllowed)
-            schemaField.emptyAllowed = function () {
-
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string")
-                    if (this.checkValue( schemaField.minSize, "minSize") === 0 && this.checkValue( schemaField.maxSize, "maxSize") === 0) return true;
-
-            };
-
-        //mapping default values
-        if (!schemaField.default) {
-
-            //maybe min Size
-            const minSize = MarshalHelper.checkValue.call( this, schemaField.minSize, "minSize" );
-            schemaField.default = defaultValues[schemaField.type].call(this, minSize);
-        }
-
-    }
-
 
     checkValue(...args){
         return MarshalHelper.checkValue.call(this, ...args);
@@ -398,5 +321,7 @@ module.exports = class MarshalBase{
     sizeInKB(){
        return this.size() / 1024;
     }
+
+
 
 }

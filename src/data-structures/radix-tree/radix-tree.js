@@ -2,12 +2,12 @@ const Exception = require("../../helpers/exception");
 const Helper = require( "../../helpers/helper");
 const Marshal = require( "../../marshal/marshal");
 
-const DBSchema = require("../../db/db-generic/db-schema");
+const DBMarshal = require("../../db/db-generic/db-marshal");
 const RadixTreeRoot = require( "./radix-tree-root")
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
 const RadixTreeNode = require( "./radix-tree-node");
 
-module.exports = class RadixTree extends DBSchema {
+module.exports = class RadixTree extends DBMarshal {
 
     constructor(scope, schema, data, type, creationOptions) {
 
@@ -28,7 +28,7 @@ module.exports = class RadixTree extends DBSchema {
 
                 root: {
                     type: "object",
-                    classObject: RadixTreeRoot,
+                    schemaClass: RadixTreeRoot,
 
                     position: 101,
                 },
