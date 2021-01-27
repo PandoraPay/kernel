@@ -1,5 +1,6 @@
 const randomBytes = require('randombytes');
-const isArrayBuffer = require('is-array-buffer');
+let isArrayBuffer = require('is-array-buffer');
+if (isArrayBuffer.default) isArrayBuffer = isArrayBuffer.default;
 
 class BufferHelper{
 
