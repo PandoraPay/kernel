@@ -65,10 +65,10 @@ module.exports = class HashVirtualMap extends HashMap {
 
         let element = data;
         if (!(data instanceof DBMarshal))
-            element = this._createMarshalObject({
+            element = this._createSimpleMarshalObject(this._schema, "element",{
                 id: id,
                 data: data instanceof DBMarshal ? data.toBuffer() : data,
-            }, "object", "element", { schemaBuiltClass: this._schema } ); //data is provided
+            }, "object", undefined,  ); //data is provided
 
         if (this._hasCache(id)) this._deleteCache(id);
         this._virtual[id] = {
@@ -116,10 +116,10 @@ module.exports = class HashVirtualMap extends HashMap {
 
         if (out){
 
-            const element = this._createMarshalObject({
+            const element = this._createSimpleMarshalObject( this._schema, "element", {
                 id: id,
                 data: out.data instanceof DBMarshal ? out.data.toBuffer() : out.data,
-            }, "object", "element", { schemaBuiltClass: this._schema } ); //data is provided
+            }, "object", undefined, { schemaBuiltClass: this._schema } ); //data is provided
 
             this._virtual[id] = {
                 id,
@@ -168,10 +168,10 @@ module.exports = class HashVirtualMap extends HashMap {
 
         let element = data;
         if (!(data instanceof DBMarshal))
-            element = this._createMarshalObject({
+            element = this._createSimpleMarshalObject(this._schema, "element", {
                 id: id,
                 data: data instanceof DBMarshal ? data.toBuffer() : data,
-            }, "object", "element",  { schemaBuiltClass: this._schema } ); //data is provided
+            }, "object",   undefined, ); //data is provided
 
         if ( this._hasCache(id) ) this._deleteCache(id);
 

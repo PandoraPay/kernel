@@ -81,7 +81,7 @@ module.exports = class RadixTree extends DBMarshal {
 
     createNewRoot(){
 
-        const newRoot = this._createSimpleObject( this.root.constructor, "root", {
+        const newRoot = this._createSimpleMarshalObject( this.root.constructor, "root", {
             id: this.root.id,
         }, "object", undefined, {skipValidation: true, skipProcessingConstructionValues: true} );
 
@@ -167,7 +167,7 @@ module.exports = class RadixTree extends DBMarshal {
 
         //construct the data as an object
         if ( this.root.nodeClassData && data instanceof Marshal === false )
-            data = this.root._createSimpleObject( this.root.nodeClassData, "children", data );
+            data = this.root._createSimpleMarshalObject( this.root.nodeClassData, "children", data );
 
         //found node already
         if (found.result) {
@@ -216,7 +216,7 @@ module.exports = class RadixTree extends DBMarshal {
             node.__data.childrenLabels = [];
             node.__data.childrenHashes = [];
 
-            const newNode = node._createSimpleObject( node.nodeClass, "children", {
+            const newNode = node._createSimpleMarshalObject( node.nodeClass, "children", {
                 label: remainingLabel,
                 data: nodeData,
                 type: nodeType,
@@ -248,7 +248,7 @@ module.exports = class RadixTree extends DBMarshal {
 
         const newLabel = label.substr( found.labelOffset );
 
-        const child  = node._createSimpleObject( node.nodeClass,  "children",{
+        const child  = node._createSimpleMarshalObject( node.nodeClass,  "children",{
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
@@ -301,7 +301,7 @@ module.exports = class RadixTree extends DBMarshal {
 
             const otherChild = await toDeleteParent.loadChild( toDeleteParent.__data.childrenLabels[ otherChildIndex ].string, otherChildIndex );
 
-            const newParent = grandParent._createSimpleObject(this.root.nodeClass, "children", {
+            const newParent = grandParent._createSimpleMarshalObject(this.root.nodeClass, "children", {
                 label: toDeleteParent.__data.label + otherChild.__data.label,
             }, "object", 0, {skipValidation: true, skipProcessingConstructionValues: true} );
 
@@ -366,7 +366,7 @@ module.exports = class RadixTree extends DBMarshal {
 
         try{
 
-            const obj = this.root._createSimpleObject( this.root.nodeClass, "children", {
+            const obj = this.root._createSimpleMarshalObject( this.root.nodeClass, "children", {
                 label: label,
                 data: Buffer.alloc(1),
                 type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
@@ -465,7 +465,7 @@ module.exports = class RadixTree extends DBMarshal {
 
     async loadNodeChild(label, position, parent){
 
-        const child = parent._createSimpleObject( parent.nodeClass, "children", {
+        const child = parent._createSimpleMarshalObject( parent.nodeClass, "children", {
             label: label,
         }, "object", position, {skipProcessingConstructionValues: true} );
 

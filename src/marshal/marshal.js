@@ -393,7 +393,7 @@ class Marshal extends MarshalBase {
 
     }
 
-    _createSimpleObject(schemaBuiltClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
+    _createSimpleMarshalObject(schemaBuiltClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
 
         const object = this._creationMiddleware( {
                 ...this._scope,

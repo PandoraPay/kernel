@@ -63,7 +63,7 @@ const RadixTreeNodeTypeEnum = require( "./src/data-structures/radix-tree/radix-t
 
 const HashMap = require( "./src/data-structures/hash-map/hash-map");
 const HashVirtualMap = require( "./src/data-structures/hash-map/hash-virtual-map");
-const HashMapElement = require( "./src/data-structures/hash-map/schema-build-hash-map-element");
+const SchemaBuildHashMapElement = require( "./src/data-structures/hash-map/schema/schema-build-hash-map-element");
 
 const NetworkTypeEnum = require( "./bin/argv/modules/network-type-enum");
 
@@ -137,7 +137,7 @@ const library = {
         hashMap:{
             HashMap,
             HashVirtualMap,
-            HashMapElement,
+            SchemaBuildHashMapElement,
         }
 
     },

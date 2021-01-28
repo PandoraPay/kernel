@@ -1,6 +1,6 @@
-const DBSchemaBuild = require( "../../db/db-generic/db-schema-build" );
-const Helper = require( "../../helpers/helper");
-const Exception = require("../../helpers/exception");
+const DBSchemaBuild = require( "../../../db/db-generic/db-schema-build" );
+const Helper = require( "../../../helpers/helper");
+const Exception = require("../../../helpers/exception");
 
 class SchemaBuildHashMapElement extends DBSchemaBuild {
 
@@ -17,7 +17,7 @@ class SchemaBuildHashMapElement extends DBSchemaBuild {
 
                 id : {
                     fixedBytes: 64,
-                    unique: false,
+                    unique: false, // it is verified by the hash map
                 },
 
                 data: {

@@ -3,7 +3,7 @@ const TestsHelper = require("../../../unit-testing/tests-helper");
 
 const HashMap = require("../../../../../src/data-structures/hash-map/hash-map");
 const DBMarshal = require("../../../../../src/db/db-generic/db-marshal");
-const {SchemaBuildHashMapElement} = require("../../../../../src/data-structures/hash-map/schema-build-hash-map-element");
+const {SchemaBuildHashMapElement} = require("../../../../../src/data-structures/hash-map/schema/schema-build-hash-map-element");
 
 /**
  *

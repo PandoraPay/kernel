@@ -398,7 +398,7 @@ module.exports = class DBMarshal extends Marshal{
 
     /**
      * Used to export methods to new instances
-     * @param schemaBuiltClass
+     * @param marshalObject
      */
 
     static exportDatabaseSchemaMethods( marshalObject){
