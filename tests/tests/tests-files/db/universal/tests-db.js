@@ -180,7 +180,7 @@ module.exports = async function run ( dbType ) {
 
         "multi hierarchy": async function (){
 
-            const schema = Helper.merge(  MarshalTests.testMultilevelSchema(DBSchemaBuild), {
+            const schema = Helper.merge(  MarshalTests.testMultilevelSchema, {
                 fields: {
                     table:{
                         default: "TS2",
@@ -220,7 +220,7 @@ module.exports = async function run ( dbType ) {
 
         "multi hierarchy DELETE": async function (){
 
-            const schema = Helper.merge(  MarshalTests.testMultilevelSchema(DBSchemaBuild), {}, true);
+            const schema = Helper.merge(  MarshalTests.testMultilevelSchema, {}, true);
             const schemaBuilt = new DBSchemaBuild(schema)
 
             const obj = this.db.createMarshalInstance( schemaBuilt );

@@ -1,8 +1,8 @@
-const SchemaMarshal = require('../../marshal/schemas/schema-build')
+const SchemaBuild = require('../../marshal/schemas/schema-build')
 const Helper = require('../../helpers/helper')
 const MarshalData  = require( "./../../marshal/data/marshal-data")
 
-class DBSchemaBuild extends SchemaMarshal {
+class DBSchemaBuild extends SchemaBuild {
 
     constructor(schema = {}) {
 
@@ -57,6 +57,9 @@ class DBSchemaBuild extends SchemaMarshal {
         }, schema.saving || {}, true);
     }
 
+    get getClass(){
+        return DBSchemaBuild;
+    }
 
     postProcessSchema() {
         super.postProcessSchema();

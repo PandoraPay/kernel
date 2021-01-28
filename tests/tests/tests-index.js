@@ -21,8 +21,8 @@ module.exports = {
 
     tests: async scope =>{
 
-        // await TestsHashMap(scope);
-        //
+        await TestsHashMap(scope);
+
         // await TestsRadixTree(scope);
         //
         // await TestsMerkleTree();

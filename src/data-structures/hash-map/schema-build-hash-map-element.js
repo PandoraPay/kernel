@@ -1,12 +1,12 @@
-const DBMarshal = require( "../../db/db-generic/db-marshal" );
+const DBSchemaBuild = require( "../../db/db-generic/db-schema-build" );
 const Helper = require( "../../helpers/helper");
 const Exception = require("../../helpers/exception");
 
-module.exports = class HashMapElement extends DBMarshal {
+class SchemaBuildHashMapElement extends DBSchemaBuild {
 
-    constructor(scope, schema, data, type, creationOptions) {
+    constructor(schema = {}) {
 
-        super(scope, Helper.merge({
+        super(Helper.merge({
 
             fields: {
 
@@ -25,6 +25,7 @@ module.exports = class HashMapElement extends DBMarshal {
                     type: "buffer",
                     minSize: 0,
                     maxSize: 255,
+                    position: 1000,
 
                 },
 
@@ -37,10 +38,12 @@ module.exports = class HashMapElement extends DBMarshal {
             },
 
 
-        }, schema, false), data, type, creationOptions);
-
+        }, schema, false));
     }
 
+}
 
-
+module.exports = {
+    SchemaBuildHashMapElement,
+    SchemaBuiltHashMapElement: new SchemaBuildHashMapElement()
 }

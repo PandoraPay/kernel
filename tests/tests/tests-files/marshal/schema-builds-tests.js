@@ -2,6 +2,9 @@ const {SchemaBuiltBuffer} = require("../../../../src/marshal/schemas/samples/sch
 const DBSchemaBuild = require("../../../../src/db/db-generic/db-schema-build")
 
 const testSimple2Schema = {
+
+    _testCreate: true,
+
     fields: {
         field0:{
             type: "buffer",
@@ -108,7 +111,7 @@ const testSimpleUnique = {
         field0: {
 
             type: "string",
-            default: "HELLO WORLD",
+            default: "HclassSchemaELLO WORLD",
 
             unique: true,
 

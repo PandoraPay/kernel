@@ -37,7 +37,21 @@ class SchemaBuild {
             //returnOnlyField
         }, schema.options || {}, true);
 
+        for (const key in this.fields){
+
+            const schemaField = this.fields[key];
+            if (schemaField.schemaBuiltClass)
+                if (typeof schemaField.schemaBuiltClass === "object" && schemaField.schemaBuiltClass._testCreate)
+                    schemaField.schemaBuiltClass = new this.getClass( schemaField.schemaBuiltClass );
+
+
+        }
+
         this._initializeSchema();
+    }
+
+    get getClass(){
+        return SchemaBuild;
     }
 
     _initializeSchema(){

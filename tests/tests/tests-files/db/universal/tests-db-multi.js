@@ -105,7 +105,7 @@ module.exports = async function run ( dbType) {
 
                 await Helper.waitUntilCondition( () => masterCluster.stickyMaster.workers.length === 0, undefined, 55000 );
 
-                const data = await this.db.findAll( classSchema, "multi1" );
+                const data = await this.db.findAll( classSchema, undefined, "multi1" );
 
                 const param = dbType !== "PouchDB" ? this._scope.argv.masterCluster.workerCount : 0;
 

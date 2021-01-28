@@ -226,7 +226,7 @@ module.exports = function run () {
 
         "multi level marshal": async function(){
 
-            const schema = MarshalTests.testMultilevelSchema(SchemaMarshal);
+            const schema = MarshalTests.testMultilevelSchema;
             const schemaBuilt = new SchemaMarshal(schema);
 
             const obj = new Marshal(this._scope, schemaBuilt);

@@ -175,7 +175,7 @@ class Marshal extends MarshalBase {
                 //avoid processing values ( used in constructor )
                 if (!creationOptions.skipProcessingConstructionValues) {
                     const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
-                    dataValue = schemaField[fct]( dataValue, schemaField, field, dataType, undefined, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
+                    dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
                 }
 
             }

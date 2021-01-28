@@ -1,6 +1,8 @@
 const BN = require("bn.js")
 
 const testMiniSchema =  {
+    _testCreate: true,
+
     fields: {
         field0: {
             type: "buffer",
@@ -301,7 +303,7 @@ const testStringSchema = {
     ]
 }
 
-const testMultilevelSchema = (SchemaBuild) => ({
+const testMultilevelSchema = {
     fields: {
 
         field0: {
@@ -309,7 +311,7 @@ const testMultilevelSchema = (SchemaBuild) => ({
             default: function () {
                 return this._createMarshalObject( {}, "object", "field0");
             },
-            schemaBuiltClass: new SchemaBuild(testMiniSchema),
+            schemaBuiltClass: testMiniSchema,
         },
 
         field1: {
@@ -323,7 +325,7 @@ const testMultilevelSchema = (SchemaBuild) => ({
                 ];
             },
 
-            schemaBuiltClass: new SchemaBuild(testMiniSchema),
+            schemaBuiltClass: testMiniSchema,
 
             maxSize: 255,
             minSize: 0,
@@ -332,7 +334,7 @@ const testMultilevelSchema = (SchemaBuild) => ({
     saving: {
         enabled: true,
     }
-})
+}
 
 
 module.exports = {
