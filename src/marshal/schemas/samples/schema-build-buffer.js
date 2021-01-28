@@ -32,6 +32,6 @@ class SchemaMarshalBuild extends SchemaMarshal {
 }
 
 module.exports = {
-    SchemaBuildBufferClass: SchemaMarshalBuild,
-    SchemaBuildBuffer: new SchemaMarshalBuild(),
+    SchemaBuildBuffer: SchemaMarshalBuild,
+    SchemaBuiltBuffer: new SchemaMarshalBuild(),
 }

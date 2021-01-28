@@ -4,7 +4,7 @@
  */
 
 const GenericDatabase = require( "../db-generic/generic-database");
-const PouchSchema = require( "./pouch-schema")
+const PouchMarshal = require( "./pouch-marshal")
 const PouchClient = require( "./client/pouch-client")
 
 class PouchDB extends GenericDatabase{
@@ -13,7 +13,7 @@ class PouchDB extends GenericDatabase{
 
         super( {
             ...scope,
-            schema: PouchSchema
+            marshal: PouchMarshal
         });
 
         this.client = new PouchClient({ ...this._scope, db: this, parent: this });

@@ -2,7 +2,7 @@ const SchemaMarshal = require('../../marshal/schemas/schema-build')
 const Helper = require('../../helpers/helper')
 const MarshalData  = require( "./../../marshal/data/marshal-data")
 
-class DbSchemaBuild extends SchemaMarshal {
+class DBSchemaBuild extends SchemaMarshal {
 
     constructor(schema = {}) {
 
@@ -40,7 +40,7 @@ class DbSchemaBuild extends SchemaMarshal {
 
         },schema, true));
 
-        this.saving = Helper.merge( schema.saving || {}, {
+        this.saving = Helper.merge(  {
             enabled: true,
             indexable: false,
             indexableById: true,
@@ -54,7 +54,7 @@ class DbSchemaBuild extends SchemaMarshal {
 
             //todo
             //storeDataNotId: false,
-        }, true);
+        }, schema.saving || {}, true);
     }
 
 
@@ -73,4 +73,4 @@ class DbSchemaBuild extends SchemaMarshal {
 
 }
 
-module.exports = DbSchemaBuild;
+module.exports = DBSchemaBuild;

@@ -1,4 +1,4 @@
-const {SchemaBuildBuffer} = require("../../../../src/marshal/schemas/samples/db-schema-build-buffer");
+const {SchemaBuiltBuffer} = require("../../../../src/marshal/schemas/samples/schema-build-buffer");
 const DBSchemaBuild = require("../../../../src/db/db-generic/db-schema-build")
 
 const testSimple2Schema = {
@@ -24,9 +24,9 @@ const testSimple2Schema = {
 
         field2:{
             type: "object",
-            schemaClass: SchemaBuildBuffer,
+            schemaBuiltClass: SchemaBuiltBuffer,
             default() {
-                return this._createSchemaObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
+                return this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
             },
         },
     },
@@ -46,29 +46,29 @@ const testAdvancedSchema = {
         },
         field1: {
             type: "object",
-            schemaClass: SchemaBuildBuffer,
+            schemaBuiltClass: SchemaBuiltBuffer,
             default() {
-                return this._createSchemaObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field1");
+                return this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field1");
             },
         },
         field2: {
             type: "array",
-            schemaClass: SchemaBuildBuffer,
+            schemaBuiltClass: SchemaBuiltBuffer,
             default() {
                 return [
-                    this._createSchemaObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
-                    this._createSchemaObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
-                    this._createSchemaObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
                 ]
             },
         },
         field3:{
             type: "array",
-            schemaClass: new DBSchemaBuild(testSimple2Schema),
+            schemaBuiltClass: new DBSchemaBuild(testSimple2Schema),
             default() {
                 return [
-                    this._createSchemaObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
-                    this._createSchemaObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
+                    this._createMarshalObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
+                    this._createMarshalObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
                 ]
             },
         },

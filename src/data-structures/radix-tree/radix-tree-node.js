@@ -1,7 +1,7 @@
 const Helper = require( "../../helpers/helper");
 const DBMarshal = require("../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
-const DBSchemaBuffer = require( "../../marshal/schemas/samples/db-schema-build-buffer" );
+const DBSchemaBuffer = require( "../../marshal/schemas/samples/schema-build-buffer" );
 const DBSchemaString = require("../../marshal/schemas/samples/db-schema-string");
 const CryptoHelper = require( "../../helpers/crypto/crypto-helper");
 
@@ -121,7 +121,7 @@ module.exports = class RadixTreeNode extends DBMarshal {
                 childrenLabels: {
 
                     type: "array",
-                    schemaClass: DBSchemaString,
+                    schemaBuiltClass: DBSchemaString,
 
                     fixedBytes(){ return this.childrenCount },
 
@@ -136,7 +136,7 @@ module.exports = class RadixTreeNode extends DBMarshal {
                 childrenHashes:{
 
                     type: "array",
-                    schemaClass: DBSchemaBuffer,
+                    schemaBuiltClass: DBSchemaBuffer,
 
                     fixedBytes(){ return this.childrenCount; },
 
@@ -290,8 +290,8 @@ module.exports = class RadixTreeNode extends DBMarshal {
         while ( i2 < newLabels.length && newLabel >= newLabels[i2].string )
             i2++;
 
-        const newLabelObject = this._createSchemaObject( { string: newLabel }, "object", "childrenLabels", undefined,  undefined, i2 );
-        const newHashObject = this._createSchemaObject( { buffer: newChild.hash() }, "object", "childrenHashes", undefined,  undefined, i2 );
+        const newLabelObject = this._createMarshalObject( { string: newLabel }, "object", "childrenLabels", undefined,  undefined, i2 );
+        const newHashObject = this._createMarshalObject( { buffer: newChild.hash() }, "object", "childrenHashes", undefined,  undefined, i2 );
 
         newLabels.splice(i2, 0, newLabelObject );
         newHashes.splice(i2, 0, newHashObject );

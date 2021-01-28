@@ -67,14 +67,14 @@ module.exports = class UnmarshalFields {
     /**
      * ARRAY
      */
-    static unmarshal_array(input, schemaField, field, type, callbackObject, createSchemaObject, unmarshalOptions){
+    static unmarshal_array(input, schemaField, field, type, callbackObject, createMarshalObject, unmarshalOptions){
 
         const array = [];
         let element;
 
         for (let i=0; i<input.length; i++) {
 
-            element = createSchemaObject( input[i], type, field, schemaField,  callbackObject, i, unmarshalOptions );
+            element = createMarshalObject( input[i], type, field, schemaField,  callbackObject, i, unmarshalOptions );
 
             array.push(  element );
         }
@@ -83,7 +83,7 @@ module.exports = class UnmarshalFields {
 
     }
 
-    static unmarshal_array_fromBuffer( input, schemaField, field, type, callbackObject, createSchemaObject, unmarshalOptions ){
+    static unmarshal_array_fromBuffer( input, schemaField, field, type, callbackObject, createMarshalObject, unmarshalOptions ){
 
         if ( MarshalHelper.checkValue.call( this, schemaField.maxSize, "maxSize" ) === 0 && schemaField.checkValue.call( this, schemaField.minSize, "minSize") === 0) return [];
 
@@ -92,7 +92,7 @@ module.exports = class UnmarshalFields {
 
         for (let i=0; i<length; i++) {
 
-            element = createSchemaObject( input, type, field, schemaField,  callbackObject, i, unmarshalOptions);
+            element = createMarshalObject( input, type, field, schemaField,  callbackObject, i, unmarshalOptions);
 
             array.push(element);
         }
@@ -104,12 +104,12 @@ module.exports = class UnmarshalFields {
     /**
      * OBJECT
      */
-    static unmarshal_object(input, schemaField, field, type, callbackObject, createSchemaObject, unmarshalOptions ){
-        return createSchemaObject( input, type, field,  schemaField, callbackObject, undefined, unmarshalOptions );
+    static unmarshal_object(input, schemaField, field, type, callbackObject, createMarshalObject, unmarshalOptions ){
+        return createMarshalObject( input, type, field,  schemaField, callbackObject, undefined, unmarshalOptions );
     }
 
-    static unmarshal_object_fromBuffer(input, schemaField, field,  type, callbackObject, createSchemaObject, unmarshalOptions){
-        return createSchemaObject( input, type, field, schemaField, callbackObject, undefined, unmarshalOptions);
+    static unmarshal_object_fromBuffer(input, schemaField, field,  type, callbackObject, createMarshalObject, unmarshalOptions){
+        return createMarshalObject( input, type, field, schemaField, callbackObject, undefined, unmarshalOptions);
     }
 
     /**

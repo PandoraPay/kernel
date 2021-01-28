@@ -28,7 +28,7 @@ module.exports = class RadixTree extends DBMarshal {
 
                 root: {
                     type: "object",
-                    schemaClass: RadixTreeRoot,
+                    schemaBuiltClass: RadixTreeRoot,
 
                     position: 101,
                 },

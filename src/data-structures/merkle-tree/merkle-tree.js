@@ -29,7 +29,7 @@ module.exports = class MerkleTree extends DBMarshal {
                         else if (count === 1) this.levels = 1;
                         else this.levels = Math.ceil ( Math.log2( count ) );
 
-                        this.root = this._createSchemaObject(undefined, undefined, "root");
+                        this.root = this._createMarshalObject(undefined, undefined, "root");
                         this._calculateLevelsCounts(count);
 
                         if (this._countChanged) this._countChanged( count );
@@ -41,7 +41,7 @@ module.exports = class MerkleTree extends DBMarshal {
 
                 root:{
                     type: "object",
-                    schemaClass: MerkleTreeRoot,
+                    schemaBuiltClass: MerkleTreeRoot,
 
                     setEvent(root){
                         this._leaves = undefined;
@@ -82,7 +82,7 @@ module.exports = class MerkleTree extends DBMarshal {
         else if (count === 1) this.levels = 1;
         else this.levels = Math.ceil ( Math.log2( count ) );
 
-        this.root = this._createSchemaObject(undefined, undefined, "root");
+        this.root = this._createMarshalObject(undefined, undefined, "root");
         this._calculateLevelsCounts(count);
 
         if (this._countChanged) this._countChanged( count );

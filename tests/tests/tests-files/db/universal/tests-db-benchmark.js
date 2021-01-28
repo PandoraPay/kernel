@@ -14,13 +14,7 @@ module.exports = async function run ( dbType) {
     const TEST1 = (dbType === "CouchDB" ?  300 : 20001);
 
     const schema = MarshalTests.testSimpleSchema;
-    const schemaBuild = new DBSchemaBuild(schema);
-
-    class classSchema extends DBMarshal {
-        constructor(scope, sc={}, data, type, onlyFields, emptyObject){
-            super(scope, schemaBuild, data, type, onlyFields, emptyObject);
-        }
-    }
+    const schemaBuilt = new DBSchemaBuild(schema);
 
     describe( ()=>`${dbType} Benchmark 1) ${TEST1}`, {
 
@@ -28,7 +22,7 @@ module.exports = async function run ( dbType) {
 
             for (let i = 0; i < TEST1; i++) {
 
-                const obj = this.db.createSchemaInstance( classSchema );
+                const obj = this.db.createMarshalInstance( schemaBuilt );
 
                 for (let i = 0; i < schema.output.length; i++) {
                     this.expect(typeof obj["field" + i], typeof schema.output[i]);
@@ -42,7 +36,7 @@ module.exports = async function run ( dbType) {
 
             const array = [];
             for (let i = 0; i < TEST1; i++)
-                array.push( this.db.createSchemaInstance( classSchema ) );
+                array.push( this.db.createMarshalInstance( schemaBuilt ) );
 
             await Promise.all(array.map(async (it, index) => {
                 
@@ -57,16 +51,16 @@ module.exports = async function run ( dbType) {
 
         "loading objects": async function () {
 
-            const data = await this.db.findAll( classSchema, "benchmark1" );
+            const data = await this.db.findAll( undefined, schemaBuilt, "benchmark1" );
             this.expect(data.length, TEST1)
 
         },
 
         "delete objects": async function () {
 
-            await this.db.deleteAll( classSchema, "benchmark1" );
+            await this.db.deleteAll( undefined, schemaBuilt, "benchmark1" );
 
-            const data = await this.db.findAll( classSchema, "benchmark1" );
+            const data = await this.db.findAll( undefined, schemaBuilt, "benchmark1" );
             this.expect(data.length, 0)
 
         },

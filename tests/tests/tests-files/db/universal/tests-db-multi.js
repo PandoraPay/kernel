@@ -2,7 +2,7 @@ const describe = require( '../../../unit-testing/describe');
 const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
 const DBMarshal = require( "../../../../../src/db/db-generic/db-marshal");
 const Helper = require( "../../../../../src/helpers/helper");
-
+const DBSchemaBuild = require('../../../../../src/db/db-generic/db-schema-build')
 /**
  *
  * REDIS BENCHMARK
@@ -12,10 +12,12 @@ const Helper = require( "../../../../../src/helpers/helper");
 module.exports = async function run ( dbType) {
 
     const TEST1 = dbType === "CouchDB" ?  300 : 10001;
+    const schema = MarshalTests.testSimpleSchema;
+    const schemaBuilt = new DBSchemaBuild(schema);
 
     class classSchema extends DBMarshal {
-        constructor(scope, sc={}, data, type, onlyFields, emptyObject){
-            super(scope, {...MarshalTests.schemaSimple}, data, type, onlyFields, emptyObject);
+        constructor(scope, sc={}, data, type, onlyFields){
+            super(scope, schemaBuilt, data, type, onlyFields);
         }
     }
 
@@ -115,7 +117,7 @@ module.exports = async function run ( dbType) {
 
                 const array = [];
                 for (let i = 0; i < TEST1; i++)
-                    array.push(this.db.createSchemaInstance( MarshalTests.schemaSimple ));
+                    array.push(this.db.createMarshalInstance( schemaBuilt ));
 
                 await Promise.all(array.map(async (it, index) => {
 

@@ -1,7 +1,7 @@
 const DBMarshal = require( "../db-generic/db-marshal" );
 const Exception = require("../../helpers/exception");
 
-module.exports = class RedisSchema extends DBMarshal {
+module.exports = class RedisMarshal extends DBMarshal {
 
     /**
      * Delete from Redis Database. It works to delete Buffers, Hex, JASON and Objects

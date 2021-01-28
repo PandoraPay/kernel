@@ -6,7 +6,6 @@ const MarshalBase = require( "./marshal-base");
 const MarshalHelper = require( "./helpers/marshal-helper");
 const SchemaMarshal = require('./schemas/schema-build')
 
-const EmptySchemaMarshal = new SchemaMarshal();
 /**
  *
  * Marshal Class enables automatic serialization/deserialization of the application's data.
@@ -22,10 +21,9 @@ const EmptySchemaMarshal = new SchemaMarshal();
 
 class Marshal extends MarshalBase {
 
-    constructor(scope, schema = EmptySchemaMarshal, data, type, creationOptions) {
+    constructor(scope, schema, data, type, creationOptions) {
 
         super(scope, schema, data, creationOptions);
-
         this._createSchema(data, type, creationOptions);
 
     }
@@ -177,7 +175,7 @@ class Marshal extends MarshalBase {
                 //avoid processing values ( used in constructor )
                 if (!creationOptions.skipProcessingConstructionValues) {
                     const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
-                    dataValue = schemaField[fct]( dataValue, schemaField, field, dataType, undefined, this._createSchemaObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
+                    dataValue = schemaField[fct]( dataValue, schemaField, field, dataType, undefined, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
                 }
 
             }
@@ -193,7 +191,7 @@ class Marshal extends MarshalBase {
             if (typeof dataValue === "function") dataValue = dataValue.call(this, schemaField);
 
             if (dataValue === undefined && schemaField.type === "object" && !this.checkValue(schemaField.emptyAllowed, "emptyAllowed"))
-                    dataValue = this._createSchemaObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
+                    dataValue = this._createMarshalObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
 
             isDefault = true;
         }
@@ -349,7 +347,7 @@ class Marshal extends MarshalBase {
                     } else
                         if (input[fieldName] === undefined) continue;
 
-                data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createSchemaObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
+                data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
                 this[field] = data;
 
@@ -367,7 +365,7 @@ class Marshal extends MarshalBase {
 
         const parentIndex = (position === undefined) ? this[fieldName].length-1 : position;
 
-        const element = data instanceof Marshal ? data : this._createSchemaObject( data, type, fieldName, schemaField,  undefined, parentIndex, unmarshalOptions );
+        const element = data instanceof Marshal ? data : this._createMarshalObject( data, type, fieldName, schemaField,  undefined, parentIndex, unmarshalOptions );
 
         const array = [... this[fieldName] ];
 
@@ -395,7 +393,7 @@ class Marshal extends MarshalBase {
 
     }
 
-    _createSimpleObject(schemaClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
+    _createSimpleObject(schemaBuiltClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
 
         const object = this._creationMiddleware( {
                 ...this._scope,
@@ -403,7 +401,7 @@ class Marshal extends MarshalBase {
                 parent: this,
                 parentIndex: parentIndex,
             },
-            schemaClass,
+            schemaBuiltClass,
             data,
             type,
             unmarshalOptions);
@@ -412,15 +410,15 @@ class Marshal extends MarshalBase {
 
     }
 
-    _createSchemaObject( data, type, fieldName, schemaField, callbackObject, parentIndex, unmarshalOptions = {} ) {
+    _createMarshalObject( data, type, fieldName, schemaBuiltField, callbackObject, parentIndex, unmarshalOptions = {} ) {
 
         if ( !this._schema.options.hashing.enabled || this.checkProperty("skipHashing", fieldName  )) unmarshalOptions.skipPropagatingHashing = true;
 
-        if (!schemaField) schemaField = this._schema.fields[fieldName];
-        let schemaClass = schemaField.schemaClass;
+        if (!schemaBuiltField) schemaBuiltField = this._schema.fields[fieldName];
+        let schemaBuiltClass = schemaBuiltField.schemaBuiltClass;
         //if it is a callback
-        if ( typeof schemaClass === "function" && !schemaClass.prototype )
-            schemaClass = schemaClass.call(this, data, fieldName, schemaField);
+        if ( typeof schemaBuiltClass === "function" && !schemaBuiltClass.prototype )
+            schemaBuiltClass = schemaBuiltClass.call(this, data, fieldName, schemaBuiltField);
 
         let loadingId = false;
         if (data !== undefined && typeof data === "string" && callbackObject) {
@@ -435,21 +433,21 @@ class Marshal extends MarshalBase {
                 parent: this,
                 parentIndex: parentIndex,
             },
-            schemaClass,
+            schemaBuiltClass,
             loadingId ? undefined : data,
             loadingId ? undefined : type,
             unmarshalOptions);
 
-        if (loadingId && schemaClass)
+        if (loadingId && schemaBuiltClass)
             callbackObject(object, unmarshalOptions, data, type );
 
         return object;
 
     }
 
-    _creationMiddleware(scope, schemaClass, data, type, unmarshalOptions){
-        if (!schemaClass) return;
-        return new this.getMarshalClass( scope, schemaClass, data, type, unmarshalOptions );
+    _creationMiddleware(scope, schemaBuiltClass, data, type, unmarshalOptions){
+        if (!schemaBuiltClass) return;
+        return new this.getMarshalClass( scope, schemaBuiltClass, data, type, unmarshalOptions );
     }
 
     get getMarshalClass(){

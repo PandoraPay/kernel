@@ -24,8 +24,8 @@ class SchemaBuild {
 
     constructor( schema = {} ) {
 
-        this.fields = Helper.merge( schema.fields || {}, {}, true);
-        this.options = Helper.merge( schema.options || {}, {
+        this.fields = Helper.merge(  {}, schema.fields || {}, true);
+        this.options = Helper.merge(  {
 
             hashing:{
                 //enabled: false
@@ -35,8 +35,7 @@ class SchemaBuild {
             },
 
             //returnOnlyField
-        }, true);
-        this.__schema = schema;
+        }, schema.options || {}, true);
 
         this._initializeSchema();
     }

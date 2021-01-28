@@ -3,15 +3,15 @@ const Helper = require( "../../helpers/helper");
 
 module.exports = class DBMarshalHelper{
 
-    static onlyIds( schemaClass ){
+    static onlyIds( schemaBuiltClass ){
 
-        return DBMarshalHelper.onlyProperties( schemaClass, { id: true } );
+        return DBMarshalHelper.onlyProperties( schemaBuiltClass, { id: true } );
 
     }
 
-    static onlyProperties( schemaClass, onlyFieldsSpecified = { table: true, db:true, id: true } ){
+    static onlyProperties( schemaBuiltClass, onlyFieldsSpecified = { table: true, db:true, id: true } ){
 
-        class onlyIds extends schemaClass{
+        class onlyIds extends schemaBuiltClass{
 
             constructor(scope, schema = {},  data, type, creationOptions={}) {
 

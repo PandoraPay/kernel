@@ -3,7 +3,7 @@
  */
 
 const Exception = require( "../../helpers/exception")
-const Marshal = require("../../marshal/marshal");
+const DBSchemaBuild = require('../db-generic/db-schema-build')
 const DBMarshal = require("./db-marshal");
 
 module.exports = class GenericDatabase{
@@ -29,26 +29,28 @@ module.exports = class GenericDatabase{
         return true;
     }
 
-    get schema(){
-        return this._scope.schema;
+    get marshal(){
+        return this._scope.marshal;
     }
 
-    createSchemaInstance(schema,  data, type, creationOptions){
+    createMarshalInstance( argument,  data, type, creationOptions){
 
-        if (typeof schema  === "function"  && schema.prototype) {
+        if (typeof argument  === "function"  && argument.prototype) {
 
-            if (schema.prototype instanceof DBMarshal){
-                const obj = new schema( {...this._scope, db: this}, undefined, undefined, undefined, creationOptions );
-                this._scope.schema.exportDatabaseSchemaMethods( obj );
+            if (argument.prototype instanceof DBMarshal){
+                const obj = new argument( {...this._scope, db: this}, undefined, undefined, undefined, creationOptions );
+                this._scope.marshal.exportDatabaseSchemaMethods( obj );
                 return obj;
             }
             else
-                throw new Exception(this, "schema is a marshal not a DBMarshal");
+                throw new Exception(this, "argument is a marshal so not a DBMarshal");
 
         }
 
+        if (!(argument instanceof DBSchemaBuild))
+            throw new Exception(this, "schema is a marshal not a DBMarshal");
 
-        return new this._scope.schema({...this._scope, db: this}, schema,  data, type, creationOptions);
+        return new this._scope.marshal({...this._scope, db: this}, argument,  data, type, creationOptions);
     }
 
     async connectDB(){
@@ -92,11 +94,11 @@ module.exports = class GenericDatabase{
 
     }
 
-    async find( modelClass, id, infix, table, creationOptions){
+    async find( marshalClass = this._scope.marshal, marshalSchemaBuilt, id, infix, table, creationOptions){
 
         if (!this._started) await this.connectDB();
 
-        if ( !id ) throw new Exception( modelClass.name, "Find - id was not specified", {id: id} );
+        if ( !id ) throw new Exception( marshalClass.name, "Find - id was not specified", {id: id} );
 
         let output;
 
@@ -106,7 +108,7 @@ module.exports = class GenericDatabase{
 
             const results =  Promise.all( id.map( async it => {
                 
-                const obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
+                const obj = new marshalClass({ ...this._scope, db: this, }, marshalSchemaBuilt, undefined, undefined, creationOptions);
 
                 //this._scope.logger.info(this, `Loading index ${index} ${it}`);
 
@@ -119,7 +121,7 @@ module.exports = class GenericDatabase{
             return results;
 
         } else {
-            const obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
+            const obj = new marshalClass({...this._scope, db: this}, marshalSchemaBuilt, undefined, undefined, creationOptions);
             await obj.load(id, infix, table);
             output = obj;
         }
@@ -130,15 +132,15 @@ module.exports = class GenericDatabase{
 
     /**
      * Delete all given ids objects
-     * @param modelClass
+     * @param marshalClass
      * @param id
      * @param infix
      * @param table
      * @returns {Promise<boolean>}
      */
-    async delete( modelClass, ids, infix, table, creationOptions = {}){
+    async delete( marshalClass = this._scope.marshal, marshalSchemaBuilt, ids, infix, table, creationOptions = {}){
 
-        if ( !ids ) throw new Exception( modelClass.name, "Delete - ids were not specified", {ids: ids} );
+        if ( !ids ) throw new Exception( marshalClass.name, "Delete - ids were not specified", {ids: ids} );
 
         if (!Array.isArray(ids)) ids = [ids];
 
@@ -146,7 +148,7 @@ module.exports = class GenericDatabase{
 
         return Promise.all( ids.map( async (it) => {
 
-            const obj = new modelClass({...this._scope, db: this}, undefined, undefined, undefined, creationOptions);
+            const obj = new marshalClass({...this._scope, db: this}, marshalSchemaBuilt, undefined, undefined, creationOptions);
             await obj.load( it, infix, table,);
             return obj.delete();
 
@@ -157,20 +159,20 @@ module.exports = class GenericDatabase{
 
     /**
      * Delete All objects from database
-     * @param modelClass
+     * @param marshalClass
      * @param infix
      * @param table
      */
-    async deleteAll( modelClass, infix, table, creationOptions = {} ){
+    async deleteAll( marshalClass = this._scope.marshal, marshalSchemaBuilt, infix, table, creationOptions = {} ){
 
         creationOptions.skipValidation = true;
 
-        const models = await this.findAll( modelClass, infix, table, undefined, creationOptions );
+        const models = await this.findAll( marshalClass, marshalSchemaBuilt, infix, table, undefined, creationOptions );
         return Promise.all( models.map(  it => it.delete() ));
 
     }
 
-    async count ( modelClass, infix = '', table, creationOptions ){
+    async count ( marshalClass = this._scope.marshal, infix = '', table, creationOptions ){
         if (!this._started) await this.connectDB();
     }
 
@@ -178,36 +180,36 @@ module.exports = class GenericDatabase{
 
     }
 
-    async scan( modelClass, index=0, count = 10, infix='', table,  creationOptions ){
+    async scan( marshalClass = this._scope.marshal , marshalSchemaBuilt, index=0, count = 10, infix='', table,  creationOptions ){
 
         if (infix && infix[infix.length-1] !== ':') infix += ":";
         
         const multi = this.client.multi();
 
-        const obj = new modelClass( { ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions );
+        const obj = new marshalClass( { ...this._scope, db: this, }, marshalSchemaBuilt, undefined, undefined, creationOptions );
 
         let elements = await this._scanMiddleware(obj, infix, table||obj.table,  index, count , multi);
         elements = elements.filter ( obj => obj );
 
-        return this.find(modelClass, elements, infix, table, creationOptions);
+        return this.find(marshalClass, marshalSchemaBuilt, elements, infix, table, creationOptions);
 
     }
 
     /**
      * Find All Objects from a specific class
-     * @param modelClass
+     * @param marshalClass
      * @param infix
      * @param table
      * @returns {Promise<Array>}
      */
-    async findAll( modelClass, infix, table, count = 100000, creationOptions){
+    async findAll( marshalClass = this._scope.marshal, marshalSchemaBuilt, infix, table, count = 100000, creationOptions){
 
-        return this.scan(modelClass, 0, count, infix, table, creationOptions);
+        return this.scan( marshalClass, marshalSchemaBuilt, 0, count, infix, table, creationOptions);
 
     }
 
-    async findModelByIndex( modelClass, position, infix, table, creationOptions){
-        return this.scan(modelClass, position, 1, infix, table, creationOptions);
+    async findModelByIndex( marshalClass = this._scope.marshal, marshalSchemaBuilt, position, infix, table, creationOptions){
+        return this.scan( marshalClass, marshalSchemaBuilt, position, 1, infix, table, creationOptions);
     }
 
     /**

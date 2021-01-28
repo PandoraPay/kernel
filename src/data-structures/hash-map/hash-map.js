@@ -19,7 +19,7 @@ module.exports = class HashMap extends DBMarshal {
 
                 element: {
                     type: "object",
-                    schemaClass: HashMapElement,
+                    schemaBuiltClass: HashMapElement,
                     position: 100,
 
                     emptyAllowed: true,
@@ -40,7 +40,7 @@ module.exports = class HashMap extends DBMarshal {
     async findAllHashMap(){
         try{
 
-            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createMarshalObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.findAllSiblings(  );
 
         }catch(err){
@@ -52,7 +52,7 @@ module.exports = class HashMap extends DBMarshal {
 
         try{
 
-            const element = this._createSchemaObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createMarshalObject({ }, "object", "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.deleteAllSiblings(  );
 
         }catch(err){
@@ -65,7 +65,7 @@ module.exports = class HashMap extends DBMarshal {
 
         let element = data;
         if (data instanceof HashMapElement === false)
-            element = this._createSchemaObject({
+            element = this._createMarshalObject({
                 id: id,
                 data: data,
             }, "object", "element" ); //data provided
@@ -82,7 +82,7 @@ module.exports = class HashMap extends DBMarshal {
 
             let element = id;
             if (id instanceof HashMapElement === false)
-                element = this._createSchemaObject({
+                element = this._createMarshalObject({
                     id: id,
                 }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -102,7 +102,7 @@ module.exports = class HashMap extends DBMarshal {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSchemaObject({
+            const element = this._createMarshalObject({
                 id: id,
             }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -121,7 +121,7 @@ module.exports = class HashMap extends DBMarshal {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSchemaObject({
+            const element = this._createMarshalObject({
                 id: id,
             }, "object", "element",  undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 

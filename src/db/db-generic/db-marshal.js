@@ -86,23 +86,23 @@ module.exports = class DBMarshal extends Marshal{
      * @returns {Promise.<boolean>}
      */
     async deleteAllSiblings(infix, table, db = this._scope.db, creationOptions){
-        return db.deleteAll(this.constructor, infix, table, creationOptions);
+        return db.deleteAll(this.constructor, this._schema, infix, table, creationOptions);
     }
 
     static deleteAll(db, infix, table, creationOptions){
-        return db.deleteAll(this, infix, table, creationOptions);
+        return db.deleteAll(this, undefined, infix, table, creationOptions);
     }
 
     async findAllSiblings(infix, table, db = this._scope.db, creationOptions){
-        return db.findAll(this.constructor, infix, table, creationOptions);
+        return db.findAll(this.constructor, this._schema, infix, table, creationOptions);
     }
 
     static findAll(db, infix, table, creationOptions){
-        return db.findAll(this, infix, table, creationOptions);
+        return db.findAll(this, undefined, infix, table, creationOptions);
     }
 
     static count(db, infix, table, creationOptions){
-        return db.count(this, infix, table, creationOptions);
+        return db.count(this, undefined, infix, table, creationOptions);
     }
 
     /**
@@ -398,7 +398,7 @@ module.exports = class DBMarshal extends Marshal{
 
     /**
      * Used to export methods to new instances
-     * @param schemaClass
+     * @param schemaBuiltClass
      */
 
     static exportDatabaseSchemaMethods( marshalObject){
@@ -420,7 +420,7 @@ module.exports = class DBMarshal extends Marshal{
      */
     _importMethodsFromDatabaseSchema (databaseSchema) {
 
-        if (!databaseSchema) databaseSchema = (this._scope.db && this._scope.db.schema) ? this._scope.db.schema : undefined;
+        if (!databaseSchema) databaseSchema = (this._scope.db && this._scope.db.marshal) ? this._scope.db.marshal : undefined;
 
         if (databaseSchema)
             databaseSchema.exportDatabaseSchemaMethods( this );

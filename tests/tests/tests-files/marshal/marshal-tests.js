@@ -301,15 +301,15 @@ const testStringSchema = {
     ]
 }
 
-const testMultilevelSchema = (MarshalClass) => ({
+const testMultilevelSchema = (SchemaBuild) => ({
     fields: {
 
         field0: {
             type: "object",
             default: function () {
-                return this._createSchemaObject( {}, "object", "field0");
+                return this._createMarshalObject( {}, "object", "field0");
             },
-            schemaClass: new MarshalClass(testMiniSchema),
+            schemaBuiltClass: new SchemaBuild(testMiniSchema),
         },
 
         field1: {
@@ -317,13 +317,13 @@ const testMultilevelSchema = (MarshalClass) => ({
 
             default: function () {
                 return [
-                    this._createSchemaObject( {}, "object", "field1"),
-                    this._createSchemaObject( {}, "object", "field1"),
-                    this._createSchemaObject( {}, "object", "field1"),
+                    this._createMarshalObject( {}, "object", "field1"),
+                    this._createMarshalObject( {}, "object", "field1"),
+                    this._createMarshalObject( {}, "object", "field1"),
                 ];
             },
 
-            schemaClass: new MarshalClass(testMiniSchema),
+            schemaBuiltClass: new SchemaBuild(testMiniSchema),
 
             maxSize: 255,
             minSize: 0,

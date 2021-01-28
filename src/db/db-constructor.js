@@ -13,21 +13,7 @@ class DBConstructor{
 
     }
 
-    /**
-     * Not used anymore
-     * @param DBSchemaClass
-     * @return {Promise.<void>}
-     */
-    async declareSchemaClassForSpecialDatabaseOps(DBSchemaClass){
 
-        const className = DBSchemaClass.constructor.name;
-
-        if (this._schemas[DBSchemaClass.constructor.name])
-            return;
-
-        this._schemas[DBSchemaClass.constructor.name] = DBSchemaClass;
-
-    }
 
     /**
      * create the main and public database. Everything is public in this database

@@ -68,7 +68,7 @@ module.exports = class MerkleTreeNode extends DBMarshal {
                 children:{
                     
                     type: "array",
-                    schemaClass: MerkleTreeNode,
+                    schemaBuiltClass: MerkleTreeNode,
                     
                     minSize: 0,
                     maxSize(){
@@ -161,7 +161,7 @@ module.exports = class MerkleTreeNode extends DBMarshal {
 
         if (this.level < levels && data[ offset ]) {
 
-            const left = this._createSchemaObject( {
+            const left = this._createMarshalObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
             }, "object", "children", undefined, undefined, undefined, {}  );
 
@@ -174,7 +174,7 @@ module.exports = class MerkleTreeNode extends DBMarshal {
 
         if ( this.level < levels && data[ offset ] ){
 
-            const right = this._createSchemaObject( {
+            const right = this._createMarshalObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
             }, "object", "children", undefined, undefined, undefined, {}  );
 

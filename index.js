@@ -30,7 +30,7 @@ const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-va
 const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
 const DBMarshal = require( "./src/db/db-generic/db-marshal");
-const DBSchemaBuffer = require( "./src/marshal/schemas/samples/db-schema-build-buffer");
+const DBSchemaBuffer = require( "./src/marshal/schemas/samples/schema-build-buffer");
 const DBSchemaBufferBig = require( "./src/marshal/schemas/samples/db-schema-buffer-big");
 const DBSchemaBufferUnique = require( "./src/marshal/schemas/samples/db-schema-buffer-unique");
 const DBSchemaNumber = require( "./src/marshal/schemas/samples/db-schema-number");

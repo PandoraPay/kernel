@@ -2,9 +2,9 @@ const Helper = require( "../../../helpers/helper");
 const DBMarshal = require( "../../../db/db-generic/db-marshal");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 
-const {SchemaBuildBufferClass} = require( "./db-schema-build-buffer" );
+const {SchemaBuildBuffer} = require( "./schema-build-buffer" );
 
-module.exports = class DBSchemaBufferBig extends SchemaBuildBufferClass {
+module.exports = class DBSchemaBufferBig extends SchemaBuildBuffer {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 
