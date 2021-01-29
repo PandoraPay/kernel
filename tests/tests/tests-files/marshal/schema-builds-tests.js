@@ -29,7 +29,7 @@ const testSimple2Schema = {
             type: "object",
             schemaBuiltClass: SchemaBuiltBuffer,
             default() {
-                return this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
+                return this._createMarshalObject(  {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
             },
         },
     },

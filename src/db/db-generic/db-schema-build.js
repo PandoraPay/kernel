@@ -48,7 +48,6 @@ class DBSchemaBuild extends SchemaBuild {
             //type: undefined,
 
             saveInfixParentTable: true,
-            //saveInfixParentId: false,
 
             //skipSavingAsItWasNotLoaded: false,
 

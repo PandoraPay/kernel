@@ -45,7 +45,7 @@ module.exports = async function run() {
 
     });
 
-    // await TestsMerkleTreeDB("CouchDB");
+    await TestsMerkleTreeDB("CouchDB");
 
     await TestsDB( "CouchDB" );
 

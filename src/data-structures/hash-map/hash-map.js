@@ -19,7 +19,7 @@ class HashMap extends DBMarshal {
     async findAllHashMap(){
         try{
 
-            const element = this._createSimpleMarshalObject( this._schema, "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createSimpleMarshalObject( undefined, this._schema, "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.findAllSiblings(  );
 
         }catch(err){
@@ -31,7 +31,7 @@ class HashMap extends DBMarshal {
 
         try{
 
-            const element = this._createSimpleMarshalObject( this._schema, "element" , undefined, undefined, undefined,{skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createSimpleMarshalObject( undefined, this._schema, "element" , undefined, undefined, undefined,{skipProcessingConstructionValues: true, skipValidation: true} );
             return element.deleteAllSiblings(  );
 
         }catch(err){
@@ -44,7 +44,7 @@ class HashMap extends DBMarshal {
 
         let element = data;
         if (!(data instanceof DBMarshal))
-            element = this._createSimpleMarshalObject( this._schema, "element", {
+            element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
                 id: id,
                 data: data,
             }, "object" ); //data provided
@@ -61,7 +61,7 @@ class HashMap extends DBMarshal {
 
             let element = id;
             if (!(id instanceof DBMarshal))
-                element = this._createSimpleMarshalObject( this._schema, "element",  {
+                element = this._createSimpleMarshalObject( undefined, this._schema, "element",  {
                     id: id,
                 }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -81,7 +81,7 @@ class HashMap extends DBMarshal {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSimpleMarshalObject( this._schema, "element", {
+            const element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
                 id: id,
             }, "object", undefined,  { schemaBuiltClass: this._schema }, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -100,7 +100,7 @@ class HashMap extends DBMarshal {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSimpleMarshalObject(this._schema, "element", {
+            const element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
                 id: id,
             }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 

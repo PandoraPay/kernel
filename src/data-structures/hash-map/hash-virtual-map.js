@@ -65,7 +65,7 @@ module.exports = class HashVirtualMap extends HashMap {
 
         let element = data;
         if (!(data instanceof DBMarshal))
-            element = this._createSimpleMarshalObject(this._schema, "element",{
+            element = this._createSimpleMarshalObject( undefined, this._schema, "element",{
                 id: id,
                 data: data instanceof DBMarshal ? data.toBuffer() : data,
             }, "object", undefined,  ); //data is provided
@@ -116,7 +116,7 @@ module.exports = class HashVirtualMap extends HashMap {
 
         if (out){
 
-            const element = this._createSimpleMarshalObject( this._schema, "element", {
+            const element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
                 id: id,
                 data: out.data instanceof DBMarshal ? out.data.toBuffer() : out.data,
             }, "object", undefined, { schemaBuiltClass: this._schema } ); //data is provided
@@ -168,7 +168,7 @@ module.exports = class HashVirtualMap extends HashMap {
 
         let element = data;
         if (!(data instanceof DBMarshal))
-            element = this._createSimpleMarshalObject(this._schema, "element", {
+            element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
                 id: id,
                 data: data instanceof DBMarshal ? data.toBuffer() : data,
             }, "object",   undefined, ); //data is provided

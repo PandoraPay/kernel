@@ -1,22 +1,11 @@
-const Helper = require( "../../helpers/helper");
 const MerkleTreeNode = require( "./merkle-tree-node");
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum");
+const {SchemaBuiltMerkleTreeRoot} = require('./schema/schema-build-merkle-tree-root')
 
 module.exports = class MerkleTreeRoot extends MerkleTreeNode {
     
-    constructor(scope, schema,  data, type, creationOptions ){
-
-        super(scope, Helper.merge({
-
-            saving: {
-
-                saveInfixParentTable: true,
-                saveInfixParentId: true,
-
-            }
-
-        }, schema, false), data, type, creationOptions);
-
+    constructor(scope, schema = SchemaBuiltMerkleTreeRoot,  data, type, creationOptions ){
+        super(scope, schema, data, type, creationOptions);
     }
     
     init(){
@@ -26,7 +15,7 @@ module.exports = class MerkleTreeRoot extends MerkleTreeNode {
         this.height = 0;
 
         if (this.tree.count === 0 )
-            this.type = MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF;
+            this.type = MerkleTreeNodeTypeEnum.MERKLE_TREE_EMPTY_ROOT_LEAF;
         else
             this.type = MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE;
     }

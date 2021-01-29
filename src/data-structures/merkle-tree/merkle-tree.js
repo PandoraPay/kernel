@@ -1,76 +1,13 @@
-const Helper = require( "../../helpers/helper");
 const DBMarshal  = require( "../../db/db-generic/db-marshal")
 const Exception  = require("../../helpers/exception");
-const MerkleTreeRoot  = require("./merkle-tree-root");
+
+const {SchemaBuiltMerkleTree} = require('./schema/schema-build-merkle-tree')
 
 module.exports = class MerkleTree extends DBMarshal {
     
-    constructor(scope, schema,  data, type, creationOptions){
+    constructor(scope, schema = SchemaBuiltMerkleTree,  data, type, creationOptions){
         
-        super(scope, Helper.merge({
-
-            fields: {
-
-                table: {
-                    default: "merkle",
-                    fixedBytes: 6,
-                },
-
-                id: {
-                    position: 100,
-                },
-
-                count:{
-                    type: "number",
-                    skipHashing: true,
-
-                    setEvent(count ){
-                        if (count === 0) this.levels = 0;
-                        else if (count === 1) this.levels = 1;
-                        else this.levels = Math.ceil ( Math.log2( count ) );
-
-                        this.root = this._createMarshalObject(undefined, undefined, "root");
-                        this._calculateLevelsCounts(count);
-
-                        if (this._countChanged) this._countChanged( count );
-                    },
-
-                    position: 101,
-
-                },
-
-                root:{
-                    type: "object",
-                    schemaBuiltClass: MerkleTreeRoot,
-
-                    setEvent(root){
-                        this._leaves = undefined;
-                        this._leavesNonPruned = undefined;
-                    },
-
-                    position: 102,
-                },
-
-            },
-
-            options: {
-
-                hashing: {
-                    enabled: true,
-                    fct: b => b,
-                    
-                    parentHashingPropagation: true,
-                },
-
-            },
-
-            saving: {
-
-                saveInfixParentId: true,
-
-            }
-
-        }, schema, false), data, type, creationOptions);
+        super(scope, schema, data, type, creationOptions);
 
         this._leaves = undefined;
         this._leavesNonPruned = undefined;

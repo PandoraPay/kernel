@@ -1,145 +1,14 @@
-const Helper = require( "../../helpers/helper");
 const DBMarshal = require( "../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
 
-const MarshalFields = require( "../../marshal/fields/marshal-fields");
-
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum")
-const CryptoHelper = require("../../helpers/crypto/crypto-helper");
+const {SchemaBuiltMerkleTreeNode} = require('./schema/schema-build-merkle-tree-node')
 
 module.exports = class MerkleTreeNode extends DBMarshal {
 
-    constructor(scope, schema,  data, type, creationOptions){
-
-        super(scope, Helper.merge({
-
-            fields: {
-
-                table: {
-                    default: "mNode",
-                    fixedBytes: 5,
-                },
-
-                id: {
-                    default(){
-                        return this.height.toString();
-                    },
-                    minSize: 0,
-                    maxSize: 15,
-
-                    unique: false,
-                },
-
-                pruned: {
-                    type: "boolean",
-                    default: false,
-
-                    skipHashing: true,
-
-                    position: 100,
-                },
-
-                data: {
-
-                    type: "buffer",
-                    minSize(){
-                        return (this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF && !this.__data.pruned) ? 1 : 0;
-                    },
-
-                    maxSize(){
-                        return (this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF && !this.__data.pruned) ? 1<<18 - 1 : 0;
-                    },
-
-                    skipHashing(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE || this.__data.pruned;
-                    },
-
-                    skipSaving(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE || this.__data.pruned;
-                    },
-
-                    skipMarshal(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE || this.__data.pruned;
-                    },
-
-                    position: 101,
-                },
-
-                children:{
-                    
-                    type: "array",
-                    schemaBuiltClass: MerkleTreeNode,
-                    
-                    minSize: 0,
-                    maxSize(){
-                        return (this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE && !this.__data.pruned) ? 1<<18 - 1 : 0;
-                    },
-
-                    skipHashing(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF && !this.__data.pruned;
-                    },
-
-                    skipSaving(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF || this.__data.pruned;
-                    },
-
-                    skipMarshal(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_LEAF || this.__data.pruned;
-                    },
-
-                    position: 102,
-                },
-
-
-                prunedHash: {
-
-                    type: "buffer",
-                    fixedBytes: 32,
-
-                    skipHashing(){ return !this.pruned; },
-                    skipMarshal(){ return !this.pruned; },
-
-                    getter(){
-                        return this.pruned ? this.__data.prunedHash : this.hash();
-                    },
-
-                    position: 1000,
-                },
-
-
-
-            },
-
-            options: {
-
-                hashing: {
-                    
-                    enabled: true,
-                    parentHashingPropagation: true,
-
-                    returnSpecificHash(){
-                        return this.pruned ? this.prunedHash : undefined ;
-                    },
-
-                    fct: CryptoHelper.sha256,
-
-                },
-
-            },
-
-            saving: {
-                saveInfixParentTable: false,
-                indexableById: false,
-                /**
-                 * scan is not supported because of disabling indexable by id
-                 */
-            }
-
-        }, schema, false), data, type, creationOptions);
-
-
+    constructor(scope, schema = SchemaBuiltMerkleTreeNode,  data, type, creationOptions) {
+        super(scope, schema, data, type, creationOptions);
     }
-
 
     init(){
         this.tree = this._scope.parent.tree;
