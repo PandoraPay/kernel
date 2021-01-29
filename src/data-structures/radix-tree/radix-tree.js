@@ -6,56 +6,12 @@ const DBMarshal = require("../../db/db-generic/db-marshal");
 const RadixTreeRoot = require( "./radix-tree-root")
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
 const RadixTreeNode = require( "./radix-tree-node");
+const {SchemaBuiltRadixTree} = require('./schema/schema-build-radix-tree')
 
 module.exports = class RadixTree extends DBMarshal {
 
-    constructor(scope, schema, data, type, creationOptions) {
-
-        super(scope, Helper.merge({
-
-            fields: {
-
-                table: {
-                    default: "radix",
-                    fixedBytes: 5,
-                },
-
-                id:{
-                    default: "radixTree",
-                    fixedBytes: 9,
-                    position: 100,
-                },
-
-                root: {
-                    type: "object",
-                    schemaBuiltClass: RadixTreeRoot,
-
-                    position: 101,
-                },
-
-            },
-
-            options: {
-                hashing: {
-                    enabled: true,
-                    parentHashingPropagation: true,
-
-                    /**
-                     * Disable Hashing function to avoid hashing the root hash
-                     */
-
-                    fct: b => b,
-                },
-            },
-
-            saving: {
-
-                saveInfixParentId: true,
-
-            }
-
-        }, schema, false), data, type, creationOptions);
-
+    constructor(scope, schema = SchemaBuiltRadixTree, data, type, creationOptions) {
+        super(scope, schema, data, type, creationOptions);
     }
 
     init(data){
@@ -81,9 +37,9 @@ module.exports = class RadixTree extends DBMarshal {
 
     createNewRoot(){
 
-        const newRoot = this._createSimpleMarshalObject( undefined, this.root.constructor, "root", {
+        const newRoot = this._createMarshalObject( {
             id: this.root.id,
-        }, "object", undefined, {skipValidation: true, skipProcessingConstructionValues: true} );
+        },"object","root", undefined,  undefined, undefined, {skipValidation: true, skipProcessingConstructionValues: true} );
 
         this.root = newRoot;
 
@@ -166,8 +122,8 @@ module.exports = class RadixTree extends DBMarshal {
         const found = await this.findRadix( label);
 
         //construct the data as an object
-        if ( this.root.nodeClassData && data instanceof Marshal === false )
-            data = this.root._createSimpleMarshalObject( undefined, this.root.nodeClassData, "children", data );
+        if ( this.root.childNodeDataMarshalClass && !(data instanceof Marshal) )
+            data = this.root._createSimpleMarshalObject( this.root.childNodeDataMarshalClass, this.root.childNodeDataSchemaBuilt, "children", data );
 
         //found node already
         if (found.result) {
@@ -210,20 +166,20 @@ module.exports = class RadixTree extends DBMarshal {
 
             node.type = RadixTreeNodeTypeEnum.RADIX_TREE_NODE;
 
-            node.data = node.nodeClassDataEmpty;
+            node.data = node.childNodeDataEmpty;
 
             node.__data.childrenCount = 0;
             node.__data.childrenLabels = [];
             node.__data.childrenHashes = [];
 
-            const newNode = node._createSimpleMarshalObject( undefined, node.nodeClass, "children", {
+            const newNode = node._createSimpleMarshalObject( node.childNodeMarshalClass, node.childNodeSchemaBuilt, "children", {
                 label: remainingLabel,
                 data: nodeData,
                 type: nodeType,
                 childrenCount: nodeChildrenCount,
                 childrenLabels: nodeChildrenLabels,
                 childrenHashes: nodeChildrenHashes,
-            }, "object", 0,  {skipProcessingConstructionValues: true} );
+            }, "object", 0,  {skipProcessingConstructionValues: true, } );
 
             newNode.children = node.children;
             for (let i=0; i < newNode.children.length; i++)
@@ -248,7 +204,7 @@ module.exports = class RadixTree extends DBMarshal {
 
         const newLabel = label.substr( found.labelOffset );
 
-        const child  = node._createSimpleMarshalObject( undefined, node.nodeClass,  "children",{
+        const child  = node._createSimpleMarshalObject( node.childNodeMarshalClass, node.childNodeSchemaBuilt,  "children",{
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
@@ -301,7 +257,7 @@ module.exports = class RadixTree extends DBMarshal {
 
             const otherChild = await toDeleteParent.loadChild( toDeleteParent.__data.childrenLabels[ otherChildIndex ].string, otherChildIndex );
 
-            const newParent = grandParent._createSimpleMarshalObject( undefined, this.root.nodeClass, "children", {
+            const newParent = grandParent._createSimpleMarshalObject( this.root.childNodeMarshalClass, this.root.childNodeSchemaBuilt, "children", {
                 label: toDeleteParent.__data.label + otherChild.__data.label,
             }, "object", 0, {skipValidation: true, skipProcessingConstructionValues: true} );
 
@@ -366,11 +322,10 @@ module.exports = class RadixTree extends DBMarshal {
 
         try{
 
-            const obj = this.root._createSimpleMarshalObject( undefined, this.root.nodeClass, "children", {
+            const obj = this.root._createSimpleMarshalObject( this.root.childNodeMarshalClass, this.root.childNodeSchemaBuilt, "children", {
                 label: label,
-                data: Buffer.alloc(1),
                 type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
-            }, "object", 0,  {skipValidation: true, skipProcessingConstructionValues: true} );
+            }, "object", 0,  { skipProcessingConstructionValues: true, skipValidation: true,} );
 
             await obj.load( this.root.id + label );
 
@@ -465,9 +420,9 @@ module.exports = class RadixTree extends DBMarshal {
 
     async loadNodeChild(label, position, parent){
 
-        const child = parent._createSimpleMarshalObject( undefined, parent.nodeClass, "children", {
+        const child = parent._createSimpleMarshalObject( parent.childNodeMarshalClass, parent.childNodeSchemaBuilt, "children", {
             label: label,
-        }, "object", position, {skipProcessingConstructionValues: true} );
+        }, "object", position, {skipProcessingConstructionValues: true, skipValidation: true } );
 
         await child.load( parent.id + label );
         return child;

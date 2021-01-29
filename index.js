@@ -30,11 +30,11 @@ const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-va
 const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
 const DBMarshal = require( "./src/db/db-generic/db-marshal");
-const DBSchemaBuffer = require( "./src/marshal/schemas/samples/schema-build-buffer");
+const SchemaBuildBuffer = require( "./src/marshal/schemas/samples/schema-build-buffer");
 const DBSchemaBufferBig = require( "./src/marshal/schemas/samples/db-schema-buffer-big");
 const DBSchemaBufferUnique = require( "./src/marshal/schemas/samples/db-schema-buffer-unique");
-const DBSchemaNumber = require( "./src/marshal/schemas/samples/db-schema-number");
-const DBSchemaString = require( "./src/marshal/schemas/samples/db-schema-string");
+const SchemaBuildNumber = require( "./src/marshal/schemas/samples/schema-build-number");
+const SchemaBuildString = require( "./src/marshal/schemas/samples/schema-build-string");
 const DBSchemaBoolean = require( "./src/marshal/schemas/samples/db-schema-boolean");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
@@ -53,6 +53,9 @@ const MerkleTree = require( "./src/data-structures/merkle-tree/merkle-tree");
 const MerkleTreeNode = require( "./src/data-structures/merkle-tree/merkle-tree-node");
 const MerkleTreeNodeTypeEnum = require( "./src/data-structures/merkle-tree/merkle-tree-node-type-enum");
 const MerkleTreeRoot = require( "./src/data-structures/merkle-tree/merkle-tree-root");
+const SchemaBuildMerkleTreeRoot = require( "./src/data-structures/merkle-tree/schema/schema-build-merkle-tree-root");
+const SchemaBuildMerkleTreeNode = require( "./src/data-structures/merkle-tree/schema/schema-build-merkle-tree-node");
+const SchemaBuildMerkleTree = require( "./src/data-structures/merkle-tree/schema/schema-build-merkle-tree");
 
 const RadixTree = require( "./src/data-structures/radix-tree/radix-tree");
 const RadixTreeVirtual3 = require( "./src/data-structures/radix-tree/radix-tree-virtual3");
@@ -60,6 +63,9 @@ const RadixTreeVirtual = require( "./src/data-structures/radix-tree/radix-tree-v
 const RadixTreeNode = require( "./src/data-structures/radix-tree/radix-tree-node");
 const RadixTreeRoot = require( "./src/data-structures/radix-tree/radix-tree-root");
 const RadixTreeNodeTypeEnum = require( "./src/data-structures/radix-tree/radix-tree-node-type-enum");
+const SchemaBuildRadixTreeRoot = require( "./src/data-structures/radix-tree/schema/schema-build-radix-tree-root");
+const SchemaBuildRadixTree = require( "./src/data-structures/radix-tree/schema/schema-build-radix-tree");
+const SchemaBuildRadixTreeNode = require( "./src/data-structures/radix-tree/schema/schema-build-radix-tree-node");
 
 const HashMap = require( "./src/data-structures/hash-map/hash-map");
 const HashVirtualMap = require( "./src/data-structures/hash-map/hash-virtual-map");
@@ -102,11 +108,11 @@ const library = {
             RedisDB,
 
             samples:{
-                DBSchemaBuffer,
+                SchemaBuildBuffer,
                 DBSchemaBufferUnique,
                 DBSchemaBufferBig,
-                DBSchemaNumber,
-                DBSchemaString,
+                SchemaBuildString,
+                SchemaBuildNumber,
                 DBSchemaBoolean,
             },
 
@@ -122,7 +128,12 @@ const library = {
             MerkleTree,
             MerkleTreeNode,
             MerkleTreeRoot,
-            MerkleTreeNodeTypeEnum
+            MerkleTreeNodeTypeEnum,
+            schema:{
+                SchemaBuildMerkleTreeRoot,
+                SchemaBuildMerkleTree,
+                SchemaBuildMerkleTreeNode,
+            }
         },
 
         radixTree:{
@@ -132,12 +143,19 @@ const library = {
             RadixTreeNode,
             RadixTreeRoot,
             RadixTreeNodeTypeEnum,
+            schema:{
+                SchemaBuildRadixTreeRoot,
+                SchemaBuildRadixTree,
+                SchemaBuildRadixTreeNode,
+            },
         },
 
         hashMap:{
             HashMap,
             HashVirtualMap,
-            SchemaBuildHashMapElement,
+            schema:{
+                SchemaBuildHashMapElement
+            }
         }
 
     },

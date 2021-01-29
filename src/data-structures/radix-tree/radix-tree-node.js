@@ -1,205 +1,23 @@
 const Helper = require( "../../helpers/helper");
 const DBMarshal = require("../../db/db-generic/db-marshal")
 const Exception = require("../../helpers/exception");
-const DBSchemaBuffer = require( "../../marshal/schemas/samples/schema-build-buffer" );
-const DBSchemaString = require("../../marshal/schemas/samples/db-schema-string");
-const CryptoHelper = require( "../../helpers/crypto/crypto-helper");
-
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
+const {SchemaBuiltRadixTreeNode} = require('./schema/schema-build-radix-tree-node')
 
 module.exports = class RadixTreeNode extends DBMarshal {
 
-    constructor(scope, schema,  data, type, creationOptions){
+    constructor(scope, schema = SchemaBuiltRadixTreeNode,  data, type, creationOptions){
 
-        super(scope, Helper.merge({
-
-            fields: {
-
-                table: {
-                    default: "node",
-                    fixedBytes: 4,
-                },
-
-                /**
-                 * Required to retrieve its parents
-                 */
-
-                label: {
-
-                    type: "string",
-                    minSize: 1,
-                    maxSize: 40,
-
-                    default(){
-                        return this._scope.parent.childrenLabels[this._scope.parentIndex];
-                    },
-
-                    setEvent(label){
-
-                        if (this.type !== undefined) this.type = this.getType();
-                        if (this.id) this.id = this.getNewId();
-
-                    },
-
-                    skipHashing: true,
-                    skipMarshal: true,
-
-                    position: 101,
-                },
-
-                id:{
-
-                    minSize: 4,
-                    maxSize: 80,
-
-                    default(){
-                        return this.getNewId();
-                    },
-
-                    unique: true,
-
-                    position: 102,
-
-                },
-
-                type: {
-                    type: "number",
-                    default(){
-                        return this.getType();
-                    },
-
-                    position: 103,
-                },
-
-                pruned: {
-                    type: "boolean",
-
-                    default: false,
-
-                    skipHashing: true,
-                    skipMarshal: true,
-
-                    position: 104,
-
-                },
-
-                data: {
-
-                    type: "buffer",
-                    minSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.pruned ? 1 : 0;
-                    },
-
-                    maxSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.pruned ? 262143 : 0;
-                    },
-
-                    skipHashing(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
-                    skipSaving() { return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
-                    skipMarshal(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
-
-                    position: 105,
-                },
-
-                childrenCount:{
-
-                    type: "number",
-
-                    minSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.pruned ? 1 : 0;
-                    },
-
-                    maxSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.pruned ? 16 : 0;
-                    },
-
-                    position: 106,
-
-                },
-
-
-                childrenLabels: {
-
-                    type: "array",
-                    schemaBuiltClass: DBSchemaString,
-
-                    fixedBytes(){ return this.childrenCount },
-
-                    skipHashing(){ return this.pruned },
-                    skipSaving(){ return this.pruned },
-                    skipMarshal(){ return this.pruned },
-
-                    position: 107,
-
-                },
-
-                childrenHashes:{
-
-                    type: "array",
-                    schemaBuiltClass: DBSchemaBuffer,
-
-                    fixedBytes(){ return this.childrenCount; },
-
-                    skipHashing(){ return this.pruned },
-                    skipSaving(){ return this.pruned },
-                    skipMarshal(){ return this.pruned },
-
-                    position: 108,
-                },
-
-
-                prunedHash: {
-
-                    type: "buffer",
-                    fixedBytes: 32,
-
-                    skipHashing(){ return !this.pruned; },
-                    skipMarshal(){ return !this.pruned; },
-
-                    getter(){
-                        return this.pruned ? this.__data.prunedHash : this.hash();
-                    },
-
-                    position: 109,
-                },
-
-
-
-            },
-
-            options: {
-                hashing: {
-
-                    enabled: true,
-                    parentHashingPropagation: true,
-
-                    returnSpecificHash(){
-                        return this.pruned ? this.__data.prunedHash : undefined ;
-                    },
-
-                    fct: CryptoHelper.sha256
-
-                },
-
-            },
-
-            saving: {
-
-                saveInfixParentTable: false,
-                indexableById: false,
-
-                /**
-                 * scan is not supported because of disabling indexable by id
-                 */
-            }
-
-        }, schema, false), data, type, creationOptions);
+        super(scope, schema, data, type, creationOptions);
 
         this.children = [];
 
-        this.nodeClass = RadixTreeNode;
-        this.nodeClassData = undefined; //data is buffer
-        this.nodeClassDataEmpty = Buffer.alloc(0);
+        this.childNodeMarshalClass = RadixTreeNode;
+        this.childNodeSchemaBuilt = SchemaBuiltRadixTreeNode;
+
+        this.childNodeDataMarshalClass = undefined; //data is buffer
+        this.childNodeDataSchemaBuilt = undefined; //data is buffer
+        this.childNodeDataEmpty = Buffer.alloc(0);
         
     }
 

@@ -1,10 +1,11 @@
-const DBMarshal = require( "../../../db/db-generic/db-marshal" );
+const Helper = require( "../../../helpers/helper");
+const SchemaMarshal = require( "../schema-build");
 
-module.exports = class DBSchemaString extends DBMarshal {
+class SchemaBuildString extends SchemaMarshal {
 
-    constructor(scope, schema,  data, type, creationOptions){
+    constructor(schema = {}){
 
-        super(scope, {
+        super( Helper.merge( {
 
             fields: {
                 string: {
@@ -21,12 +22,18 @@ module.exports = class DBSchemaString extends DBMarshal {
                     enabled: true,
                     parentHashingPropagation: true,
 
-                    fct: (a)=>a,
+                    fct: a => a,
 
                 },
             }
-        },  data, type, creationOptions);
+        },  schema, true) );
 
     }
 
+}
+
+
+module.exports = {
+    SchemaBuildString,
+    SchemaBuiltString: new SchemaBuildString()
 }

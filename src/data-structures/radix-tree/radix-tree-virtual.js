@@ -207,7 +207,7 @@ module.exports = class RadixTreeVirtual extends RadixTree{
                 if (node.id.indexOf(key) < 0)
                     throw new Exception(this, "validateVirtualMap raised an error2", {key, node});
 
-                if ( this._maps[key].type !== "deleted" && (node instanceof RadixTreeRoot === false ) && node.parent instanceof RadixTreeNode   )
+                if ( this._maps[key].type !== "deleted" && !(node instanceof RadixTreeRoot) && node.parent instanceof RadixTreeNode   )
                     if (node.parent.childrenLabels[ node.parentIndex ].string !== node.label)
                         throw new Exception(this, "validateVirtualMap raised an error3", {key, node})
 

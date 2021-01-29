@@ -1,55 +1,12 @@
 const Helper = require( "../../helpers/helper");
-const DBMarshal = require("../../db/db-generic/db-marshal")
 const RadixTreeNode = require("./radix-tree-node")
-const RadixTreeNodeTypeEnum = require("./radix-tree-node-type-enum");
+const {SchemaBuiltRadixTreeRoot} = require('./schema/schema-build-radix-tree-root')
 
 module.exports = class RadixTreeRoot extends RadixTreeNode {
 
-    constructor(scope, schema,  data, type, creationOptions ){
+    constructor(scope, schema = SchemaBuiltRadixTreeRoot,  data, type, creationOptions ){
 
-        super(scope, Helper.merge({
-
-            fields: {
-
-                id:{
-                    default(){
-                        return this.parent.id+":root";
-                    },
-                },
-
-                label: {
-                    minSize: 0,
-                    maxSize: 0,
-                    default(){
-                        return '';
-                    }
-                },
-
-                type: {
-                    default(){
-                        return this.label.length === 40 ? RadixTreeNodeTypeEnum.RADIX_TREE_LEAF : RadixTreeNodeTypeEnum.RADIX_TREE_NODE;
-                    },
-                },
-
-                childrenCount: {
-
-                    minSize() {
-                        return 0;
-                    },
-
-                },
-
-                data: undefined,
-
-            },
-
-            saving: {
-                saveInfixParentTable: true,
-                saveInfixParentId: true,
-            }
-
-        }, schema, false), data, type, creationOptions);
-
+        super(scope, schema, data, type, creationOptions);
         this.rootLoaded = false;
 
     }

@@ -147,7 +147,6 @@ class SchemaBuildMerkleTreeNode extends DBSchemaBuild {
 
         }, schema, true ) );
 
-
     }
 
 }

@@ -40,7 +40,7 @@ class SchemaBuild {
         for (const key in this.fields){
 
             const schemaField = this.fields[key];
-            if (schemaField.schemaBuiltClass)
+            if (schemaField && schemaField.schemaBuiltClass)
                 if (typeof schemaField.schemaBuiltClass === "object" && schemaField.schemaBuiltClass._testCreate)
                     schemaField.schemaBuiltClass = new this.getClass( schemaField.schemaBuiltClass );
 

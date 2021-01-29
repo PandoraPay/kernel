@@ -1,8 +1,7 @@
 const Helper = require( "../../../helpers/helper");
-
 const SchemaMarshal = require( "../schema-build");
 
-class SchemaMarshalBuild extends SchemaMarshal {
+class SchemaBuildBuffer extends SchemaMarshal {
 
     constructor( options = {} ){
 
@@ -21,7 +20,7 @@ class SchemaMarshalBuild extends SchemaMarshal {
                         enabled: true,
                         parentHashingPropagation: true,
 
-                        fct: (a) => a,
+                        fct: a => a,
                     }
                 },
 
@@ -32,6 +31,6 @@ class SchemaMarshalBuild extends SchemaMarshal {
 }
 
 module.exports = {
-    SchemaBuildBuffer: SchemaMarshalBuild,
-    SchemaBuiltBuffer: new SchemaMarshalBuild(),
+    SchemaBuildBuffer: SchemaBuildBuffer,
+    SchemaBuiltBuffer: new SchemaBuildBuffer(),
 }

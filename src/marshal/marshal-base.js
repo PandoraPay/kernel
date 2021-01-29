@@ -21,7 +21,7 @@ module.exports = class MarshalBase{
 
         this.__isMarshal = true;
 
-        if (!schema || schema instanceof SchemaMarshal === false) throw "schema is not defined or invalid";
+        if (!schema || !(schema instanceof SchemaMarshal) ) throw "schema is not defined or invalid";
 
         this._schema = schema;
 
