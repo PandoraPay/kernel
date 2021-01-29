@@ -29,7 +29,7 @@ class SchemaBuildMerkleTree extends DBSchemaBuild{
                         else if (count === 1) this.levels = 1;
                         else this.levels = Math.ceil ( Math.log2( count ) );
 
-                        this.root = this._createMarshalObject(undefined, undefined, "root");
+                        this.root = this._createModelObject(undefined, undefined, "root");
                         this._calculateLevelsCounts(count);
 
                         if (this._countChanged) this._countChanged( count );
@@ -42,7 +42,7 @@ class SchemaBuildMerkleTree extends DBSchemaBuild{
                 root:{
                     type: "object",
                     schemaBuiltClass: SchemaBuiltMerkleTreeRoot,
-                    marshalClass: MerkleTreeRoot,
+                    modelClass: MerkleTreeRoot,
 
                     setEvent(root){
                         this._leaves = undefined;

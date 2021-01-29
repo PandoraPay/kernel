@@ -1,8 +1,8 @@
 const describe = require('../../unit-testing/describe');
-const Marshal = require("../../../../src/marshal/marshal");
+const Model = require("../../../../src/marshal/model");
 const MarshalTests = require("../../tests-files/marshal/marshal-tests")
 const BN = require("bn.js")
-const SchemaMarshal = require("../../../../src/marshal/schemas/schema-build");
+const SchemaBuild = require("../../../../src/marshal/schemas/schema-build");
 
 /**
  *
@@ -12,13 +12,13 @@ const SchemaMarshal = require("../../../../src/marshal/schemas/schema-build");
 
 module.exports = function run () {
     
-    describe("Marshal", {
+    describe("Model", {
 
         'creation': async function () {
 
             const schema = MarshalTests.testSimpleSchema;
-            const schemaBuilt = new SchemaMarshal(schema);
-            const obj = new Marshal( this._scope, schemaBuilt );
+            const schemaBuilt = new SchemaBuild(schema);
+            const obj = new Model( this._scope, schemaBuilt );
 
             this.expect(typeof obj, "object");
             this.expect(obj.noFields, schema.output.length);
@@ -46,7 +46,7 @@ module.exports = function run () {
             this.expect((obj.toBuffer()).length > 10, true);
 
 
-            const obj2 = new Marshal(this._scope, schemaBuilt );
+            const obj2 = new Model(this._scope, schemaBuilt );
             obj2.fromJSON(json);
 
             this.expect(obj.toString(), obj2.toString());
@@ -70,9 +70,9 @@ module.exports = function run () {
         'buffer tests': async function () {
 
             const schema = MarshalTests.testBufferSchema;
-            const schemaBuilt = new SchemaMarshal(schema);
+            const schemaBuilt = new SchemaBuild(schema);
 
-            const obj = new Marshal(this._scope, schemaBuilt );
+            const obj = new Model(this._scope, schemaBuilt );
             const json = obj.toJSON(false);
 
             schema.data.map( (it, index) => {
@@ -93,7 +93,7 @@ module.exports = function run () {
 
             });
 
-            const obj2 = new Marshal(this._scope, schemaBuilt );
+            const obj2 = new Model(this._scope, schemaBuilt );
             obj2.fromJSON(json);
 
             this.expect( obj.toString(), obj2.toString());
@@ -118,7 +118,7 @@ module.exports = function run () {
 
             });
 
-            const obj3 = new Marshal(this._scope, schemaBuilt );
+            const obj3 = new Model(this._scope, schemaBuilt );
             obj3.fromBuffer( obj2.toBuffer() );
 
             this.expect( obj.toString(), obj3.toString());
@@ -148,9 +148,9 @@ module.exports = function run () {
         'string tests': async function () {
 
             const schema = MarshalTests.testStringSchema;
-            const schemaBuilt = new SchemaMarshal(schema);
+            const schemaBuilt = new SchemaBuild(schema);
 
-            const obj = new Marshal(this._scope, schemaBuilt );
+            const obj = new Model(this._scope, schemaBuilt );
 
             schema.data.map( (it, index) => {
                 this.expect( it, obj["field" + index]  );
@@ -172,7 +172,7 @@ module.exports = function run () {
             });
 
 
-            const obj2 = new Marshal(this._scope, schemaBuilt );
+            const obj2 = new Model(this._scope, schemaBuilt );
             obj2.fromJSON(json);
 
             this.expect(obj.toString(), obj2.toString());
@@ -197,7 +197,7 @@ module.exports = function run () {
                 this.expect( buffer.toString("utf8"), it );
             });
 
-            const obj3 = new Marshal(this._scope, schemaBuilt );
+            const obj3 = new Model(this._scope, schemaBuilt );
             obj3.fromBuffer( obj2.toBuffer() );
 
             this.expect( obj.toString(), obj3.toString());
@@ -227,9 +227,9 @@ module.exports = function run () {
         "multi level marshal": async function(){
 
             const schema = MarshalTests.testMultilevelSchema;
-            const schemaBuilt = new SchemaMarshal(schema);
+            const schemaBuilt = new SchemaBuild(schema);
 
-            const obj = new Marshal(this._scope, schemaBuilt);
+            const obj = new Model(this._scope, schemaBuilt);
 
             const json = obj.toJSON(false);
 
@@ -242,7 +242,7 @@ module.exports = function run () {
             this.expect( json["field1"][1].field0, Buffer.from("0a0420000420000420","hex"));
             this.expect( json["field1"][2].field0, Buffer.from("0a0420000420000420","hex"));
 
-            const obj2 = new Marshal(this._scope, schemaBuilt );
+            const obj2 = new Model(this._scope, schemaBuilt );
             obj2.fromJSON(json);
 
             this.expect( obj.toString(), obj2.toString() );

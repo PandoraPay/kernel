@@ -1,9 +1,9 @@
-const DBMarshal  = require( "../../db/db-generic/db-marshal")
+const DBModel  = require( "../../db/db-generic/db-model")
 const Exception  = require("../../helpers/exception");
 
 const {SchemaBuiltMerkleTree} = require('./schema/schema-build-merkle-tree')
 
-module.exports = class MerkleTree extends DBMarshal {
+module.exports = class MerkleTree extends DBModel {
     
     constructor(scope, schema = SchemaBuiltMerkleTree,  data, type, creationOptions){
         
@@ -19,7 +19,7 @@ module.exports = class MerkleTree extends DBMarshal {
         else if (count === 1) this.levels = 1;
         else this.levels = Math.ceil ( Math.log2( count ) );
 
-        this.root = this._createMarshalObject(undefined, undefined, "root");
+        this.root = this._createModelObject(undefined, undefined, "root");
         this._calculateLevelsCounts(count);
 
         if (this._countChanged) this._countChanged( count );

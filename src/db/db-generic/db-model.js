@@ -1,10 +1,10 @@
-const Marshal  = require( "./../../marshal/marshal")
+const Marshal  = require( "../../marshal/model")
 
 const Exception  = require( "../../helpers/exception");
 const Helper  = require( "../../helpers/helper")
 const MarshalData  = require( "./../../marshal/data/marshal-data")
 
-module.exports = class DBMarshal extends Marshal{
+module.exports = class DBModel extends Marshal{
 
     constructor(scope, schema,  data, type, creationOptions){
 
@@ -418,12 +418,12 @@ module.exports = class DBMarshal extends Marshal{
     /**
      * Given a specific Database Schema, it will override object's methods importing database specific methods
      */
-    _importMethodsFromDatabaseSchema (databaseSchema) {
+    _importMethodsFromDatabaseSchema (databaseModel) {
 
-        if (!databaseSchema) databaseSchema = (this._scope.db && this._scope.db.marshal) ? this._scope.db.marshal : undefined;
+        if (!databaseModel) databaseModel = (this._scope.db && this._scope.db.model) ? this._scope.db.model : undefined;
 
-        if (databaseSchema)
-            databaseSchema.exportDatabaseSchemaMethods( this );
+        if (databaseModel)
+            databaseModel.exportDatabaseSchemaMethods( this );
 
     }
 
@@ -438,8 +438,8 @@ module.exports = class DBMarshal extends Marshal{
 
     }
 
-    get getMarshalClass(){
-        return DBMarshal;
+    get getModelClass(){
+        return DBModel;
     }
 
 }

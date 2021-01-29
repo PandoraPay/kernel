@@ -1,4 +1,4 @@
-# Marshal
+# Model
 
 This enables automatic marshal (serialization) and unmarshal (deserialization). Moreover, the library will also allow validation of the data. 
 To use the class, the developer just has to define a schema and the interface will do the trick automatically. 

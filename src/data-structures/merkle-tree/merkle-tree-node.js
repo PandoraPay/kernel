@@ -1,10 +1,10 @@
-const DBMarshal = require( "../../db/db-generic/db-marshal")
+const DBModel = require( "../../db/db-generic/db-model")
 const Exception = require("../../helpers/exception");
 
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum")
 const {SchemaBuiltMerkleTreeNode} = require('./schema/schema-build-merkle-tree-node')
 
-module.exports = class MerkleTreeNode extends DBMarshal {
+module.exports = class MerkleTreeNode extends DBModel {
 
     constructor(scope, schema = SchemaBuiltMerkleTreeNode,  data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
@@ -30,7 +30,7 @@ module.exports = class MerkleTreeNode extends DBMarshal {
 
         if (this.level < levels && data[ offset ]) {
 
-            const left = this._createMarshalObject( {
+            const left = this._createModelObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
             }, "object", "children", undefined, undefined, undefined, {}  );
 
@@ -43,7 +43,7 @@ module.exports = class MerkleTreeNode extends DBMarshal {
 
         if ( this.level < levels && data[ offset ] ){
 
-            const right = this._createMarshalObject( {
+            const right = this._createModelObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
             }, "object", "children", undefined, undefined, undefined, {}  );
 

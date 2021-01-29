@@ -21,7 +21,7 @@ const Events = require( "./src/helpers/events/events");
 const Argv = require( "./bin/argv/argv");
 const App = require( './src/app');
 
-const Marshal = require( "./src/marshal/marshal");
+const Model = require( "./src/marshal/model");
 const MarshalData = require( "./src/marshal/data/marshal-data");
 const MarshalFields = require( "./src/marshal/fields/marshal-fields");
 const MarshalValidation = require( "./src/marshal/fields/marshal-validation");
@@ -29,7 +29,10 @@ const UnmarshalFields = require( "./src/marshal/fields/unmarshal-fields");
 const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-validation-pre-processing");
 const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
-const DBMarshal = require( "./src/db/db-generic/db-marshal");
+const DBModel = require( "./src/db/db-generic/db-model");
+const DBSchemaBuild = require( "./src/db/db-generic/db-schema-build");
+
+const SchemaBuild = require( "./src/marshal/schemas/schema-build");
 const SchemaBuildBuffer = require( "./src/marshal/schemas/samples/schema-build-buffer");
 const DBSchemaBufferBig = require( "./src/marshal/schemas/samples/db-schema-buffer-big");
 const DBSchemaBufferUnique = require( "./src/marshal/schemas/samples/db-schema-buffer-unique");
@@ -38,7 +41,7 @@ const SchemaBuildString = require( "./src/marshal/schemas/samples/schema-build-s
 const DBSchemaBoolean = require( "./src/marshal/schemas/samples/db-schema-boolean");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
-const DBMarshalHelper = require( "./src/db/db-generic/db-marshal-helper");
+const DBModelHelper = require( "./src/db/db-generic/db-model-helper");
 const DBConstructor = require( "./src/db/db-constructor");
 
 const AsyncInterval = require( "./src/helpers/async-interval");
@@ -88,6 +91,7 @@ const sticky = BROWSER ? undefined : require('sticky-session').default;
 const HttpServer = BROWSER ? undefined : require("./src/cluster/server/http-server");
 const ServerCluster = BROWSER ? undefined : require("./src/cluster/server/server-cluster");
 const RedisDB = BROWSER ? undefined : require( "./src/db/redis-db/redis-db" );
+const PouchDB = BROWSER ? undefined : require( "./src/db/pouch-db/pouch-db" );
 
 const library = {
 
@@ -95,7 +99,8 @@ const library = {
 
     marshal:{
 
-        Marshal,
+        Model,
+
         MarshalData,
         MarshalFields,
         MarshalValidation,
@@ -103,23 +108,29 @@ const library = {
         MarshalValidationPreset,
         MarshalValidationPreProcessing,
 
-        db:{
-            DBMarshal,
-            RedisDB,
-
+        schema:{
+            SchemaBuild,
             samples:{
                 SchemaBuildBuffer,
-                DBSchemaBufferUnique,
-                DBSchemaBufferBig,
                 SchemaBuildString,
                 SchemaBuildNumber,
+                DBSchemaBufferUnique,
+                DBSchemaBufferBig,
                 DBSchemaBoolean,
             },
-
-            DBMarshalHelper,
-            DBConstructor,
-
         },
+    },
+
+    db:{
+        DBModel,
+        DBSchemaBuild,
+
+        RedisDB,
+        PouchDB,
+
+        DBModelHelper,
+        DBConstructor,
+
     },
 
     dataStructures: {

@@ -1,8 +1,6 @@
 const describe = require( '../../../unit-testing/describe');
 const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
-const DBMarshal = require( "../../../../../src/db/db-generic/db-marshal");
 const DBSchemaBuild = require( "../../../../../src/db/db-generic/db-schema-build");
-const SchemaMarshal = require("../../../../../src/marshal/schemas/schema-build");
 /**
  *
  * REDIS BENCHMARK
@@ -22,7 +20,7 @@ module.exports = async function run ( dbType) {
 
             for (let i = 0; i < TEST1; i++) {
 
-                const obj = this.db.createMarshalInstance( schemaBuilt );
+                const obj = this.db.createModelInstance( schemaBuilt );
 
                 for (let i = 0; i < schema.output.length; i++) {
                     this.expect(typeof obj["field" + i], typeof schema.output[i]);
@@ -36,7 +34,7 @@ module.exports = async function run ( dbType) {
 
             const array = [];
             for (let i = 0; i < TEST1; i++)
-                array.push( this.db.createMarshalInstance( schemaBuilt ) );
+                array.push( this.db.createModelInstance( schemaBuilt ) );
 
             await Promise.all(array.map(async (it, index) => {
                 

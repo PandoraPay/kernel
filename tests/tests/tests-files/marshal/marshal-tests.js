@@ -309,7 +309,7 @@ const testMultilevelSchema = {
         field0: {
             type: "object",
             default: function () {
-                return this._createMarshalObject( {}, "object", "field0");
+                return this._createModelObject( {}, "object", "field0");
             },
             schemaBuiltClass: testMiniSchema,
         },
@@ -319,9 +319,9 @@ const testMultilevelSchema = {
 
             default: function () {
                 return [
-                    this._createMarshalObject( {}, "object", "field1"),
-                    this._createMarshalObject( {}, "object", "field1"),
-                    this._createMarshalObject( {}, "object", "field1"),
+                    this._createModelObject( {}, "object", "field1"),
+                    this._createModelObject( {}, "object", "field1"),
+                    this._createModelObject( {}, "object", "field1"),
                 ];
             },
 

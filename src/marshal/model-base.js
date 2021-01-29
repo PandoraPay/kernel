@@ -1,6 +1,6 @@
 const BN = require( "bn.js");
 
-const SchemaMarshal = require('./schemas/schema-build')
+const SchemaBuild = require('./schemas/schema-build')
 
 const Base58 = require( "../helpers/base58-helper");
 const StringHelper = require( "../helpers/string-helper");
@@ -10,7 +10,7 @@ const MarshalHelper = require( "./helpers/marshal-helper");
 
 const defaultValuesExist = {number: true, string: true, array: true, boolean: true, buffer: true, object: true, bigNumber: true};
 
-module.exports = class MarshalBase{
+module.exports = class ModelBase {
 
     constructor(scope, schema, data, creationOptions = {}) {
 
@@ -19,9 +19,9 @@ module.exports = class MarshalBase{
             ...creationOptions.scope||{},
         };
 
-        this.__isMarshal = true;
+        this.__isModel = true;
 
-        if (!schema || !(schema instanceof SchemaMarshal) ) throw "schema is not defined or invalid";
+        if (!schema || !(schema instanceof SchemaBuild) ) throw "schema is not defined or invalid";
 
         this._schema = schema;
 
@@ -311,8 +311,8 @@ module.exports = class MarshalBase{
     size(){
 
 
-        const marshal = this.toBuffer();
-        const size = marshal.length;
+        const model = this.toBuffer();
+        const size = model.length;
 
         return size;
 

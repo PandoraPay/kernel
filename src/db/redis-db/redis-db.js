@@ -1,7 +1,7 @@
 const Exception = require("../../helpers/exception");
 
 const GenericDatabase = require( "../db-generic/generic-database");
-const RedisMarshal = require( "./redis-marshal");
+const RedisModel = require( "./redis-model");
 
 const RedisClient = require( "./client/redis-client")
 const ArrayHelper = require( "../../helpers/array-helper");
@@ -12,9 +12,7 @@ module.exports = class RedisDB extends GenericDatabase{
 
         super( {
             ...scope,
-
-            marshal: RedisMarshal
-
+            model: RedisModel
         });
 
         this.client =  new RedisClient({ ...this._scope, db: this, parent: this });
@@ -33,11 +31,11 @@ module.exports = class RedisDB extends GenericDatabase{
         return this._scope.argv.db.redisDB.differentDatabase === false;
     }
 
-    async deleteAll( marshalClass = this._scope.marshal, marshalSchemaBuilt, infix='', table, creationOptions = {} ){
+    async deleteAll( modelClass = this._scope.model, marshalSchemaBuilt, infix='', table, creationOptions = {} ){
 
         creationOptions.skipValidation = true;
 
-        const models = await this.findAll( marshalClass, infix, table, undefined , creationOptions );
+        const models = await this.findAll( modelClass, infix, table, undefined , creationOptions );
         const out = await Promise.all( models.map(  it => it.delete() ));
 
         if (models.length > 0 && models[0]._schema.saving.indexable ){
@@ -50,14 +48,14 @@ module.exports = class RedisDB extends GenericDatabase{
 
     /**
      * Return the number of objects stored in the database
-     * @param marshalClass
+     * @param modelClass
      * @param infix
      * @param table
      * @returns {Promise<void>}
      */
-    async count ( marshalClass = this._scope.marshal, marshalSchemaBuilt, infix='', table, creationOptions){
+    async count ( modelClass = this._scope.model, marshalSchemaBuilt, infix='', table, creationOptions){
 
-        const obj = new marshalClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
+        const obj = new modelClass({ ...this._scope, db: this, }, undefined, undefined, undefined, creationOptions);
         const count = await this.client.redis.hget( `id:info:index`, `${infix}${table||obj.table}`)
 
         return count ? Number.parseInt(count) : 0;

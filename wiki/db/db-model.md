@@ -1,4 +1,4 @@
-The Database Schema extends the Marshal and introduces some new fields:
+The Database Model extends the Model and introduces some new fields:
 
 1. `db` - for clusters
 2. `table` - for identifying the object

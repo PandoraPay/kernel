@@ -1,5 +1,4 @@
 const Helper = require( "../../../helpers/helper");
-const DBMarshal = require( "../../../db/db-generic/db-marshal");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 
 const {SchemaBuildBuffer} = require( "./schema-build-buffer" );

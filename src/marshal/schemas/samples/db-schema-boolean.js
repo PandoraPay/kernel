@@ -1,7 +1,7 @@
 const Helper = require( "../../../helpers/helper");
-const DBMarshal = require( "../../../db/db-generic/db-marshal" );
+const DBModel = require( "../../../db/db-generic/db-model" );
 
-module.exports = class DBSchemaBoolean extends DBMarshal {
+module.exports = class DBSchemaBoolean extends DBModel {
 
     constructor(scope, schema = {},  data, type, creationOptions){
 

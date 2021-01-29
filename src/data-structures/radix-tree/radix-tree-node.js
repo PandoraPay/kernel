@@ -1,10 +1,10 @@
 const Helper = require( "../../helpers/helper");
-const DBMarshal = require("../../db/db-generic/db-marshal")
+const DBModel = require("../../db/db-generic/db-model")
 const Exception = require("../../helpers/exception");
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
 const {SchemaBuiltRadixTreeNode} = require('./schema/schema-build-radix-tree-node')
 
-module.exports = class RadixTreeNode extends DBMarshal {
+module.exports = class RadixTreeNode extends DBModel {
 
     constructor(scope, schema = SchemaBuiltRadixTreeNode,  data, type, creationOptions){
 
@@ -12,10 +12,10 @@ module.exports = class RadixTreeNode extends DBMarshal {
 
         this.children = [];
 
-        this.childNodeMarshalClass = RadixTreeNode;
+        this.childNodeModelClass = RadixTreeNode;
         this.childNodeSchemaBuilt = SchemaBuiltRadixTreeNode;
 
-        this.childNodeDataMarshalClass = undefined; //data is buffer
+        this.childNodeDataModelClass = undefined; //data is buffer
         this.childNodeDataSchemaBuilt = undefined; //data is buffer
         this.childNodeDataEmpty = Buffer.alloc(0);
         
@@ -108,8 +108,8 @@ module.exports = class RadixTreeNode extends DBMarshal {
         while ( i2 < newLabels.length && newLabel >= newLabels[i2].string )
             i2++;
 
-        const newLabelObject = this._createMarshalObject( { string: newLabel }, "object", "childrenLabels", undefined,  undefined, i2 );
-        const newHashObject = this._createMarshalObject( { buffer: newChild.hash() }, "object", "childrenHashes", undefined,  undefined, i2 );
+        const newLabelObject = this._createModelObject( { string: newLabel }, "object", "childrenLabels", undefined,  undefined, i2 );
+        const newHashObject = this._createModelObject( { buffer: newChild.hash() }, "object", "childrenHashes", undefined,  undefined, i2 );
 
         newLabels.splice(i2, 0, newLabelObject );
         newHashes.splice(i2, 0, newHashObject );

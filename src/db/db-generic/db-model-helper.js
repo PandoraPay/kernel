@@ -1,11 +1,11 @@
 const Exception = require("../../helpers/exception");
 const Helper = require( "../../helpers/helper");
 
-module.exports = class DBMarshalHelper{
+module.exports = class DBModelHelper{
 
     static onlyIds( schemaBuiltClass ){
 
-        return DBMarshalHelper.onlyProperties( schemaBuiltClass, { id: true } );
+        return DBModelHelper.onlyProperties( schemaBuiltClass, { id: true } );
 
     }
 
@@ -29,8 +29,6 @@ module.exports = class DBMarshalHelper{
         }
 
         return onlyIds;
-
-
     }
 
 }

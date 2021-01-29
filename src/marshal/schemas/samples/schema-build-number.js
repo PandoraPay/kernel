@@ -1,8 +1,8 @@
 const Helper = require( "../../../helpers/helper");
-const SchemaMarshal = require( "../schema-build");
+const SchemaBuild = require( "../schema-build");
 
 
-class SchemaBuildNumber extends SchemaMarshal {
+class SchemaBuildNumber extends SchemaBuild {
 
     constructor( options = {} ){
 

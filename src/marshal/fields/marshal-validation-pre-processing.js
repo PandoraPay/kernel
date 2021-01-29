@@ -2,7 +2,7 @@ const BN  = require("bn.js")
 const Exception  = require( "../../helpers/exception");
 const StringHelper  = require( "../../helpers/string-helper");
 
-const Marshal  = require( "./../marshal")
+const Marshal  = require( "../model")
 const MarshalHelper  = require("../helpers/marshal-helper");
 
 module.exports = class MarshalValidationPreProcessing{

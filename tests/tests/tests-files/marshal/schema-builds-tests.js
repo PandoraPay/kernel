@@ -29,7 +29,7 @@ const testSimple2Schema = {
             type: "object",
             schemaBuiltClass: SchemaBuiltBuffer,
             default() {
-                return this._createMarshalObject(  {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
+                return this._createModelObject(  {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
             },
         },
     },
@@ -51,7 +51,7 @@ const testAdvancedSchema = {
             type: "object",
             schemaBuiltClass: SchemaBuiltBuffer,
             default() {
-                return this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field1");
+                return this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field1");
             },
         },
         field2: {
@@ -59,9 +59,9 @@ const testAdvancedSchema = {
             schemaBuiltClass: SchemaBuiltBuffer,
             default() {
                 return [
-                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
-                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
-                    this._createMarshalObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
+                    this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),
                 ]
             },
         },
@@ -70,8 +70,8 @@ const testAdvancedSchema = {
             schemaBuiltClass: new DBSchemaBuild(testSimple2Schema),
             default() {
                 return [
-                    this._createMarshalObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
-                    this._createMarshalObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
+                    this._createModelObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
+                    this._createModelObject( {field0: "0000000000000000000000AAFF00000000000000000000000000000000000000", field1: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field3"),
                 ]
             },
         },

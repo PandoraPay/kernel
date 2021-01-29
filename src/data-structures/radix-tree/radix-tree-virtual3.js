@@ -104,7 +104,7 @@ module.exports = class RadixTreeVirtual3 extends RadixTree{
 
         const promisesDelete = [];
         for (let id in this._idsDeleted ) {
-            const objToDelete = this._createSimpleMarshalObject( this.root.childNodeMarshalClass, this.root.childNodeSchemaBuilt, "children", {
+            const objToDelete = this._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: Buffer.alloc(1),
                 id: deleteIds[id].id,
             }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );

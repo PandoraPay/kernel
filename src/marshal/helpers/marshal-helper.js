@@ -50,28 +50,6 @@ class MarshalHelper{
 
     }
 
-
-    objectDelimiter(str, value, delimiter = '.'){
-
-        const final = {};
-        let obj = final;
-
-        while (str.indexOf(".")>=0){
-
-            let infix = str.substr(0, x.indexOf(delimiter));
-            str = str.substr(str.indexOf(delimiter)+1);
-
-            if ( !obj[infix] )
-                obj[infix] = {};
-
-            obj = obj[infix];
-        }
-
-        obj[str] = value;
-
-        return final;
-    }
-
 }
 
 module.exports = new MarshalHelper()

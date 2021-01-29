@@ -1,14 +1,14 @@
 const Exception = require("../../helpers/exception");
 const Helper = require( "../../helpers/helper");
-const Marshal = require( "../../marshal/marshal");
+const Model = require( "../../marshal/model");
 
-const DBMarshal = require("../../db/db-generic/db-marshal");
+const DBModel = require("../../db/db-generic/db-model");
 const RadixTreeRoot = require( "./radix-tree-root")
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
 const RadixTreeNode = require( "./radix-tree-node");
 const {SchemaBuiltRadixTree} = require('./schema/schema-build-radix-tree')
 
-module.exports = class RadixTree extends DBMarshal {
+module.exports = class RadixTree extends DBModel {
 
     constructor(scope, schema = SchemaBuiltRadixTree, data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
@@ -37,7 +37,7 @@ module.exports = class RadixTree extends DBMarshal {
 
     createNewRoot(){
 
-        const newRoot = this._createMarshalObject( {
+        const newRoot = this._createModelObject( {
             id: this.root.id,
         },"object","root", undefined,  undefined, undefined, {skipValidation: true, skipProcessingConstructionValues: true} );
 
@@ -122,8 +122,8 @@ module.exports = class RadixTree extends DBMarshal {
         const found = await this.findRadix( label);
 
         //construct the data as an object
-        if ( this.root.childNodeDataMarshalClass && !(data instanceof Marshal) )
-            data = this.root._createSimpleMarshalObject( this.root.childNodeDataMarshalClass, this.root.childNodeDataSchemaBuilt, "children", data );
+        if ( this.root.childNodeDataModelClass && !(data instanceof Model) )
+            data = this.root._createSimpleModelObject( this.root.childNodeDataModelClass, this.root.childNodeDataSchemaBuilt, "children", data );
 
         //found node already
         if (found.result) {
@@ -134,7 +134,7 @@ module.exports = class RadixTree extends DBMarshal {
             //update
             found.node.data = data;
 
-            if (data instanceof Marshal) data.parent = found.node;
+            if (data instanceof Model) data.parent = found.node;
 
             await found.node.propagateHashChange();
             await this._saveNode(found.node);
@@ -172,7 +172,7 @@ module.exports = class RadixTree extends DBMarshal {
             node.__data.childrenLabels = [];
             node.__data.childrenHashes = [];
 
-            const newNode = node._createSimpleMarshalObject( node.childNodeMarshalClass, node.childNodeSchemaBuilt, "children", {
+            const newNode = node._createSimpleModelObject( node.childNodeModelClass, node.childNodeSchemaBuilt, "children", {
                 label: remainingLabel,
                 data: nodeData,
                 type: nodeType,
@@ -204,13 +204,13 @@ module.exports = class RadixTree extends DBMarshal {
 
         const newLabel = label.substr( found.labelOffset );
 
-        const child  = node._createSimpleMarshalObject( node.childNodeMarshalClass, node.childNodeSchemaBuilt,  "children",{
+        const child  = node._createSimpleModelObject( node.childNodeModelClass, node.childNodeSchemaBuilt,  "children",{
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
         }, "object", 0,  {skipProcessingConstructionValues: true} );
 
-        if (data instanceof Marshal) data.parent = child;
+        if (data instanceof Model) data.parent = child;
 
         node.addChild(newLabel, child);
 
@@ -257,7 +257,7 @@ module.exports = class RadixTree extends DBMarshal {
 
             const otherChild = await toDeleteParent.loadChild( toDeleteParent.__data.childrenLabels[ otherChildIndex ].string, otherChildIndex );
 
-            const newParent = grandParent._createSimpleMarshalObject( this.root.childNodeMarshalClass, this.root.childNodeSchemaBuilt, "children", {
+            const newParent = grandParent._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: toDeleteParent.__data.label + otherChild.__data.label,
             }, "object", 0, {skipValidation: true, skipProcessingConstructionValues: true} );
 
@@ -322,7 +322,7 @@ module.exports = class RadixTree extends DBMarshal {
 
         try{
 
-            const obj = this.root._createSimpleMarshalObject( this.root.childNodeMarshalClass, this.root.childNodeSchemaBuilt, "children", {
+            const obj = this.root._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: label,
                 type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
             }, "object", 0,  { skipProcessingConstructionValues: true, skipValidation: true,} );
@@ -420,7 +420,7 @@ module.exports = class RadixTree extends DBMarshal {
 
     async loadNodeChild(label, position, parent){
 
-        const child = parent._createSimpleMarshalObject( parent.childNodeMarshalClass, parent.childNodeSchemaBuilt, "children", {
+        const child = parent._createSimpleModelObject( parent.childNodeModelClass, parent.childNodeSchemaBuilt, "children", {
             label: label,
         }, "object", position, {skipProcessingConstructionValues: true, skipValidation: true } );
 

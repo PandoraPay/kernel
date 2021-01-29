@@ -4,7 +4,7 @@ const SchemaBuildsTests = require( "../../marshal/schema-builds-tests")
 const Helper = require( "../../../../../src/helpers/helper")
 
 const DBSchemaBuild = require("../../../../../src/db/db-generic/db-schema-build")
-const DBMarshal = require("../../../../../src/db/db-generic/db-marshal")
+const DBModel = require("../../../../../src/db/db-generic/db-model")
 
 
 /**
@@ -107,7 +107,7 @@ module.exports = async function run ( dbType ) {
             }, true);
 
             const schemaBuilt = new DBSchemaBuild(schema)
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             for (let i=0; i<schema.output.length; i++) {
                 this.expect( typeof obj["field" + i], typeof schema.output[i] );
@@ -128,7 +128,7 @@ module.exports = async function run ( dbType ) {
 
             const json2 = obj.toString();
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
 
             await obj2.load("test_table_1_402");
             this.expect(json1, obj2.toString() );
@@ -152,7 +152,7 @@ module.exports = async function run ( dbType ) {
             }, true);
             const schemaBuilt = new DBSchemaBuild(schema)
 
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             const json = obj.toJSON(false);
 
@@ -163,7 +163,7 @@ module.exports = async function run ( dbType ) {
 
             await obj.save();
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
 
             await obj2.load();
 
@@ -192,7 +192,7 @@ module.exports = async function run ( dbType ) {
             }, true);
             const schemaBuilt = new DBSchemaBuild(schema)
 
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             const json = obj.toJSON(false);
 
@@ -207,7 +207,7 @@ module.exports = async function run ( dbType ) {
 
             await obj.save("TS3");
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
 
             await obj2.load(obj.id, "TS3",);
 
@@ -223,7 +223,7 @@ module.exports = async function run ( dbType ) {
             const schema = Helper.merge(  MarshalTests.testMultilevelSchema, {}, true);
             const schemaBuilt = new DBSchemaBuild(schema)
 
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             await this.expect( await this.db.client.existsAny("TS3_DELETE"), false);
 
@@ -231,7 +231,7 @@ module.exports = async function run ( dbType ) {
 
             await this.expect( await this.db.client.existsAny("TS3_DELETE"), true);
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
 
             await obj2.load(obj.id, "TS3_DELETE");
 
@@ -246,7 +246,7 @@ module.exports = async function run ( dbType ) {
             const schema = SchemaBuildsTests.testAdvancedSchema;
             const schemaBuilt = new DBSchemaBuild(schema);
 
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             const json = obj.toJSON(true);
 
@@ -254,7 +254,7 @@ module.exports = async function run ( dbType ) {
 
             await obj.save("TS4");
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
 
             await obj2.load(obj.id, "TS4",);
 
@@ -279,7 +279,7 @@ module.exports = async function run ( dbType ) {
             const schema = MarshalTests.testBufferSchema;
             const schemaBuilt = new DBSchemaBuild(schema);
 
-            const obj = this.db.createMarshalInstance( schemaBuilt );
+            const obj = this.db.createModelInstance( schemaBuilt );
 
             await this.expect( await this.db.client.existsAny("TS4_DELETE_ALL") , false );
 
@@ -311,18 +311,18 @@ module.exports = async function run ( dbType ) {
             const schema = SchemaBuildsTests.testSimpleUnique;
             const schemaBuilt = new DBSchemaBuild(schema);
 
-            const obj1 = this.db.createMarshalInstance( schemaBuilt );
+            const obj1 = this.db.createModelInstance( schemaBuilt );
             await obj1.save("TEST_UNIQUE");
 
-            const obj1_1 = this.db.createMarshalInstance( schemaBuilt );
+            const obj1_1 = this.db.createModelInstance( schemaBuilt );
             await obj1_1.load(obj1.id, "TEST_UNIQUE");
             this.expect(obj1_1.field0, obj1.field0);
 
-            const obj2 = this.db.createMarshalInstance( schemaBuilt );
+            const obj2 = this.db.createModelInstance( schemaBuilt );
             obj2.field0 = "THE PEOPLE";
             await obj2.save("TEST_UNIQUE");
 
-            const obj3 = this.db.createMarshalInstance( schemaBuilt );
+            const obj3 = this.db.createModelInstance( schemaBuilt );
             obj3.field0 = "THE PEOPLE";
 
             await this.expectError( obj3.save("TEST_UNIQUE") );

@@ -1,8 +1,8 @@
-const DBMarshal = require( "../db-generic/db-marshal");
+const DBModel = require( "../db-generic/db-model");
 const Exception = require( "../../helpers/exception");
 const BufferHelper = require( "../../helpers/buffers/buffer-helper");
 
-class PouchMarshal extends DBMarshal{
+class PouchModel extends DBModel{
 
     async _saveMiddleware(infix, table, id, db, data, type, multi){
 
@@ -62,4 +62,4 @@ class PouchMarshal extends DBMarshal{
 
 }
 
-module.exports = PouchMarshal
+module.exports = PouchModel

@@ -69,7 +69,7 @@ class SchemaBuildMerkleTreeNode extends DBSchemaBuild {
                     type: "array",
 
                     schemaBuiltClass: undefined,
-                    marshalClass: MerkleTreeNode,
+                    modelClass: MerkleTreeNode,
 
                     minSize: 0,
                     maxSize(){

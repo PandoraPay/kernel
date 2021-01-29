@@ -1,6 +1,6 @@
 const describe = require( '../../../unit-testing/describe');
 const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
-const DBMarshal = require( "../../../../../src/db/db-generic/db-marshal");
+const DBModel = require( "../../../../../src/db/db-generic/db-model");
 const Helper = require( "../../../../../src/helpers/helper");
 const DBSchemaBuild = require('../../../../../src/db/db-generic/db-schema-build')
 /**
@@ -15,7 +15,7 @@ module.exports = async function run ( dbType) {
     const schema = MarshalTests.testSimpleSchema;
     const schemaBuilt = new DBSchemaBuild(schema);
 
-    class classSchema extends DBMarshal {
+    class classSchema extends DBModel {
         constructor(scope, sc={}, data, type, onlyFields){
             super(scope, schemaBuilt, data, type, onlyFields);
         }
@@ -117,7 +117,7 @@ module.exports = async function run ( dbType) {
 
                 const array = [];
                 for (let i = 0; i < TEST1; i++)
-                    array.push(this.db.createMarshalInstance( schemaBuilt ));
+                    array.push(this.db.createModelInstance( schemaBuilt ));
 
                 await Promise.all(array.map(async (it, index) => {
 

@@ -1,14 +1,14 @@
 const Exception = require( "../helpers/exception");
 const Helper = require( "../helpers/helper");
 
-const MarshalBase = require( "./marshal-base");
+const ModelBase = require( "./model-base");
 
 const MarshalHelper = require( "./helpers/marshal-helper");
-const SchemaMarshal = require('./schemas/schema-build')
+const SchemaBuild = require('./schemas/schema-build')
 
 /**
  *
- * Marshal Class enables automatic serialization/deserialization of the application's data.
+ * Model Class enables automatic serialization/deserialization of the application's data.
  * Blocks and Data needs to be serialized to Raw Data (Buffer) and JSON(Object, and String)
  *
  * Invalid fields must throw errors
@@ -19,7 +19,7 @@ const SchemaMarshal = require('./schemas/schema-build')
  */
 
 
-class Marshal extends MarshalBase {
+class Model extends ModelBase {
 
     constructor(scope, schema, data, type, creationOptions) {
 
@@ -157,7 +157,7 @@ class Marshal extends MarshalBase {
         }
 
 
-        if (dataValue instanceof Marshal === false){
+        if (!(dataValue instanceof Model)){
 
 
             if (dataType === "buffer" && dataValue !== undefined && this.checkProperty( "skipMarshal", field) )
@@ -175,7 +175,7 @@ class Marshal extends MarshalBase {
                 //avoid processing values ( used in constructor )
                 if (!creationOptions.skipProcessingConstructionValues) {
                     const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
-                    dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
+                    dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
                 }
 
             }
@@ -191,7 +191,7 @@ class Marshal extends MarshalBase {
             if (typeof dataValue === "function") dataValue = dataValue.call(this, schemaField);
 
             if (dataValue === undefined && schemaField.type === "object" && !this.checkValue(schemaField.emptyAllowed, "emptyAllowed"))
-                    dataValue = this._createMarshalObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
+                    dataValue = this._createModelObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
 
             isDefault = true;
         }
@@ -347,7 +347,7 @@ class Marshal extends MarshalBase {
                     } else
                         if (input[fieldName] === undefined) continue;
 
-                data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createMarshalObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
+                data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
                 Object.getOwnPropertyDescriptor(this, field).set.call( this, data, !unmarshalOptions.emptyObject, false );
 
@@ -365,7 +365,7 @@ class Marshal extends MarshalBase {
 
         const parentIndex = (position === undefined) ? this[fieldName].length-1 : position;
 
-        const element = data instanceof Marshal ? data : this._createMarshalObject( data, type, fieldName, schemaField,  undefined, parentIndex, unmarshalOptions );
+        const element = data instanceof Model ? data : this._createModelObject( data, type, fieldName, schemaField,  undefined, parentIndex, unmarshalOptions );
 
         const array = [... this[fieldName] ];
 
@@ -393,9 +393,9 @@ class Marshal extends MarshalBase {
 
     }
 
-    _createSimpleMarshalObject( marshalClass, schemaBuiltClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
+    _createSimpleModelObject( modelClass, schemaBuiltClass, fieldName, data, type, parentIndex, unmarshalOptions = {}  ){
 
-        const object = this._creationMiddleware( marshalClass, {
+        const object = this._creationMiddleware( modelClass, {
                 ...this._scope,
                 parentFieldName: fieldName,
                 parent: this,
@@ -410,7 +410,7 @@ class Marshal extends MarshalBase {
 
     }
 
-    _createMarshalObject( data, type, fieldName, schemaBuiltField, callbackObject, parentIndex, unmarshalOptions = {} ) {
+    _createModelObject( data, type, fieldName, schemaBuiltField, callbackObject, parentIndex, unmarshalOptions = {} ) {
 
         if ( !this._schema.options.hashing.enabled || this.checkProperty("skipHashing", fieldName  )) unmarshalOptions.skipPropagatingHashing = true;
 
@@ -419,9 +419,9 @@ class Marshal extends MarshalBase {
         if ( typeof schemaBuiltClass === "function" && !schemaBuiltClass.prototype ) //if it is a callback
             schemaBuiltClass = schemaBuiltClass.call(this, data, fieldName, schemaBuiltField);
 
-        let marshalClass = schemaBuiltField.marshalClass;
-        if ( typeof marshalClass === "function" && !marshalClass.prototype ) //if it is a callback
-            marshalClass = marshalClass.call(this, data, fieldName, schemaBuiltField);
+        let modelClass = schemaBuiltField.modelClass;
+        if ( typeof modelClass === "function" && !modelClass.prototype ) //if it is a callback
+            modelClass = modelClass.call(this, data, fieldName, schemaBuiltField);
 
         let loadingId = false;
         if (data !== undefined && typeof data === "string" && callbackObject) {
@@ -430,7 +430,7 @@ class Marshal extends MarshalBase {
         }
 
 
-        const object = this._creationMiddleware( marshalClass, {
+        const object = this._creationMiddleware( modelClass, {
                 ...this._scope,
                 parentFieldName: fieldName,
                 parent: this,
@@ -448,13 +448,13 @@ class Marshal extends MarshalBase {
 
     }
 
-    _creationMiddleware( marshalClass = this.getMarshalClass, scope, schemaBuiltClass, data, type, unmarshalOptions){
+    _creationMiddleware( modelClass = this.getModelClass, scope, schemaBuiltClass, data, type, unmarshalOptions){
         if (!schemaBuiltClass) return;
-        return new marshalClass( scope, schemaBuiltClass, data, type, unmarshalOptions );
+        return new modelClass( scope, schemaBuiltClass, data, type, unmarshalOptions );
     }
 
-    get getMarshalClass(){
-        return Marshal;
+    get getModelClass(){
+        return Model;
     }
 
     isChanged(){
@@ -468,4 +468,4 @@ class Marshal extends MarshalBase {
 
 }
 
-module.exports = Marshal;
+module.exports = Model;

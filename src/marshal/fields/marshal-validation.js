@@ -35,7 +35,7 @@ class MarshalValidation {
         if ( !Array.isArray(value) ) throw "Value is not an array";
 
         for (let it=0; it<value.length; it++ ) {
-            if (typeof value[it] !== "object" || !value[it].__isMarshal) throw "Object in array is not a marshaling object"
+            if (typeof value[it] !== "object" || !value[it].__isModel) throw "Object in array is not a marshaling object"
             if (! value[it].validate() ) throw "Object in array is not valid";
         }
 
@@ -72,7 +72,7 @@ class MarshalValidation {
             if (emptyAllowed) return true;
         }
 
-        if (typeof value !== "object" || !value.__isMarshal) throw "Object is not a marshaling object";
+        if (typeof value !== "object" || !value.__isModel) throw "Object is not a marshaling object";
         if (! value.validate()) throw "Object was not validated";
     }
 

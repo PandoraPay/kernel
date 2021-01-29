@@ -1,4 +1,4 @@
-const DBMarshal = require("../../db/db-generic/db-marshal")
+const DBModel = require("../../db/db-generic/db-model")
 const Exception = require("../../helpers/exception");
 
 const HashMap = require("./hash-map")
@@ -64,10 +64,10 @@ module.exports = class HashVirtualMap extends HashMap {
         if (out) throw new Exception(this, "Element already exists");
 
         let element = data;
-        if (!(data instanceof DBMarshal))
-            element = this._createSimpleMarshalObject( undefined, this._schema, "element",{
+        if (!(data instanceof DBModel))
+            element = this._createSimpleModelObject( undefined, this._schema, "element",{
                 id: id,
-                data: data instanceof DBMarshal ? data.toBuffer() : data,
+                data: data instanceof DBModel ? data.toBuffer() : data,
             }, "object", undefined,  ); //data is provided
 
         if (this._hasCache(id)) this._deleteCache(id);
@@ -116,9 +116,9 @@ module.exports = class HashVirtualMap extends HashMap {
 
         if (out){
 
-            const element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
+            const element = this._createSimpleModelObject( undefined, this._schema, "element", {
                 id: id,
-                data: out.data instanceof DBMarshal ? out.data.toBuffer() : out.data,
+                data: out.data instanceof DBModel ? out.data.toBuffer() : out.data,
             }, "object", undefined, { schemaBuiltClass: this._schema } ); //data is provided
 
             this._virtual[id] = {
@@ -167,10 +167,10 @@ module.exports = class HashVirtualMap extends HashMap {
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
         let element = data;
-        if (!(data instanceof DBMarshal))
-            element = this._createSimpleMarshalObject( undefined, this._schema, "element", {
+        if (!(data instanceof DBModel))
+            element = this._createSimpleModelObject( undefined, this._schema, "element", {
                 id: id,
-                data: data instanceof DBMarshal ? data.toBuffer() : data,
+                data: data instanceof DBModel ? data.toBuffer() : data,
             }, "object",   undefined, ); //data is provided
 
         if ( this._hasCache(id) ) this._deleteCache(id);
