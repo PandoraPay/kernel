@@ -37,6 +37,8 @@ class SchemaBuild {
             //returnOnlyField
         }, schema.options || {}, true);
 
+        this._beforeInitializing();
+
         for (const key in this.fields){
 
             const schemaField = this.fields[key];
@@ -48,6 +50,10 @@ class SchemaBuild {
         }
 
         this._initializeSchema();
+    }
+
+    _beforeInitializing(){
+
     }
 
     get getClass(){
