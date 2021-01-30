@@ -125,10 +125,7 @@ module.exports = class HashMapDBModel extends DBModel {
         const element = await this.getMap(id);
         if (element) {
 
-            //TODO use srem for redis schema instead of delete
-            // element.data = data;
-            // await element.save();
-
+            //delete is necessary because a more complex object could be spanned
             await element.delete();
 
         }

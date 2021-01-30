@@ -1,4 +1,5 @@
 const DBModel = require("../../db/db-generic/db-model")
+const Model = require('../../marshal/model')
 const Exception = require("../../helpers/exception");
 
 const HashMapDBModel = require("./hash-map-db-model")
@@ -41,12 +42,11 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
             const siblings = await this.findAllHashMap(  );
 
             for (let i=0; i < siblings.length; i++) {
-                this._virtual[siblings[i].id] = {
+                this._addCache(siblings[i].id, {
                     type: "view",
                     sortedListScore: 0,
                     element: siblings[i],
-                };
-                this._addCache(id);
+                });
             }
             return true;
 
@@ -70,7 +70,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
                 data: data instanceof DBModel ? data.toBuffer() : data,
             }, "object", undefined,  ); //data is provided
 
-        if (this._hasCache(id)) this._deleteCache(id);
+        if (this._hasCache(id)) this._deleteCacheSortedList(id);
         this._virtual[id] = {
             type: "add",
             element,
@@ -85,7 +85,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         if (!this._virtual[id])
             this._virtual[id] = { };
 
-        if ( this._hasCache(id) ) this._deleteCache(id);
+        if ( this._hasCache(id) ) this._deleteCacheSortedList(id);
         this._virtual[id].type = "del";
 
         return id;
@@ -100,14 +100,8 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
             if (this._virtual[id].type === "del") return undefined;
             if (this._virtual[id].type === "add" ) return this._virtual[id].element;
-            if (this._virtual[id].type === "view") {
-
-                //updating importance
-                this._deleteCache(id);
-                this._virtual[id].sortedListScore += 1;
-                this._addCache(id);
-                return this._virtual[id].element;
-            }
+            if (this._virtual[id].type === "view")
+                return this._updateScoreCacheSortedList(id, 1); //updating importance
 
 
         }
@@ -121,16 +115,13 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
                 data: out.data instanceof DBModel ? out.data.toBuffer() : out.data,
             }, "object", undefined, { schemaBuiltClass: this._schema } ); //data is provided
 
-            this._virtual[id] = {
+            return this._addCache( id, {
                 id,
                 type: "view",
                 sortedListScore: 0,
                 element,
-            };
+            } );
 
-            this._addCache( id );
-
-            return element;
         }
 
     }
@@ -173,7 +164,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
                 data: data instanceof DBModel ? data.toBuffer() : data,
             }, "object",   undefined, ); //data is provided
 
-        if ( this._hasCache(id) ) this._deleteCache(id);
+        if ( this._hasCache(id) ) this._deleteCacheSortedList(id);
 
         this._virtual[id] = {
             id,
@@ -215,7 +206,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
                 if (type === "del") delete this._virtual[id];
                 else if (type === "add") {
                     this._virtual[id].type = "view";
-                    this._addCache(id);
+                    this._u(id);
                 }
                 else if (type === "view") continue;
             }
@@ -229,10 +220,22 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
     }
 
     _deleteCache(id){
-        return ArrayHelper.removeSortedArray( this._virtual[id], this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
+        const element = this._virtual[id];
+        ArrayHelper.removeSortedArray( element, this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
+        delete this._virtual[id];
     }
 
-    _addCache(id){
+    _updateScoreCacheSortedList(id, scoreUpdate = 1){
+        this._deleteCacheSortedList(id);
+        this._virtual[id].sortedListScore += scoreUpdate;
+        this._addCacheSortedList(id);
+    }
+
+    _deleteCacheSortedList(id){
+        ArrayHelper.removeSortedArray( this._virtual[id], this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
+    }
+
+    _addCacheSortedList(id){
 
         if (this._virtualList.length >= this._scope.argv.settings.hashMapVirtualCacheSize ){
             const data = this._virtualList[0];

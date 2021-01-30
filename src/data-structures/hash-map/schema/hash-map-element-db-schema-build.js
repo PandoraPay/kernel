@@ -17,7 +17,6 @@ class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 
                 id : {
                     fixedBytes: 64,
-                    unique: false, // it is verified by the hash map
                 },
 
                 data: {
