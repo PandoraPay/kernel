@@ -55,7 +55,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         }
     }
 
-    async addMap ( id, data){
+    async addMap ( id, data, dataType ){
 
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
@@ -64,11 +64,10 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         if (out) throw new Exception(this, "Element already exists");
 
         let element = data;
-        if (!(data instanceof DBModel))
-            element = this._createSimpleModelObject( undefined, this._schema, "element",{
-                id: id,
-                data: data instanceof DBModel ? data.toBuffer() : data,
-            }, "object", undefined,  ); //data is provided
+        if (!(data instanceof DBModel)) {
+            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType);
+            element.id = id; //data is provided
+        }
 
         if (this._hasCache(id)) this._deleteCacheSortedList(id);
         this._virtual[id] = {
@@ -100,29 +99,20 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
             if (this._virtual[id].type === "del") return undefined;
             if (this._virtual[id].type === "add" ) return this._virtual[id].element;
-            if (this._virtual[id].type === "view")
-                return this._updateScoreCacheSortedList(id, 1); //updating importance
+            if (this._virtual[id].type === "view") return this._updateScoreCacheSortedList(id, 1); //updating importance
 
 
         }
 
         const out = await this._getFallback('getMap')(id);
 
-        if (out){
-
-            const element = this._createSimpleModelObject( undefined, this._schema, "element", {
-                id: id,
-                data: out.data instanceof DBModel ? out.data.toBuffer() : out.data,
-            }, "object", undefined, { schemaBuiltClass: this._schema } ); //data is provided
-
+        if (out)
             return this._addCache( id, {
                 id,
                 type: "view",
                 sortedListScore: 0,
-                element,
+                out,
             } );
-
-        }
 
     }
 
@@ -153,16 +143,15 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
      * @param data
      * @returns {Promise<*>}
      */
-    async updateMap (id, data){
+    async updateMap (id, data, dataType){
 
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
         let element = data;
-        if (!(data instanceof DBModel))
-            element = this._createSimpleModelObject( undefined, this._schema, "element", {
-                id: id,
-                data: data instanceof DBModel ? data.toBuffer() : data,
-            }, "object",   undefined, ); //data is provided
+        if (!(data instanceof DBModel)) {
+            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType, undefined,); //data is provided
+            element.id = id;
+        }
 
         if ( this._hasCache(id) ) this._deleteCacheSortedList(id);
 
@@ -223,6 +212,11 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         const element = this._virtual[id];
         ArrayHelper.removeSortedArray( element, this._virtualList, (a,b) => a.sortedListScore - b.sortedListScore );
         delete this._virtual[id];
+    }
+
+    _addCache(id, element){
+        this._virtual[id] = element;
+        this._addCacheSortedList(id);
     }
 
     _updateScoreCacheSortedList(id, scoreUpdate = 1){

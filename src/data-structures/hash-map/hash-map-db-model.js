@@ -40,14 +40,13 @@ module.exports = class HashMapDBModel extends DBModel {
 
     }
 
-    async addMap ( id, data){
+    async addMap ( id, data, dataType ){
 
         let element = data;
-        if (!(data instanceof DBModel))
-            element = this._createSimpleModelObject( undefined, this._schema, "element", {
-                id: id,
-                data: data,
-            }, "object" ); //data provided
+        if (!(data instanceof DBModel)) {
+            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType);
+            element.id = id;
+        }
 
         await element.save();
 
@@ -120,7 +119,7 @@ module.exports = class HashMapDBModel extends DBModel {
      * @param data
      * @returns {Promise<*>}
      */
-    async updateMap (id, data){
+    async updateMap (id, data, dataType ){
 
         const element = await this.getMap(id);
         if (element) {
@@ -130,7 +129,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
         }
 
-        return this.addMap(id, data);
+        return this.addMap(id, data, dataType);
 
     }
 
