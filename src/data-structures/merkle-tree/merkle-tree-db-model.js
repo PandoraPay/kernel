@@ -1,11 +1,11 @@
 const DBModel  = require( "../../db/db-generic/db-model")
 const Exception  = require("../../helpers/exception");
 
-const {SchemaBuiltMerkleTree} = require('./schema/schema-build-merkle-tree')
+const {MerkleTreeDBSchemaBuilt} = require('./schema/merkle-tree-db-schema-build')
 
-module.exports = class MerkleTree extends DBModel {
+module.exports = class MerkleTreeDBModel extends DBModel {
     
-    constructor(scope, schema = SchemaBuiltMerkleTree,  data, type, creationOptions){
+    constructor(scope, schema = MerkleTreeDBSchemaBuilt,  data, type, creationOptions){
         
         super(scope, schema, data, type, creationOptions);
 

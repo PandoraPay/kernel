@@ -1,8 +1,8 @@
-const {SchemaBuildMerkleTreeNode} = require('./schema-build-merkle-tree-node')
+const {MerkleTreeNodeSchemaBuild} = require('./merkle-tree-node-db-schema-build')
 const Helper = require( "../../../helpers/helper");
 
 
-class SchemaBuildMerkleTreeRoot extends SchemaBuildMerkleTreeNode {
+class MerkleTreeRootDBSchemaBuild extends MerkleTreeNodeSchemaBuild {
 
     constructor(schema = {}){
         super(Helper.merge({
@@ -20,6 +20,6 @@ class SchemaBuildMerkleTreeRoot extends SchemaBuildMerkleTreeNode {
 }
 
 module.exports = {
-    SchemaBuildMerkleTreeRoot,
-    SchemaBuiltMerkleTreeRoot: new SchemaBuildMerkleTreeRoot()
+    MerkleTreeRootDBSchemaBuild: MerkleTreeRootDBSchemaBuild,
+    MerkleTreeRootDBSchemaBuilt: new MerkleTreeRootDBSchemaBuild()
 }

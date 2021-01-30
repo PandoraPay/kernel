@@ -1,8 +1,8 @@
 const describe = require( '../../../unit-testing/describe');
 const TestsHelper = require( "../../../unit-testing/tests-helper")
-const RadixTree = require( "../../../../../src/data-structures/radix-tree/radix-tree")
+const RadixTree = require( "../../../../../src/data-structures/radix-tree/radix-tree-db-model")
 const MarshalData = require( "../../../../../src/marshal/data/marshal-data")
-const RadixTreeVirtual = require( "../../../../../src/data-structures/radix-tree/radix-tree-virtual");
+const RadixTreeVirtualDBModel = require( "../../../../../src/data-structures/radix-tree/radix-tree-virtual-db-model");
 
 /**
  *
@@ -44,7 +44,7 @@ module.exports = async function run (selectedDB) {
 
         'Radix Tree random add ALL VIRTUAL': async function () {
 
-            const tree = new RadixTreeVirtual(this._scope);
+            const tree = new RadixTreeVirtualDBModel(this._scope);
             await tree.clearTree();
 
             for (const it of randomDatum) {
@@ -82,7 +82,7 @@ module.exports = async function run (selectedDB) {
 
         'Radix Tree random findRadixLeaf VIRTUAL': async function () {
 
-            const tree = new RadixTreeVirtual(this._scope);
+            const tree = new RadixTreeVirtualDBModel(this._scope);
 
             randomDataDeleted = {};
 
@@ -163,7 +163,7 @@ module.exports = async function run (selectedDB) {
         'Radix Tree add ALL VIRTUAL2': async function () {
 
 
-            const tree = new RadixTreeVirtual(this._scope);
+            const tree = new RadixTreeVirtualDBModel(this._scope);
             await tree.clearTree();
 
             for (const it of randomDatum)
@@ -177,7 +177,7 @@ module.exports = async function run (selectedDB) {
 
         'Radix Tree random delete ALL VIRTUAL2': async function () {
 
-            const tree = new RadixTreeVirtual(this._scope);
+            const tree = new RadixTreeVirtualDBModel(this._scope);
 
             for (let i=0; i < randomDatum.length; i++){
 

@@ -2,18 +2,18 @@ const Helper = require( "../../helpers/helper");
 const DBModel = require("../../db/db-generic/db-model")
 const Exception = require("../../helpers/exception");
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" )
-const {SchemaBuiltRadixTreeNode} = require('./schema/schema-build-radix-tree-node')
+const {RadixTreeNodeDBSchemaBuilt} = require('./schema/radix-tree-node-db-schema-build')
 
-module.exports = class RadixTreeNode extends DBModel {
+module.exports = class RadixTreeNodeDBModel extends DBModel {
 
-    constructor(scope, schema = SchemaBuiltRadixTreeNode,  data, type, creationOptions){
+    constructor(scope, schema = RadixTreeNodeDBSchemaBuilt,  data, type, creationOptions){
 
         super(scope, schema, data, type, creationOptions);
 
         this.children = [];
 
-        this.childNodeModelClass = RadixTreeNode;
-        this.childNodeSchemaBuilt = SchemaBuiltRadixTreeNode;
+        this.childNodeModelClass = RadixTreeNodeDBModel;
+        this.childNodeSchemaBuilt = RadixTreeNodeDBSchemaBuilt;
 
         this.childNodeDataModelClass = undefined; //data is buffer
         this.childNodeDataSchemaBuilt = undefined; //data is buffer
@@ -199,7 +199,7 @@ module.exports = class RadixTreeNode extends DBModel {
 
     /**
      * Caution, it will load the entire tree
-     * @returns {Promise<Array|T[]|RadixTreeNode[]>}
+     * @returns {Promise<Array|T[]|RadixTreeNodeDBModel[]>}
      */
     async leaves(loadChildren = true){
 
@@ -283,14 +283,14 @@ module.exports = class RadixTreeNode extends DBModel {
 
     getDelete(){
 
-        if (this.parent instanceof RadixTreeNode && this.parent.__data.childrenCount === 2)  return this.parent;
+        if (this.parent instanceof RadixTreeNodeDBModel && this.parent.__data.childrenCount === 2)  return this.parent;
         return this;
 
     }
 
     getDeleteUpdate(){
 
-        if (this.parent instanceof RadixTreeNode && this.parent.__data.childrenCount === 2) return this.parent.parent;
+        if (this.parent instanceof RadixTreeNodeDBModel && this.parent.__data.childrenCount === 2) return this.parent.parent;
         return this.parent;
 
     }

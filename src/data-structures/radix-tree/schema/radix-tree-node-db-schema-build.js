@@ -5,7 +5,7 @@ const {SchemaBuiltString} = require("../../../marshal/schemas/samples/schema-bui
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 const RadixTreeNodeTypeEnum = require('../radix-tree-node-type-enum')
 
-class SchemaBuildRadixTreeNode extends DBSchemaBuild {
+class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}){
 
@@ -198,6 +198,6 @@ class SchemaBuildRadixTreeNode extends DBSchemaBuild {
 }
 
 module.exports = {
-    SchemaBuildRadixTreeNode,
-    SchemaBuiltRadixTreeNode: new SchemaBuildRadixTreeNode()
+    RadixTreeNodeDBSchemaBuild,
+    RadixTreeNodeDBSchemaBuilt: new RadixTreeNodeDBSchemaBuild()
 }

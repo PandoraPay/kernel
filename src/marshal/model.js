@@ -448,8 +448,11 @@ class Model extends ModelBase {
 
     }
 
-    _creationMiddleware( modelClass = this.getModelClass, scope, schemaBuiltClass, data, type, unmarshalOptions){
-        if (!schemaBuiltClass) return;
+    _creationMiddleware( modelClass, scope, schemaBuiltClass, data, type, unmarshalOptions){
+
+        if (!schemaBuiltClass && !modelClass) return;
+        if (!modelClass) modelClass = this.getModelClass;
+
         return new modelClass( scope, schemaBuiltClass, data, type, unmarshalOptions );
     }
 

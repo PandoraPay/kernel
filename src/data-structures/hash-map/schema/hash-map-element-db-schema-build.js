@@ -2,7 +2,7 @@ const DBSchemaBuild = require( "../../../db/db-generic/db-schema-build" );
 const Helper = require( "../../../helpers/helper");
 const Exception = require("../../../helpers/exception");
 
-class SchemaBuildHashMapElement extends DBSchemaBuild {
+class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}) {
 
@@ -44,6 +44,6 @@ class SchemaBuildHashMapElement extends DBSchemaBuild {
 }
 
 module.exports = {
-    SchemaBuildHashMapElement,
-    SchemaBuiltHashMapElement: new SchemaBuildHashMapElement()
+    HashMapElementDBSchemaBuild: HashMapElementDBSchemaBuild,
+    HashMapElementDBSchemaBuilt: new HashMapElementDBSchemaBuild()
 }

@@ -1,9 +1,9 @@
 const DBSchemaBuild = require('../../../db/db-generic/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 const RadixTreeNodeTypeEnum = require("./../radix-tree-node-type-enum");
-const {SchemaBuildRadixTreeNode} = require('./schema-build-radix-tree-node')
+const {RadixTreeNodeDBSchemaBuild} = require('./radix-tree-node-db-schema-build')
 
-class SchemaBuildRadixTreeRoot extends SchemaBuildRadixTreeNode {
+class RadixTreeRootDBSchemaBuild extends RadixTreeNodeDBSchemaBuild {
 
     constructor(schema = {}) {
 
@@ -55,6 +55,6 @@ class SchemaBuildRadixTreeRoot extends SchemaBuildRadixTreeNode {
 }
 
 module.exports = {
-    SchemaBuildRadixTreeRoot,
-    SchemaBuiltRadixTreeRoot: new SchemaBuildRadixTreeRoot()
+    RadixTreeRootDBSchemaBuild,
+    RadixTreeRootDBSchemaBuilt: new RadixTreeRootDBSchemaBuild()
 }

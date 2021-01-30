@@ -3,14 +3,14 @@ const Helper = require( "../../helpers/helper");
 const Model = require( "../../marshal/model");
 
 const DBModel = require("../../db/db-generic/db-model");
-const RadixTreeRoot = require( "./radix-tree-root")
+const RadixTreeRootDBModel = require( "./radix-tree-root-db-model")
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
-const RadixTreeNode = require( "./radix-tree-node");
-const {SchemaBuiltRadixTree} = require('./schema/schema-build-radix-tree')
+const RadixTreeNodeDBModel = require( "./radix-tree-node-db-model");
+const {RadixTreeDBSchemaBuilt} = require('./schema/radix-tree-db-schema-build')
 
 module.exports = class RadixTree extends DBModel {
 
-    constructor(scope, schema = SchemaBuiltRadixTree, data, type, creationOptions) {
+    constructor(scope, schema = RadixTreeDBSchemaBuilt, data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
     }
 
@@ -247,7 +247,7 @@ module.exports = class RadixTree extends DBModel {
         const toDelete = node;
         let toDeleteParent;
 
-        if (node.parent instanceof RadixTreeRoot === false && node.parent.__data.childrenCount === 2){
+        if (!(node.parent instanceof RadixTreeRootDBModel) && node.parent.__data.childrenCount === 2){
 
             toDeleteParent = node.parent;
             grandParent = node.parent.parent;
@@ -430,7 +430,7 @@ module.exports = class RadixTree extends DBModel {
 
     processLeafLabel(label){
 
-        if (label instanceof RadixTreeNode) return label.labelCompleteFast();
+        if (label instanceof RadixTreeNodeDBModel) return label.labelCompleteFast();
         if (Buffer.isBuffer(label)) label = label.toString("hex");
         if (typeof label !== "string" || label.length === 0) throw new Exception(this, "label length is invalid");
 

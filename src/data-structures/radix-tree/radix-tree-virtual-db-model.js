@@ -1,14 +1,14 @@
 const Exception = require("../../helpers/exception");
 
-const RadixTree = require("./radix-tree");
-const RadixTreeNode = require( "./radix-tree-node");
-const RadixTreeRoot = require("./radix-tree-root");
+const RadixTree = require("./radix-tree-db-model");
+const RadixTreeNodeDBModel = require( "./radix-tree-node-db-model");
+const RadixTreeRootDBModel = require("./radix-tree-root-db-model");
 
 /**
  * IT IS NOT WORKING
  */
 
-module.exports = class RadixTreeVirtual extends RadixTree{
+module.exports = class RadixTreeVirtualDBModel extends RadixTree{
 
     constructor(scope, schema, data, type, creationOptions) {
 
@@ -207,7 +207,7 @@ module.exports = class RadixTreeVirtual extends RadixTree{
                 if (node.id.indexOf(key) < 0)
                     throw new Exception(this, "validateVirtualMap raised an error2", {key, node});
 
-                if ( this._maps[key].type !== "deleted" && !(node instanceof RadixTreeRoot) && node.parent instanceof RadixTreeNode   )
+                if ( this._maps[key].type !== "deleted" && !(node instanceof RadixTreeRootDBModel) && node.parent instanceof RadixTreeNodeDBModel   )
                     if (node.parent.childrenLabels[ node.parentIndex ].string !== node.label)
                         throw new Exception(this, "validateVirtualMap raised an error3", {key, node})
 

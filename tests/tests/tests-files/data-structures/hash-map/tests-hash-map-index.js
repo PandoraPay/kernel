@@ -1,5 +1,5 @@
-const HashMap = require("../../../../../src/data-structures/hash-map/hash-map");
-const HashVirtualMap = require( "../../../../../src/data-structures/hash-map/hash-virtual-map")
+const HashMapDBModel = require("../../../../../src/data-structures/hash-map/hash-map-db-model");
+const HashVirtualMapDBModel = require( "../../../../../src/data-structures/hash-map/hash-virtual-map-db-model")
 
 const TestsHashMap = require( "./tests-hash-map")
 
@@ -11,9 +11,9 @@ const TestsHashMap = require( "./tests-hash-map")
 
 module.exports = async function run (scope) {
 
-    const hashmap = new HashMap(scope);
+    const hashmap = new HashMapDBModel(scope);
     await TestsHashMap(hashmap, "", scope.argv.dbPublic.selectedDB);
 
-    const hashmapVirtual = new HashVirtualMap(scope);
+    const hashmapVirtual = new HashVirtualMapDBModel(scope);
     await TestsHashMap(hashmapVirtual, "virtual", scope.argv.dbPublic.selectedDB);
 }

@@ -1,6 +1,6 @@
 const describe = require('../../../unit-testing/describe');
 const TestsHelper = require( "../../../unit-testing/tests-helper")
-const MerkleTree = require( "../../../../../src/data-structures/merkle-tree/merkle-tree")
+const MerkleTreeDBModel = require( "../../../../../src/data-structures/merkle-tree/merkle-tree-db-model")
 
 /**
  *
@@ -20,7 +20,7 @@ module.exports = async function run ( dbType) {
         
         "Saving Merkle Tree 1": async function (){
 
-            const tree = new MerkleTree(this._scope);
+            const tree = new MerkleTreeDBModel(this._scope);
 
             const length = 12;
             const data = TestsHelper.fillBuffer( length );
@@ -29,7 +29,7 @@ module.exports = async function run ( dbType) {
             
             await tree.save();
 
-            const newTree = new MerkleTree(this._scope);
+            const newTree = new MerkleTreeDBModel(this._scope);
             await newTree.load(tree.id);
 
             this.expect(newTree.hash(), tree.hash());
@@ -41,10 +41,10 @@ module.exports = async function run ( dbType) {
             this.expect( BFS.length , tree.totalNodes );
             this.expect( DFS.length , tree.totalNodes );
 
-            const newTree2 = new MerkleTree(this._scope);
+            const newTree2 = new MerkleTreeDBModel(this._scope);
             newTree2.fromHex(hex);
 
-            const newTree3 = new MerkleTree(this._scope);
+            const newTree3 = new MerkleTreeDBModel(this._scope);
             newTree3.fromJSON(json);
 
             this.expect(newTree2.hash(), tree.hash());
@@ -53,7 +53,7 @@ module.exports = async function run ( dbType) {
             this.expect( tree.toBuffer(), newTree2.toBuffer() );
             this.expect( tree.toBuffer(), newTree3.toBuffer() );
 
-            const prunedTree = new MerkleTree(this._scope );
+            const prunedTree = new MerkleTreeDBModel(this._scope );
             await prunedTree.loadPruningHeights( [4, 5], tree.id,  );
 
             BFS = prunedTree.BFS; DFS = prunedTree.DFS;
@@ -66,7 +66,7 @@ module.exports = async function run ( dbType) {
 
         "Saving Merkle Tree 2": async function (){
 
-            const tree = new MerkleTree(this._scope);
+            const tree = new MerkleTreeDBModel(this._scope);
 
             const length = 1000;
             const data = TestsHelper.randomBuffers( 10, length);
@@ -76,7 +76,7 @@ module.exports = async function run ( dbType) {
             await tree.save();
 
 
-            const newTree = new MerkleTree(this._scope);
+            const newTree = new MerkleTreeDBModel(this._scope);
             await newTree.load(tree.id);
 
             this.expect(newTree.hash(), tree.hash());
@@ -89,7 +89,7 @@ module.exports = async function run ( dbType) {
 
             const pruning = TestsHelper.randomNumbers(0, 2 * length, Math.min(10, length) );
 
-            const prunedTree = new MerkleTree(this._scope );
+            const prunedTree = new MerkleTreeDBModel(this._scope );
             await prunedTree.loadPruningHeights( pruning, tree.id,  );
 
             this.expect( prunedTree.hash(), tree.hash() );

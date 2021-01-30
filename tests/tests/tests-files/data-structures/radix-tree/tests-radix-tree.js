@@ -1,7 +1,7 @@
 const describe = require( '../../../unit-testing/describe');
 const TestsHelper = require( "../../../unit-testing/tests-helper")
-const RadixTree = require( "../../../../../src/data-structures/radix-tree/radix-tree")
-const RadixTreeVirtual = require( "../../../../../src/data-structures/radix-tree/radix-tree-virtual");
+const RadixTree = require( "../../../../../src/data-structures/radix-tree/radix-tree-db-model")
+const RadixTreeVirtualDBModel = require( "../../../../../src/data-structures/radix-tree/radix-tree-virtual-db-model");
 
 /**
  *
@@ -100,7 +100,7 @@ module.exports = async function run () {
 
         'RadixTree wikipedia Virtual - add & check': async function () {
 
-            let tree = new RadixTreeVirtual(this._scope);
+            let tree = new RadixTreeVirtualDBModel(this._scope);
             await tree.clearTree();
 
             for (let i=0; i < radixTest.length; i++){
@@ -122,7 +122,7 @@ module.exports = async function run () {
 
             await tree.saveTree();
 
-            tree = new RadixTreeVirtual(this._scope);
+            tree = new RadixTreeVirtualDBModel(this._scope);
             for (const label of radixTest){
 
                 const find = await tree.findRadix( label );
