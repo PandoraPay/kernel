@@ -1,5 +1,5 @@
-const {SchemaBuiltBuffer} = require("../../../../src/marshal/schemas/samples/schema-build-buffer");
-const DBSchemaBuild = require("../../../../src/db/db-generic/db-schema-build")
+const {BufferDBSchemaBuilt} = require("../../../../src/db/db-generic/schemas/samples/buffer-db-schema-build");
+const DBSchemaBuild = require("../../../../src/db/db-generic/schemas/db-schema-build")
 
 const testSimple2Schema = {
 
@@ -27,7 +27,7 @@ const testSimple2Schema = {
 
         field2:{
             type: "object",
-            schemaBuiltClass: SchemaBuiltBuffer,
+            schemaBuiltClass: BufferDBSchemaBuilt,
             default() {
                 return this._createModelObject(  {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2");
             },
@@ -49,14 +49,14 @@ const testAdvancedSchema = {
         },
         field1: {
             type: "object",
-            schemaBuiltClass: SchemaBuiltBuffer,
+            schemaBuiltClass: BufferDBSchemaBuilt,
             default() {
                 return this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field1");
             },
         },
         field2: {
             type: "array",
-            schemaBuiltClass: SchemaBuiltBuffer,
+            schemaBuiltClass: BufferDBSchemaBuilt,
             default() {
                 return [
                     this._createModelObject( {buffer: "0000000000000000000000AAFF00000000000000000000000000000000000000"}, "object", "field2"),

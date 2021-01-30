@@ -29,16 +29,14 @@ const UnmarshalFields = require( "./src/marshal/fields/unmarshal-fields");
 const MarshalValidationPreProcessing = require( "./src/marshal/fields/marshal-validation-pre-processing");
 const MarshalValidationPreset = require( "./src/marshal/fields/marshal-validation-pre-set");
 
-const DBModel = require( "./src/db/db-generic/db-model");
-const DBSchemaBuild = require( "./src/db/db-generic/db-schema-build");
-
 const SchemaBuild = require( "./src/marshal/schemas/schema-build");
-const SchemaBuildBuffer = require( "./src/marshal/schemas/samples/schema-build-buffer");
-const DBSchemaBufferBig = require( "./src/marshal/schemas/samples/db-schema-buffer-big");
-const DBSchemaBufferUnique = require( "./src/marshal/schemas/samples/db-schema-buffer-unique");
-const SchemaBuildNumber = require( "./src/marshal/schemas/samples/schema-build-number");
-const SchemaBuildString = require( "./src/marshal/schemas/samples/schema-build-string");
-const DBSchemaBoolean = require( "./src/marshal/schemas/samples/db-schema-boolean");
+
+const DBModel = require( "./src/db/db-generic/db-model");
+const DBSchemaBuild = require( "./src/db/db-generic/schemas/db-schema-build");
+const BufferDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-db-schema-build");
+const BufferUniqueDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-unique-db-schema-build");
+const NumberDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/number-db-schema-build");
+const StringDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/string-db-schema-build");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
 const DBModelHelper = require( "./src/db/db-generic/db-model-helper");
@@ -124,12 +122,10 @@ const library = {
     },
 
     schemas :{
-        SchemaBuildBuffer,
-        SchemaBuildString,
-        SchemaBuildNumber,
-        DBSchemaBufferUnique,
-        DBSchemaBufferBig,
-        DBSchemaBoolean,
+        BufferDBSchemaBuild,
+        StringDBSchemaBuild,
+        NumberDBSchemaBuild,
+        BufferUniqueDBSchemaBuild,
     },
 
     dataStructures: {

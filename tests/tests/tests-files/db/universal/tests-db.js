@@ -3,7 +3,7 @@ const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
 const SchemaBuildsTests = require( "../../marshal/schema-builds-tests")
 const Helper = require( "../../../../../src/helpers/helper")
 
-const DBSchemaBuild = require("../../../../../src/db/db-generic/db-schema-build")
+const DBSchemaBuild = require("../../../../../src/db/db-generic/schemas/db-schema-build")
 const DBModel = require("../../../../../src/db/db-generic/db-model")
 
 

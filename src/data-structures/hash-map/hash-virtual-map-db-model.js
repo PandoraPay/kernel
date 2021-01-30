@@ -65,7 +65,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
         let element = data;
         if (!(data instanceof DBModel)) {
-            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType);
+            element = this._createSimpleModelObject(this._childHashMapModel, this._childHashMapSchemaBuilt,"element", data, dataType);
             element.id = id; //data is provided
         }
 
@@ -149,7 +149,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
         let element = data;
         if (!(data instanceof DBModel)) {
-            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType, undefined,); //data is provided
+            element = this._createSimpleModelObject(this._childHashMapModel, this._childHashMapSchemaBuilt, "element", data, dataType, undefined,); //data is provided
             element.id = id;
         }
 

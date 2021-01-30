@@ -26,7 +26,7 @@ module.exports = class Helper{
             for (const key in b)
                 if ( b.hasOwnProperty(key) ) {
 
-                    if (typeof b[key] === "object" && b[key].constructor.name === "Object")
+                    if (b[key] !== null && typeof b[key] === "object" && b[key].constructor.name === "Object")
                         c[key] = Helper._mergeCloned(c[key] || {}, b[key]);
                     else
                         c[key] = b[key];

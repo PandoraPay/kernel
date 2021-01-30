@@ -1,6 +1,7 @@
-const DBSchemaBuild = require( "../../../db/db-generic/db-schema-build" );
+const DBSchemaBuild = require( "../../../db/db-generic/schemas/db-schema-build" );
 const Helper = require( "../../../helpers/helper");
 const Exception = require("../../../helpers/exception");
+const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 
 class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 
@@ -17,6 +18,7 @@ class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 
                 id : {
                     fixedBytes: 64,
+                    unique: true,
                 },
 
                 data: {
@@ -32,7 +34,9 @@ class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 
             options:{
                 hashing:{
-                    enabled: false,
+                    enabled: true,
+                    parentHashingPropagation: false,
+                    fct: CryptoHelper.sha256
                 },
             },
 

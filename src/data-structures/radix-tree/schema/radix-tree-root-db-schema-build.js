@@ -1,4 +1,4 @@
-const DBSchemaBuild = require('../../../db/db-generic/db-schema-build')
+const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 const RadixTreeNodeTypeEnum = require("./../radix-tree-node-type-enum");
 const {RadixTreeNodeDBSchemaBuild} = require('./radix-tree-node-db-schema-build')

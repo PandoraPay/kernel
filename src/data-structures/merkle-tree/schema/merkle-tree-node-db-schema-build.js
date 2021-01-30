@@ -1,4 +1,4 @@
-const DBSchemaBuild = require('../../../db/db-generic/db-schema-build')
+const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 const MerkleTreeNodeTypeEnum = require( "../merkle-tree-node-type-enum")
 const CryptoHelper = require("../../../helpers/crypto/crypto-helper");
@@ -24,7 +24,7 @@ class MerkleTreeNodeDBSchemaBuild extends DBSchemaBuild {
                     minSize: 0,
                     maxSize: 15,
 
-                    unique: false,
+                    unique: true,
                 },
 
                 pruned: {

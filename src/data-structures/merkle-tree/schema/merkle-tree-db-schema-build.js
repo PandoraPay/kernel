@@ -1,4 +1,4 @@
-const DBSchemaBuild = require('../../../db/db-generic/db-schema-build')
+const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 
 const {MerkleTreeRootDBSchemaBuilt} = require('./merkle-tree-root-db-schema-build');

@@ -2,7 +2,7 @@ const describe = require( '../../../unit-testing/describe');
 const MarshalTests = require( "../../../tests-files/marshal/marshal-tests")
 const DBModel = require( "../../../../../src/db/db-generic/db-model");
 const Helper = require( "../../../../../src/helpers/helper");
-const DBSchemaBuild = require('../../../../../src/db/db-generic/db-schema-build')
+const DBSchemaBuild = require('../../../../../src/db/db-generic/schemas/db-schema-build')
 /**
  *
  * REDIS BENCHMARK

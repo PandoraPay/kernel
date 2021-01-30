@@ -1,7 +1,7 @@
-const Helper = require( "../../../helpers/helper");
-const SchemaBuild = require( "../schema-build");
+const Helper = require( "../../../../helpers/helper");
+const DBSchemaBuild = require( "../db-schema-build");
 
-class SchemaBuildString extends SchemaBuild {
+class StringDBSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}){
 
@@ -17,6 +17,7 @@ class SchemaBuildString extends SchemaBuild {
 
             options:{
                 returnOnlyField: "string",
+
                 hashing: {
 
                     enabled: true,
@@ -34,6 +35,6 @@ class SchemaBuildString extends SchemaBuild {
 
 
 module.exports = {
-    SchemaBuildString,
-    SchemaBuiltString: new SchemaBuildString()
+    StringDBSchemaBuild,
+    StringDBSchemaBuilt: new StringDBSchemaBuild()
 }

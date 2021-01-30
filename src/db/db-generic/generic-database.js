@@ -3,7 +3,7 @@
  */
 
 const Exception = require( "../../helpers/exception")
-const DBSchemaBuild = require('../db-generic/db-schema-build')
+const DBSchemaBuild = require('./schemas/db-schema-build')
 const DBModel = require("./db-model");
 
 module.exports = class GenericDatabase{

@@ -8,6 +8,8 @@ module.exports = class HashMapDBModel extends DBModel {
 
     constructor(scope, schema = HashMapElementDBSchemaBuilt, data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
+        this._childHashMapSchemaBuilt = schema;
+        this._childHashMapModel = undefined;
     }
 
     resetHashMap(){
@@ -19,7 +21,7 @@ module.exports = class HashMapDBModel extends DBModel {
     async findAllHashMap(){
         try{
 
-            const element = this._createSimpleModelObject( undefined, this._schema, "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt, "element", undefined, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
             return element.findAllSiblings(  );
 
         }catch(err){
@@ -31,7 +33,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
         try{
 
-            const element = this._createSimpleModelObject( undefined, this._schema, "element" , undefined, undefined, undefined,{skipProcessingConstructionValues: true, skipValidation: true} );
+            const element = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt, "element" , undefined, undefined, undefined,{skipProcessingConstructionValues: true, skipValidation: true} );
             return element.deleteAllSiblings(  );
 
         }catch(err){
@@ -44,7 +46,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
         let element = data;
         if (!(data instanceof DBModel)) {
-            element = this._createSimpleModelObject(undefined, this._schema, "element", data, dataType);
+            element = this._createSimpleModelObject(this._childHashMapModel, this._childHashMapSchemaBuilt, "element", data, dataType);
             element.id = id;
         }
 
@@ -60,7 +62,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
             let element = id;
             if (!(id instanceof DBModel))
-                element = this._createSimpleModelObject( undefined, this._schema, "element",  {
+                element = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt, "element",  {
                     id: id,
                 }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -80,7 +82,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSimpleModelObject( undefined, this._schema, "element", {
+            const element = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt, "element", {
                 id: id,
             }, "object", undefined,  { schemaBuiltClass: this._schema }, undefined, undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 
@@ -99,7 +101,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
             if (Buffer.isBuffer(id)) id = id.toString("hex");
 
-            const element = this._createSimpleModelObject( undefined, this._schema, "element", {
+            const element = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt, "element", {
                 id: id,
             }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
 

@@ -1,7 +1,7 @@
-const DBSchemaBuild = require('../../../db/db-generic/db-schema-build')
+const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
-const {SchemaBuiltBuffer} = require( "../../../marshal/schemas/samples/schema-build-buffer" );
-const {SchemaBuiltString} = require("../../../marshal/schemas/samples/schema-build-string");
+const {BufferDBSchemaBuilt} = require( "../../../db/db-generic/schemas/samples/buffer-db-schema-build" );
+const {StringDBSchemaBuilt} = require("../../../db/db-generic/schemas/samples/string-db-schema-build");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 const RadixTreeNodeTypeEnum = require('../radix-tree-node-type-enum')
 
@@ -119,7 +119,7 @@ class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
                 childrenLabels: {
 
                     type: "array",
-                    schemaBuiltClass: SchemaBuiltString,
+                    schemaBuiltClass: StringDBSchemaBuilt,
 
                     fixedBytes(){ return this.childrenCount },
 
@@ -134,7 +134,7 @@ class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
                 childrenHashes:{
 
                     type: "array",
-                    schemaBuiltClass: SchemaBuiltBuffer,
+                    schemaBuiltClass: BufferDBSchemaBuilt,
 
                     fixedBytes(){ return this.childrenCount; },
 

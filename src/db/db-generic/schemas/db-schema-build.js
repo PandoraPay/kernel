@@ -1,6 +1,6 @@
-const SchemaBuild = require('../../marshal/schemas/schema-build')
-const Helper = require('../../helpers/helper')
-const MarshalData  = require( "./../../marshal/data/marshal-data")
+const SchemaBuild = require('../../../marshal/schemas/schema-build')
+const Helper = require('../../../helpers/helper')
+const MarshalData  = require( "../../../marshal/data/marshal-data")
 
 class DBSchemaBuild extends SchemaBuild {
 

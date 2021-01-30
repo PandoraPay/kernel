@@ -1,22 +1,21 @@
-const Helper = require( "../../../helpers/helper");
-const SchemaBuild = require( "../schema-build");
+const Helper = require( "../../../../helpers/helper");
+const DBSchemaBuild = require( "../db-schema-build");
 
-
-class SchemaBuildNumber extends SchemaBuild {
+class BufferDBSchemaBuild extends DBSchemaBuild {
 
     constructor( options = {} ){
 
         super( Helper.merge( {
 
             fields: {
-                number: {
-                    type: "number",
-                    fixedBytes: 7,
+                buffer: {
+                    type: "buffer",
+                    fixedBytes: 32,
                 }
             },
 
             options:{
-                returnOnlyField: "number",
+                returnOnlyField: "buffer",
 
                 hashing: {
                     enabled: true,
@@ -33,6 +32,6 @@ class SchemaBuildNumber extends SchemaBuild {
 }
 
 module.exports = {
-    SchemaBuildNumber: SchemaBuildNumber,
-    SchemaBuiltNumber: new SchemaBuildNumber(),
+    BufferDBSchemaBuild,
+    BufferDBSchemaBuilt: new BufferDBSchemaBuild(),
 }
