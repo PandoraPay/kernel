@@ -31,13 +31,9 @@ module.exports = class ModelBase {
             __hash: undefined,
         };
 
-        this.__default = {
-
-        };
+        this.__default = { };
         
-        this.__changes = {
-            
-        };
+        this.__changes = { };
 
         /**
          * call init constructor

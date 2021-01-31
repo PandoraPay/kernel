@@ -120,16 +120,12 @@ class Model extends ModelBase {
                     schemaField.setEvent.call(self, new_value, validateEnabled );
 
                 if (!loading){
-                    if (defineField)
-                        this.__changes[field] = true;
-                    else {
 
-                        // Hash should be different now as data was changed
-                        this._propagateHashingChanges(field);
+                    // Hash should be different now as data was changed
+                    this._propagateHashingChanges(field);
 
-                        this._propagateChanges(field);
+                    this._propagateChanges(field);
 
-                    }
                 }
 
             }
@@ -302,7 +298,7 @@ class Model extends ModelBase {
 
     unmarshal( input, type = "buffer", callbackObject, unmarshalOptions = {} ) {
 
-        let schemaField, data, field, saving;
+        let schemaField, data, field;
 
         const isObject = type !== "buffer";
 

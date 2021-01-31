@@ -117,12 +117,15 @@ module.exports = class DBModel extends Marshal{
     /**
      * Save the model in Database. Moreover, it stores and validates the unique fields as well. The method should be overwritten by Database schema connector.
      */
-    async save( infix='', table, id, db, saveType, saveText, multi, marshalOptions = {} ){
+    async save( infix='', table, id, db, saveType, saveText, multi, marshalOptions = {}, willSaveItself ){
 
         if (!this._schema.saving.enabled) return undefined;
-        if ( !this.isChanged()) return {
-            _id: id ||this.id,
-        };
+        // if (!this.isChanged() )
+        //     console.log(this.id, 'not saved')
+
+        if ( !this.isChanged() && !table && !id ) return { _id: id ||this.id };
+
+        if (!infix && !table && !id) willSaveItself = true;
 
         marshalOptions.saving = true;
 
@@ -156,7 +159,11 @@ module.exports = class DBModel extends Marshal{
                 const marshal = this.toObject( saveText, object => {
 
                     //saving only field
-                    if (object._schema.options.returnOnlyField) return object.toType( saveType, saveText, ); else
+                    if (object._schema.options.returnOnlyField) {
+                        const out = object.toType( saveType, saveText );
+                        if (willSaveItself) object._saved();
+                        return out;
+                    } else
                     //in case the data was not loaded
                     if (object._schema.saving.skipSavingAsItWasNotLoaded) return object.id;
                     else {
@@ -164,12 +171,13 @@ module.exports = class DBModel extends Marshal{
                         if (object._schema.saving.storeDataNotId) {
 
                             const out = object.toType(saveType, saveText, undefined );
+                            if (willSaveItself) object._saved();
                             return out;
 
                         } else {
 
-                            const output =  object.save(`${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions);
-                            promises.push( output );
+                            const promise =  object.save(`${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions, willSaveItself);
+                            promises.push( promise );
 
                             return object.id;
 
@@ -207,11 +215,16 @@ module.exports = class DBModel extends Marshal{
 
             const objects = this.savingAdditional();
             for (const object of objects)
-                promises.push( object.save( `${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions ) );
+                promises.push( object.save( `${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions, willSaveItself ) );
 
             await Promise.all(promises);
 
         }
+
+        if (willSaveItself)
+            this._saved();
+
+        if (this.onSaved) this.onSaved();
 
         //returning the id
         return {
@@ -236,9 +249,11 @@ module.exports = class DBModel extends Marshal{
     /**
      * Load the model from the Database. The method should be overwritten by Database schema connector.
      */
-    async load( id, infix='', table,  db, loadType, input, multi, unmarshalOptions = {}, callbackObject ){
+    async load( id, infix='', table,  db, loadType, input, multi, unmarshalOptions = {}, callbackObject, willLoadItself ){
 
         if (!this._schema.saving.enabled) return true;
+
+        if (!infix && !table && !id) willLoadItself = true;
 
         unmarshalOptions.loading = true;
 
@@ -271,12 +286,11 @@ module.exports = class DBModel extends Marshal{
             //loading only field
             if (object._schema.options.returnOnlyField || object._schema.saving.storeDataNotId) {
                 object.fromType(input, loadType, undefined, unmarshalOptions, true);
-                object._loaded();
+                object._loaded(willLoadItself);
                 return object;
             }
 
-            const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions, callbackObject);
-            promise.then(()=> object._loaded() );
+            const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions, callbackObject, willLoadItself);
             promises.push(promise);
             return promise;
 
@@ -285,7 +299,8 @@ module.exports = class DBModel extends Marshal{
 
         await Promise.all( promises );
 
-        this._loaded();
+        this._loaded(willLoadItself);
+
         if (this.onLoaded) this.onLoaded();
 
         return this;
@@ -293,9 +308,13 @@ module.exports = class DBModel extends Marshal{
 
     }
 
-    _loaded(){
+    _loaded(willLoadItself){
+        if (willLoadItself) this.__changes = {};
+        delete this.__data.__hash;
+    }
+
+    _saved(){
         this.__changes = {};
-        this.__data.__hash = undefined;
     }
 
     /**
@@ -407,6 +426,7 @@ module.exports = class DBModel extends Marshal{
         marshalObject.save = this.prototype.save.bind(marshalObject);
         marshalObject.load =  this.prototype.load.bind(marshalObject);
         marshalObject._loaded =  this.prototype._loaded.bind(marshalObject);
+        marshalObject._saved =  this.prototype._saved.bind(marshalObject);
         marshalObject.lock =  this.prototype.lock.bind(marshalObject);
         marshalObject.delete = this.prototype.delete.bind(marshalObject);
 

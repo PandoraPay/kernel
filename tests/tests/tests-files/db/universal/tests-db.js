@@ -286,7 +286,6 @@ module.exports = async function run ( dbType ) {
             for (let i=0; i<count; i++)
                 await obj.save("TS4_DELETE_ALL", undefined, `object_${i}`);
 
-
             await this.expect( await this.db.client.countAny("TS4_DELETE_ALL"),  count);
 
             await obj.deleteAllSiblings("TS4_DELETE_ALL");
