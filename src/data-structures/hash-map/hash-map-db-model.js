@@ -12,10 +12,21 @@ module.exports = class HashMapDBModel extends DBModel {
         this._childHashMapModel = undefined;
     }
 
-    createHashElementEmptyChild(id, data, dataType){
+    createHashElementChild(id, data, dataType){
+
         const obj = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt,
-            "element", data, dataType, undefined,
-            { skipValidation: true } );
+            "element", data, dataType, undefined );
+
+        if (id) obj.id = id;
+        return obj;
+    }
+
+
+    createHashElementEmptyChild(id){
+
+        const obj = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt,
+            "element", undefined, undefined, undefined, {emptyObject: true} );
+
         if (id) obj.id = id;
         return obj;
     }
@@ -54,7 +65,7 @@ module.exports = class HashMapDBModel extends DBModel {
 
         let element = data;
         if (!(data instanceof DBModel))
-            element = this.createHashElementEmptyChild( id, data, dataType);
+            element = this.createHashElementChild( id, data, dataType);
 
         await element.save();
 

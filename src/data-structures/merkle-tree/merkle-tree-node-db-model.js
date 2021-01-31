@@ -32,7 +32,7 @@ class MerkleTreeNodeDBModel extends DBModel {
 
             const left = this._createModelObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
-            }, "object", "children", undefined, undefined, undefined, {}  );
+            }, "object", "children" );
 
             if ( newLevel  === levels) offset++;
             else offset = left.fillMerkleTreeNode(data, offset, levels);
@@ -45,7 +45,7 @@ class MerkleTreeNodeDBModel extends DBModel {
 
             const right = this._createModelObject( {
                 data:  newLevel === levels ? data[offset] : undefined,
-            }, "object", "children", undefined, undefined, undefined, {}  );
+            }, "object", "children" );
 
             if ( newLevel  === levels) offset++;
             else offset = right.fillMerkleTreeNode(data, offset , levels);

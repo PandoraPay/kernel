@@ -116,7 +116,6 @@ class Model extends ModelBase {
 
     _defineField(field, schemaField, dataValue, dataType, creationOptions) {
 
-        const creationEmptyObject = creationOptions.emptyObject;
 
         const self = this;
         Object.defineProperty(self, field, {
@@ -158,7 +157,7 @@ class Model extends ModelBase {
 
 
         //set value
-        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationEmptyObject && !creationOptions.skipValidation, true );
+        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationOptions.emptyObject, true );
 
         if (isDefault)
             this.__default[field] = true;

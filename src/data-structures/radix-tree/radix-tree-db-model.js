@@ -39,7 +39,7 @@ module.exports = class RadixTree extends DBModel {
 
         const newRoot = this._createModelObject( {
             id: this.root.id,
-        },"object","root", undefined,  undefined, undefined, {skipValidation: true, } );
+        },"object","root" );
 
         this.root = newRoot;
 

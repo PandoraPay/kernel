@@ -28,11 +28,7 @@ class MarshalHelper{
         return {
 
             ...this._constructOptionsBase(options, field),
-
             emptyObject: options.emptyObject,
-
-            skipValidation: options.skipValidation,
-
         }
     }
 
