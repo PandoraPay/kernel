@@ -30,7 +30,6 @@ class MarshalHelper{
             ...this._constructOptionsBase(options, field),
 
             emptyObject: options.emptyObject,
-            skipProcessingConstructionValues: options.skipProcessingConstructionValues,
 
             skipValidation: options.skipValidation,
 

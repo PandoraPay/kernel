@@ -39,7 +39,7 @@ module.exports = class RadixTree extends DBModel {
 
         const newRoot = this._createModelObject( {
             id: this.root.id,
-        },"object","root", undefined,  undefined, undefined, {skipValidation: true, skipProcessingConstructionValues: true} );
+        },"object","root", undefined,  undefined, undefined, {skipValidation: true, } );
 
         this.root = newRoot;
 
@@ -179,7 +179,7 @@ module.exports = class RadixTree extends DBModel {
                 childrenCount: nodeChildrenCount,
                 childrenLabels: nodeChildrenLabels,
                 childrenHashes: nodeChildrenHashes,
-            }, "object", 0,  {skipProcessingConstructionValues: true, } );
+            }, "object", 0,  {  } );
 
             newNode.children = node.children;
             for (let i=0; i < newNode.children.length; i++)
@@ -208,7 +208,7 @@ module.exports = class RadixTree extends DBModel {
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
-        }, "object", 0,  {skipProcessingConstructionValues: true} );
+        }, "object", 0,  {  } );
 
         if (data instanceof Model) data.parent = child;
 
@@ -259,7 +259,7 @@ module.exports = class RadixTree extends DBModel {
 
             const newParent = grandParent._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: toDeleteParent.__data.label + otherChild.__data.label,
-            }, "object", 0, {skipValidation: true, skipProcessingConstructionValues: true} );
+            }, "object", 0, {skipValidation: true, } );
 
 
             //id & type will be refresh automatically
@@ -325,7 +325,7 @@ module.exports = class RadixTree extends DBModel {
             const obj = this.root._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: label,
                 type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
-            }, "object", 0,  { skipProcessingConstructionValues: true, skipValidation: true,} );
+            }, "object", 0,  {  skipValidation: true,} );
 
             await obj.load( this.root.id + label );
 
@@ -422,7 +422,7 @@ module.exports = class RadixTree extends DBModel {
 
         const child = parent._createSimpleModelObject( parent.childNodeModelClass, parent.childNodeSchemaBuilt, "children", {
             label: label,
-        }, "object", position, {skipProcessingConstructionValues: true, skipValidation: true } );
+        }, "object", position, { skipValidation: true } );
 
         await child.load( parent.id + label );
         return child;

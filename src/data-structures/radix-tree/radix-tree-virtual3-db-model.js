@@ -107,7 +107,7 @@ module.exports = class RadixTreeVirtual3DBModel extends RadixTree{
             const objToDelete = this._createSimpleModelObject( this.root.childNodeModelClass, this.root.childNodeSchemaBuilt, "children", {
                 label: Buffer.alloc(1),
                 id: deleteIds[id].id,
-            }, "object", undefined, {skipProcessingConstructionValues: true, skipValidation: true} );
+            }, "object", undefined, { skipValidation: true} );
             promisesDelete.push( objToDelete.delete() );
         }
 

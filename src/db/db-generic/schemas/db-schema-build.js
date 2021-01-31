@@ -49,9 +49,8 @@ class DBSchemaBuild extends SchemaBuild {
 
             saveInfixParentTable: true,
 
-            //skipSavingAsItWasNotLoaded: false,
-
             //storeDataNotId: false,
+
         }, schema.saving || {}, true);
     }
 

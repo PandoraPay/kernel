@@ -25,9 +25,6 @@ module.exports = class DBModel extends Marshal{
 
         if (!multi) multi = db.client.multi();
 
-        if (this._schema.saving.skipSavingAsItWasNotLoaded)
-            return id||this.id;
-
         //Remove uniqueness fields from database
         if (this._schema.fieldsWithUniquesLength > 0)
             await this._setUniqueness(infix, table, id, true, false, multi);
@@ -163,9 +160,7 @@ module.exports = class DBModel extends Marshal{
                         const out = object.toType( saveType, saveText );
                         if (willSaveItself) object._saved();
                         return out;
-                    } else
-                    //in case the data was not loaded
-                    if (object._schema.saving.skipSavingAsItWasNotLoaded) return object.id;
+                    } //in case the data was not loaded
                     else {
 
                         if (object._schema.saving.storeDataNotId) {
@@ -304,7 +299,6 @@ module.exports = class DBModel extends Marshal{
         if (this.onLoaded) this.onLoaded();
 
         return this;
-
 
     }
 

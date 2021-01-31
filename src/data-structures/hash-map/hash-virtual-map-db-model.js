@@ -64,10 +64,8 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         if (out) throw new Exception(this, "Element already exists");
 
         let element = data;
-        if (!(data instanceof DBModel)) {
-            element = this.createHashElementEmptyChild(data, dataType);
-            element.id = id; //data is provided
-        }
+        if (!(data instanceof DBModel))
+            element = this.createHashElementEmptyChild(id, data, dataType);
 
         if (this._hasCache(id)) this._deleteCacheSortedList(id);
         this._virtual[id] = {
@@ -108,7 +106,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
         if (out) {
 
-            const element = this.createHashElementEmptyChild(out.toObject, "object"); //data is provided
+            const element = this.createHashElementEmptyChild( id, out.toObject(), "object"); //data is provided
 
             this._addCache(id, {
                 id,
@@ -155,10 +153,8 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
         let element = data;
-        if (!(data instanceof DBModel)) {
-            element = this.createHashElementEmptyChild( data, dataType); //data is provided
-            element.id = id;
-        }
+        if (!(data instanceof DBModel))
+            element = this.createHashElementEmptyChild( id, data, dataType); //data is provided
 
         if ( this._hasCache(id) ) this._deleteCacheSortedList(id);
 

@@ -129,25 +129,18 @@ class Model extends ModelBase {
         if (dataType === "object" && dataValue )
             dataValue = dataValue[field];
 
-        if ( !(dataValue instanceof Model) ){
+        if ( this.checkProperty( "skipMarshal", field) )
+            dataValue = undefined;
 
-            if (dataType === "buffer" && dataValue && this.checkProperty( "skipMarshal", field) )
-                dataValue = undefined;
+        if ( dataValue && !(dataValue instanceof Model) ){
 
-            if (dataValue !== undefined && !this.checkProperty( "skipMarshal", field )  ) {
+            dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue, schemaField );
 
-                dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue, schemaField);
-
-                //avoid processing values ( used in constructor )
-                if (!creationOptions.skipProcessingConstructionValues) {
-                    const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
-                    dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
-                }
-
-            }
+            //avoid processing values ( used in constructor )
+            const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
+            dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
 
         }
-
 
         // in case dataValue was not specified
         let isDefault = false;
@@ -167,7 +160,8 @@ class Model extends ModelBase {
         //set value
         Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationEmptyObject && !creationOptions.skipValidation, true );
 
-        if (isDefault) this.__default[field] = true;
+        if (isDefault)
+            this.__default[field] = true;
 
         this.__data.__fields++;
 
