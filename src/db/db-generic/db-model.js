@@ -268,7 +268,7 @@ module.exports = class DBModel extends Marshal{
 
         this.fromType(data, loadType, (object, unmarshalOptions, input, ) => {
 
-            //saving only field
+            //loading only field
             if (object._schema.options.returnOnlyField || object._schema.saving.storeDataNotId) {
                 object.fromType(input, loadType, undefined, unmarshalOptions, true);
                 object._loaded();
@@ -295,6 +295,7 @@ module.exports = class DBModel extends Marshal{
 
     _loaded(){
         this.__changes = {};
+        this.__data.__hash = undefined;
     }
 
     /**

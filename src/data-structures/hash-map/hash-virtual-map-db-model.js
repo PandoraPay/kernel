@@ -65,7 +65,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
         let element = data;
         if (!(data instanceof DBModel)) {
-            element = this._createSimpleModelObject(this._childHashMapModel, this._childHashMapSchemaBuilt,"element", data, dataType);
+            element = this.createHashElementEmptyChild(data, dataType);
             element.id = id; //data is provided
         }
 
@@ -99,20 +99,27 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
             if (this._virtual[id].type === "del") return undefined;
             if (this._virtual[id].type === "add" ) return this._virtual[id].element;
-            if (this._virtual[id].type === "view") return this._updateScoreCacheSortedList(id, 1); //updating importance
+            if (this._virtual[id].type === "view") return this._updateScoreCacheSortedList(id, 1).element; //updating importance
 
 
         }
 
         const out = await this._getFallback('getMap')(id);
 
-        if (out)
-            return this._addCache( id, {
+        if (out) {
+
+            const element = this.createHashElementEmptyChild(out.toObject, "object"); //data is provided
+
+            this._addCache(id, {
                 id,
                 type: "view",
                 sortedListScore: 0,
-                out,
-            } );
+                element,
+            });
+
+            return element;
+
+        }
 
     }
 
@@ -135,7 +142,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
         }
 
         return false;
-    }
+    }element
 
     /**
      * Update will also create it if it doesn't exist
@@ -149,7 +156,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
 
         let element = data;
         if (!(data instanceof DBModel)) {
-            element = this._createSimpleModelObject(this._childHashMapModel, this._childHashMapSchemaBuilt, "element", data, dataType, undefined,); //data is provided
+            element = this.createHashElementEmptyChild( data, dataType); //data is provided
             element.id = id;
         }
 
@@ -195,7 +202,7 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
                 if (type === "del") delete this._virtual[id];
                 else if (type === "add") {
                     this._virtual[id].type = "view";
-                    this._u(id);
+                    this._addCache(id);
                 }
                 else if (type === "view") continue;
             }
@@ -217,12 +224,17 @@ module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
     _addCache(id, element){
         this._virtual[id] = element;
         this._addCacheSortedList(id);
+        return element;
     }
 
     _updateScoreCacheSortedList(id, scoreUpdate = 1){
+        const out = this._virtual[id];
+
         this._deleteCacheSortedList(id);
-        this._virtual[id].sortedListScore += scoreUpdate;
+        out.sortedListScore += scoreUpdate;
         this._addCacheSortedList(id);
+
+        return out;
     }
 
     _deleteCacheSortedList(id){

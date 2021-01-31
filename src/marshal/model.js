@@ -4,7 +4,6 @@ const Helper = require( "../helpers/helper");
 const ModelBase = require( "./model-base");
 
 const MarshalHelper = require( "./helpers/marshal-helper");
-const SchemaBuild = require('./schemas/schema-build')
 
 /**
  *
@@ -31,12 +30,6 @@ class Model extends ModelBase {
     _createSchema(data, type, creationOptions = {}) {
 
         if (!this._schema.fields) throw "schema.fields is not defined";
-
-        if (this._scope.parent)
-            if ( creationOptions.skipPropagatingHashing ) {
-                this._schema.options.hashing.enabled = false;
-                this._schema.options.hashing.parentHashingPropagation = false;
-            }
 
         if (data && !this._schema.options.returnOnlyField)  {
             const out = this._convertDataType(data, undefined);
@@ -82,7 +75,7 @@ class Model extends ModelBase {
                 return self.__data[field];
 
             },
-            set: function (new_value, validateEnabled=true, defineField) {
+            set: function (new_value, validateEnabled=true, defineField, loading = false ) {
 
                 new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value, schemaField);
 
@@ -118,7 +111,6 @@ class Model extends ModelBase {
 
                 self.__data[field] = new_value;
 
-                self.__changes[field] = true;
                 self.__data.modified = new Date().getTime();
 
                 if (schemaField.ifNonDefault !== undefined)
@@ -127,18 +119,18 @@ class Model extends ModelBase {
                 if (schemaField.setEvent)
                     schemaField.setEvent.call(self, new_value, validateEnabled );
 
-                if (!defineField && !MarshalHelper.checkValue.call( this, schemaField.skipHashing, field)  ){
+                if (!loading){
+                    if (defineField)
+                        this.__changes[field] = true;
+                    else {
 
-                    /**
-                     * Hash should be different now as data was changed
-                     */
+                        // Hash should be different now as data was changed
+                        this._propagateHashingChanges(field);
 
-                    if (this._schema.options.hashing.enabled) self.__data.__hash = undefined;
-                    if (this._schema.options.hashing.parentHashingPropagation) this._propagateHashingChanges();
+                        this._propagateChanges(field);
 
+                    }
                 }
-
-                this._propagateChanges();
 
             }
 
@@ -349,7 +341,7 @@ class Model extends ModelBase {
 
                 data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
-                Object.getOwnPropertyDescriptor(this, field).set.call( this, data, !unmarshalOptions.emptyObject, false );
+                Object.getOwnPropertyDescriptor(this, field).set.call( this, data, !unmarshalOptions.emptyObject, false, unmarshalOptions.loading );
 
             }
 
@@ -412,8 +404,6 @@ class Model extends ModelBase {
 
     _createModelObject( data, type, fieldName, schemaBuiltField, callbackObject, parentIndex, unmarshalOptions = {} ) {
 
-        if ( !this._schema.options.hashing.enabled || this.checkProperty("skipHashing", fieldName  )) unmarshalOptions.skipPropagatingHashing = true;
-
         if (!schemaBuiltField) schemaBuiltField = this._schema.fields[fieldName];
         let schemaBuiltClass = schemaBuiltField.schemaBuiltClass;
         if ( typeof schemaBuiltClass === "function" && !schemaBuiltClass.prototype ) //if it is a callback
@@ -441,7 +431,7 @@ class Model extends ModelBase {
             loadingId ? undefined : type,
             unmarshalOptions);
 
-        if (loadingId && schemaBuiltClass)
+        if (loadingId )
             callbackObject(object, unmarshalOptions, data, type );
 
         return object;

@@ -257,7 +257,7 @@ module.exports = class ModelBase {
 
         if (checkEnabled && !this._schema.options.hashing.enabled) return Buffer.alloc(32);
 
-        const returnSpecificHash = MarshalHelper.checkValue.call( this, this._schema.options.hashing.returnSpecificHash, "returnField");
+        const returnSpecificHash = this.checkValue(  this._schema.options.hashing.returnSpecificHash, "returnField");
         if ( returnSpecificHash ) return returnSpecificHash;
 
         if ( !marshalOptions.onlyFields && this.__data.__hash) return this.__data.__hash;
@@ -283,28 +283,37 @@ module.exports = class ModelBase {
     }
 
 
-    _propagateHashingChanges() {
+    _propagateHashingChanges(field ) {
 
-        if (this._schema.options.hashing.enabled) //TODO: if hash already deleted, it just return
+        if (this._schema.options.hashing.enabled){
+
+            if (this._schema.fields[field]){
+                if (this.checkValue(this._schema.fields[field].skipHashing, field ))
+                    return;
+            }
+
+            if (!this.__data.__hash) return;
             this.__data.__hash = undefined;
 
-        if (this._schema.options.hashing.parentHashingPropagation && this._scope.parent)
-            this._scope.parent._propagateHashingChanges();
+            if (this._schema.options.hashing.parentHashingPropagation && this._scope.parent)
+                this._scope.parent._propagateHashingChanges(this._scope.parentFieldName);
 
-        if (this.onHashChanged) this.onHashChanged.call(this );
+            if (this.onHashChanged) this.onHashChanged.call(this );
+        }
 
     }
 
-    _propagateChanges(){
+    _propagateChanges(field){
 
-        if (!this._scope.parent) return; //TODO: if hash already deleted, it just return
+        if (this.__changes[field]) return;
+        this.__changes[field] = true;
 
-        if (!this._scope.parentFieldName)
-            console.log("parentFieldName was not assigned", this);
+        if (this._scope.parent){
 
-        this._scope.parent.__changes[this._scope.parentFieldName] = true;
+            if (!this._scope.parentFieldName) this._scope.logger.error(this, "parentFieldName was not assigned", {field} );
+            this._scope.parent._propagateChanges(this._scope.parentFieldName);
 
-        this._scope.parent._propagateChanges();
+        }
 
     }
 

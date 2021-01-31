@@ -51,7 +51,6 @@ class DBSchemaBuild extends SchemaBuild {
 
             //skipSavingAsItWasNotLoaded: false,
 
-            //todo
             //storeDataNotId: false,
         }, schema.saving || {}, true);
     }

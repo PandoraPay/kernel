@@ -15,6 +15,8 @@ module.exports = async function run () {
 
         let newTree;
 
+        // console.log(tree.root.hash().toString('hex') );
+
         tree.fillMerkleTree( data );
 
         let leaves = tree.leaves();
@@ -28,11 +30,11 @@ module.exports = async function run () {
         this.expect( tree.validateMerkleTree(), true);
 
         this.expect( BFS.reduce( (res, it, index) => res &&  it.height === index, true), true);
-        
-        //console.log(tree.root.hash() );
+
+        // console.log(tree.root.hash().toString('hex') );
 
         // for (let it of DFS) {
-        //     console.log( it.data.toString("hex") );
+        //     console.log( 'data', it.data.toString("hex") );
         //     console.log( (it.children[0] ? it.children[0].hash().toString("hex") : "no left child")  );
         //     console.log( (it.children[1] ? it.children[1].hash().toString("hex") : "no right child")  );
         //     console.log(it.hash().toString("hex"), CryptoHelper.sha256(it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex") : "") + (it.children[1] ? it.children[1].hash().toString("hex") : "")).toString("hex") );
@@ -41,6 +43,19 @@ module.exports = async function run () {
         this.expect(  CryptoHelper.sha256( tree.root.data.toString("hex") + tree.root.children[0].hash().toString("hex") + tree.root.children[1].hash().toString("hex") ), tree.hash() );
 
         this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex"):"") + (it.children[1] ? it.children[1].hash().toString("hex") : "") ).equals( it.hash() ) ), true);
+
+        if (length < 50) {
+            await tree.save();
+
+            const newTree4 = new MerkleTreeDBModel(this._scope);
+            // console.log( newTree4.root.hash().toString('hex') );
+            await newTree4.load(tree.id);
+            // console.log( newTree4.root.hash().toString('hex') );
+
+            this.expect(newTree4.root.children[0].hash(), tree.root.children[0].hash() );
+            this.expect(newTree4.root.children[1].hash(), tree.root.children[1].hash() );
+            this.expect(newTree4.root.hash(), tree.root.hash() );
+        }
 
         //change one leaf
 

@@ -32,8 +32,6 @@ class MarshalHelper{
             emptyObject: options.emptyObject,
             skipProcessingConstructionValues: options.skipProcessingConstructionValues,
 
-            skipPropagatingHashing: options.skipPropagatingHashing,
-            
             skipValidation: options.skipValidation,
 
         }

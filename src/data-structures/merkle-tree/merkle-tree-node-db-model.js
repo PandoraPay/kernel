@@ -2,11 +2,11 @@ const DBModel = require( "../../db/db-generic/db-model")
 const Exception = require("../../helpers/exception");
 
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum")
-const {MerkleTreeNodeSchemaBuilt} = require('./schema/merkle-tree-node-db-schema-build')
+const {MerkleTreeNodeDBSchemaBuilt} = require('./schema/merkle-tree-node-db-schema-build')
 
-module.exports = class MerkleTreeNodeModel extends DBModel {
+class MerkleTreeNodeDBModel extends DBModel {
 
-    constructor(scope, schema = MerkleTreeNodeSchemaBuilt,  data, type, creationOptions) {
+    constructor(scope, schema = MerkleTreeNodeDBSchemaBuilt,  data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
     }
 
@@ -113,4 +113,6 @@ module.exports = class MerkleTreeNodeModel extends DBModel {
     
 }
 
+MerkleTreeNodeDBSchemaBuilt.fields.children.modelClass = MerkleTreeNodeDBModel;
 
+module.exports = MerkleTreeNodeDBModel;
