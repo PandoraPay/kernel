@@ -65,7 +65,7 @@ class Model extends ModelBase {
         return this.__data[field];
     }
 
-    _set(field, schemaField, new_value, validateEnabled= true, checkIfValuesAreIdentical, skipPropagateChanges = false){
+    _set(field, schemaField, new_value, checkIfValuesAreIdentical, validateEnabled = true, propagateChanges = true ){
 
         new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value, schemaField);
 
@@ -76,7 +76,7 @@ class Model extends ModelBase {
             new_value = schemaField.preprocessor.call(this, new_value, field );
 
         //check if the values are actually different
-        if (!checkIfValuesAreIdentical) {
+        if (checkIfValuesAreIdentical) {
             if (schemaField.type === "buffer") {
                 if (this.__data[field].equals(new_value)) return;
             } else if (schemaField.type === "array") {
@@ -104,7 +104,7 @@ class Model extends ModelBase {
         if (schemaField.setEvent)
             schemaField.setEvent.call(this, new_value, validateEnabled );
 
-        if (!skipPropagateChanges){
+        if (propagateChanges){
             // Hash should be different now as data was changed
             this._propagateHashingChanges(field);
             this._propagateChanges(field);
@@ -157,7 +157,7 @@ class Model extends ModelBase {
 
 
         //set value
-        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationOptions.emptyObject, true );
+        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, false, !creationOptions.loading, !creationOptions.loading );
 
         if (isDefault)
             this.__default[field] = true;
@@ -259,7 +259,7 @@ class Model extends ModelBase {
 
                 const data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ field ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
-                Object.getOwnPropertyDescriptor(this, field).set.call( this, data, !unmarshalOptions.emptyObject, false, unmarshalOptions.loading );
+                Object.getOwnPropertyDescriptor(this, field).set.call( this, data, false, !unmarshalOptions.loading, false );
 
             }
 
@@ -285,7 +285,7 @@ class Model extends ModelBase {
         for (let i=position; i < array.length; i++)
             array[i].parentIndex = i;
 
-        Object.getOwnPropertyDescriptor(this, fieldName).set.call( this, array, true );
+        Object.getOwnPropertyDescriptor(this, fieldName).set.call( this, array, false, true, true );
 
         return element;
 
@@ -298,7 +298,7 @@ class Model extends ModelBase {
         const array = [... this[fieldName] ];
         array.splice( position, 1 );
 
-        Object.getOwnPropertyDescriptor(this, fieldName).set.call( this, array, true );
+        Object.getOwnPropertyDescriptor(this, fieldName).set.call( this, array, false, true, true );
 
 
     }
@@ -331,12 +331,7 @@ class Model extends ModelBase {
         if ( typeof modelClass === "function" && !modelClass.prototype ) //if it is a callback
             modelClass = modelClass.call(this, data, fieldName, schemaBuiltField);
 
-        let loadingId = false;
-        if (data !== undefined && typeof data === "string" && callbackObject) {
-            loadingId = true;
-            unmarshalOptions.emptyObject = true;
-        }
-
+        const isLoadingId = unmarshalOptions.loading && callbackObject;
 
         const object = this._creationMiddleware( modelClass, {
                 ...this._scope,
@@ -345,11 +340,11 @@ class Model extends ModelBase {
                 parentIndex: parentIndex,
             },
             schemaBuiltClass,
-            loadingId ? undefined : data,
-            loadingId ? undefined : type,
+            isLoadingId ? undefined : data,
+            isLoadingId ? undefined : type,
             unmarshalOptions);
 
-        if (loadingId )
+        if ( isLoadingId )
             callbackObject(object, unmarshalOptions, data, type );
 
         return object;

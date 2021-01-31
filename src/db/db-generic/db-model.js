@@ -285,7 +285,7 @@ module.exports = class DBModel extends Marshal{
                 return object;
             }
 
-            const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions, callbackObject, willLoadItself);
+            const promise = object.load( input, `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, table, db, loadType, undefined, undefined, unmarshalOptions , callbackObject, willLoadItself);
             promises.push(promise);
             return promise;
 

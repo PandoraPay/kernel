@@ -25,7 +25,7 @@ module.exports = class HashMapDBModel extends DBModel {
     createHashElementEmptyChild(id){
 
         const obj = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt,
-            "element", undefined, undefined, undefined, {emptyObject: true} );
+            "element", undefined, undefined, undefined, {loading: true} );
 
         if (id) obj.id = id;
         return obj;

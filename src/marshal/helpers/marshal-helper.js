@@ -26,9 +26,8 @@ class MarshalHelper{
 
     constructOptionsCreation(options = {}, field){
         return {
-
             ...this._constructOptionsBase(options, field),
-            emptyObject: options.emptyObject,
+            loading: options.loading,
         }
     }
 
@@ -37,7 +36,6 @@ class MarshalHelper{
         return {
             onlyFields: (options.onlyFields && typeof options.onlyFields[field]) === "object" ? options.onlyFields[field] : undefined,
             isFieldSkipped: options.isFieldSkipped,
-
         };
 
     }
