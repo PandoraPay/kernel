@@ -41,7 +41,6 @@ class MarshalHelper{
 
         return {
             onlyFields: (options.onlyFields && typeof options.onlyFields[field]) === "object" ? options.onlyFields[field] : undefined,
-            replaceFields: ( options.replaceFields && typeof options.replaceFields[field] === "object" ) ? options.replaceFields[field] : undefined,
             isFieldSkipped: options.isFieldSkipped,
 
         };

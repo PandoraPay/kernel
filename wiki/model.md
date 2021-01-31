@@ -112,5 +112,3 @@ For the fields that are objects, the marshal will be called automatically with t
 
 **The validation and validationSpecific must throw errors for invalid values.**
 
-
-`ifNonDefault byte` (useful only in buffers) allows to detect the existence of a field by using a specific Byte

@@ -61,100 +61,78 @@ class Model extends ModelBase {
     }
 
 
+    _get(field){
+        return this.__data[field];
+    }
+
+    _set(field, schemaField, new_value, validateEnabled= true, checkIfValuesAreIdentical, skipPropagateChanges = false){
+
+        new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value, schemaField);
+
+        if (schemaField._validatePresetSchemaField)
+            new_value = schemaField._validatePresetSchemaField.call(this, new_value, schemaField);
+
+        if (schemaField.preprocessor)
+            new_value = schemaField.preprocessor.call(this, new_value, field );
+
+        //check if the values are actually different
+        if (!checkIfValuesAreIdentical) {
+            if (schemaField.type === "buffer") {
+                if (this.__data[field].equals(new_value)) return;
+            } else if (schemaField.type === "array") {
+
+                if (this.__data[field].length === new_value.length) {
+                    let change = false;
+                    for (let i = 0; i < new_value.length; i++)
+                        if (this.__data[field][i] !== new_value[i]) {
+                            change = true;
+                            break;
+                        }
+
+                    if (!change) return;
+                }
+            } else if (this.__data[field] === new_value) return;
+        }
+
+        if (validateEnabled)
+            this._validateField.call(this, field, new_value, schemaField);
+
+        this.__data[field] = new_value;
+
+        this.__data.modified = new Date().getTime();
+
+        if (schemaField.setEvent)
+            schemaField.setEvent.call(this, new_value, validateEnabled );
+
+        if (!skipPropagateChanges){
+            // Hash should be different now as data was changed
+            this._propagateHashingChanges(field);
+            this._propagateChanges(field);
+        } else {
+            this.__changes[field] = true;
+        }
+
+    }
 
     _defineField(field, schemaField, dataValue, dataType, creationOptions) {
 
-        const creationReplaceFields = creationOptions.replaceFields;
         const creationEmptyObject = creationOptions.emptyObject;
 
         const self = this;
         Object.defineProperty(self, field, {
 
-            get: schemaField.getter ? schemaField.getter.bind(self, field) : function () {
-
-                return self.__data[field];
-
-            },
-            set: function (new_value, validateEnabled=true, defineField, loading = false ) {
-
-                new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value, schemaField);
-
-                if (schemaField._validatePresetSchemaField)
-                    new_value = schemaField._validatePresetSchemaField.call(this, new_value, schemaField);
-
-                if (schemaField.preprocessor)
-                    new_value = schemaField.preprocessor.call(self, new_value, field );
-
-                //check if the values are actually different
-                if (defineField) ;
-                else
-                if (schemaField.type === "buffer"){
-                    if (self.__data[field].equals(new_value)) return;
-                } else
-                if (schemaField.type === "array"){
-
-                    if (self.__data[field].length === new_value.length ) {
-                        let change = false;
-                        for (let i = 0; i < new_value.length; i++)
-                            if (self.__data[field][i] !== new_value[i]) {
-                                change = true;
-                                break;
-                            }
-
-                        if (!change) return;
-                    }
-                }
-                else if (self.__data[field] === new_value) return;
-
-                if (validateEnabled && !creationOptions.skipValidation)
-                    self._validateField.call(self, field, new_value, schemaField);
-
-                self.__data[field] = new_value;
-
-                self.__data.modified = new Date().getTime();
-
-                if (schemaField.ifNonDefault !== undefined)
-                    self.__default[field] = false;
-
-                if (schemaField.setEvent)
-                    schemaField.setEvent.call(self, new_value, validateEnabled );
-
-                if (!loading){
-
-                    // Hash should be different now as data was changed
-                    this._propagateHashingChanges(field);
-
-                    this._propagateChanges(field);
-
-                }
-
-            }
+            get: schemaField.getter ? schemaField.getter.bind(self, field, schemaField) : this._get.bind(self, field, schemaField),
+            set: this._set.bind(self, field, schemaField ),
 
         });
 
+        if (dataType === "object" && dataValue )
+            dataValue = dataValue[field];
 
-        if (dataType === "object"  && dataValue !== undefined ) {
+        if ( !(dataValue instanceof Model) ){
 
-            let fieldName = field;
-            if (creationReplaceFields && creationReplaceFields[ field ] ){
-                fieldName = creationReplaceFields[ field ];
-                if (typeof fieldName === "object") fieldName = fieldName._name || field;
-            }
-
-            dataValue = dataValue[fieldName];
-        }
-
-
-        if (!(dataValue instanceof Model)){
-
-
-            if (dataType === "buffer" && dataValue !== undefined && this.checkProperty( "skipMarshal", field) )
+            if (dataType === "buffer" && dataValue && this.checkProperty( "skipMarshal", field) )
                 dataValue = undefined;
-
-            if ( schemaField.ifNonDefault !== undefined && dataType === "buffer"  ){
-                if (dataValue.lastByte() !== schemaField.ifNonDefault) dataValue = undefined;
-                else dataValue.read1Byte();
-            }
 
             if (dataValue !== undefined && !this.checkProperty( "skipMarshal", field )  ) {
 
@@ -177,9 +155,8 @@ class Model extends ModelBase {
 
             dataValue = schemaField.default;
             if (typeof dataValue === "function") dataValue = dataValue.call(this, schemaField);
-
-            if (dataValue === undefined && schemaField.type === "object" && !this.checkValue(schemaField.emptyAllowed, "emptyAllowed"))
-                    dataValue = this._createModelObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
+            else if ( !dataValue && schemaField.type === "object" && !this.checkValue(schemaField.emptyAllowed, "emptyAllowed"))
+                dataValue = this._createModelObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
 
             isDefault = true;
         }
@@ -188,10 +165,9 @@ class Model extends ModelBase {
 
 
         //set value
-        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationEmptyObject, true );
+        Object.getOwnPropertyDescriptor(this, field).set.call( this, dataValue, !creationEmptyObject && !creationOptions.skipValidation, true );
 
-        if (isDefault && schemaField.ifNonDefault !== undefined)
-            this.__default[field] = true;
+        if (isDefault) this.__default[field] = true;
 
         this.__data.__fields++;
 
@@ -233,12 +209,8 @@ class Model extends ModelBase {
     _marshal(type, text = true, callbackObject, marshalOptions = {}) {
 
         const isObject = (type !== "buffer");
-
-        let marshal = isObject ? {} : [], schemaField;
-
+        const marshal = isObject ? {} : [];
         const marshalOnlyFields = marshalOptions.onlyFields;
-        const marshalReplaceFields = marshalOptions.replaceFields;
-
 
         const fct = isObject ? '_marshalSchemaField' : '_marshalSchemaFieldToBuffer';
 
@@ -252,37 +224,12 @@ class Model extends ModelBase {
                 if ( marshalOptions.saving && this.checkProperty( "skipSaving", field )) continue;
                 if ( !marshalOptions.saving && this.checkProperty( "skipMarshal", field )) continue;
 
-                schemaField = this._schema.fields[field];
-
-                if ( schemaField.ifNonDefault !== undefined)
-                    if (this.__default[field]) continue;
-                    else
-                    if ( !isObject ){
-                        marshal[i] = Buffer.alloc(1);
-                        marshal[i][0] = schemaField.ifNonDefault;
-                        i++;
-                    }
+                const schemaField = this._schema.fields[field];
 
                 marshal[ isObject ? field : i ] = this._schema.fields[field][fct].call(this, this[field], schemaField, text, callbackObject, type, MarshalHelper.constructOptionsMarshaling( marshalOptions, field) );
                 i++;
 
             }
-
-        if (marshalReplaceFields && isObject ){
-
-            const newMarshal = {};
-
-            for (const field in marshal){
-
-                let fieldName = marshalReplaceFields[ field ];
-                if (typeof fieldName === "object") fieldName = fieldName._name || field;
-
-                newMarshal[ fieldName ? fieldName : field ] = marshal[field];
-            }
-
-            marshal = newMarshal;
-        }
-
 
         if (!isObject) return Buffer.concat(marshal);
         else if (isObject) {
@@ -298,44 +245,26 @@ class Model extends ModelBase {
 
     unmarshal( input, type = "buffer", callbackObject, unmarshalOptions = {} ) {
 
-        let schemaField, data, field;
-
         const isObject = type !== "buffer";
 
         const unmarshalOnlyFields = unmarshalOptions.onlyFields;
-        const unmarshalReplaceFields = unmarshalOptions.replaceFields;
 
         const fct = isObject ?  '_unmarshalSchemaField' :'_unmarshalSchemaFieldFromBuffer';
 
         const fields =  this._schema.options.returnOnlyField ? [this._schema.options.returnOnlyField] : this._schema.fieldsSorted;
 
-        for ( field of fields)
+        for ( const field of fields)
             if ( !unmarshalOnlyFields || unmarshalOnlyFields[field] ) {
 
                 if ( unmarshalOptions.loading && this.checkProperty( "skipSaving", field )) continue;
                 if ( !unmarshalOptions.loading && this.checkProperty( "skipMarshal", field )) continue;
 
-                schemaField = this._schema.fields[field];
-
-                let fieldName = field;
-                if (unmarshalReplaceFields && unmarshalReplaceFields[ field ] && isObject){
-                    fieldName = unmarshalReplaceFields[ field ];
-                    if (typeof fieldName === "object") fieldName = fieldName._name || field;
-                }
+                const schemaField = this._schema.fields[field];
 
                 if (unmarshalOptions.isFieldSkipped )
-                    if (!unmarshalOptions.isFieldSkipped.call(this, fieldName, schemaField )) continue;
+                    if (!unmarshalOptions.isFieldSkipped.call(this, field, schemaField )) continue;
 
-                if ( schemaField.ifNonDefault !== undefined )
-                    if ( !isObject ){
-
-                        if (input.lastByte() !== schemaField.ifNonDefault) continue;
-                        else input.read1Byte();
-
-                    } else
-                        if (input[fieldName] === undefined) continue;
-
-                data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ fieldName ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
+                const data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ field ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
                 Object.getOwnPropertyDescriptor(this, field).set.call( this, data, !unmarshalOptions.emptyObject, false, unmarshalOptions.loading );
 
