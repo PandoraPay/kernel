@@ -131,7 +131,7 @@ class Model extends ModelBase {
         if ( this.checkProperty( "skipMarshal", field) )
             dataValue = undefined;
 
-        if ( dataValue && !(dataValue instanceof Model) ){
+        if ( dataValue !== undefined && !(dataValue instanceof Model) ){
 
             dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue, schemaField );
 
