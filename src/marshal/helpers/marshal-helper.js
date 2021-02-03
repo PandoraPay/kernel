@@ -28,6 +28,7 @@ class MarshalHelper{
         return {
             ...this._constructOptionsBase(options, field),
             loading: options.loading,
+            skipProcessingConstructionValues: options.skipProcessingConstructionValues,
         }
     }
 

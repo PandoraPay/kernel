@@ -3,7 +3,7 @@ const Helper = require ('../../../helpers/helper')
 const MerkleTreeNodeTypeEnum = require( "../merkle-tree-node-type-enum")
 const CryptoHelper = require("../../../helpers/crypto/crypto-helper");
 
-class MerkleTreeNodeDBSchemaBuild extends DBSchemaBuild {
+class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {} ){
 
@@ -67,7 +67,7 @@ class MerkleTreeNodeDBSchemaBuild extends DBSchemaBuild {
 
                     type: "array",
 
-                    modelClass: undefined, //MerkleTreeNodeDBModel, //avoiding circular references
+                    modelClass: undefined, //MerkleTreeNodeModel, //avoiding circular references
 
                     minSize: 0,
                     maxSize(){
@@ -146,6 +146,6 @@ class MerkleTreeNodeDBSchemaBuild extends DBSchemaBuild {
 }
 
 module.exports = {
-    MerkleTreeNodeDBSchemaBuild,
-    MerkleTreeNodeDBSchemaBuilt: new MerkleTreeNodeDBSchemaBuild(),
+    MerkleTreeNodeSchemaBuild,
+    MerkleTreeNodeSchemaBuilt: new MerkleTreeNodeSchemaBuild(),
 }

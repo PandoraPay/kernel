@@ -1,14 +1,14 @@
 const Exception = require("../../helpers/exception");
 
-const RadixTree = require( "./radix-tree-db-model" );
-const RadixTreeNodeDBModel = require( "./radix-tree-node-db-model");
+const RadixTree = require( "./radix-tree-model" );
+const RadixTreeNodeModel = require( "./radix-tree-node-model");
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum");
 
 /**
  * IT IS NOT WORKING
  */
 
-module.exports = class RadixTreeVirtual3DBModel extends RadixTree{
+module.exports = class RadixTreeVirtual3Model extends RadixTree{
 
     constructor(scope, schema, data, type, creationOptions) {
 

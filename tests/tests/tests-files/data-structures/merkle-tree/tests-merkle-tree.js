@@ -1,6 +1,6 @@
 const describe = require('../../../unit-testing/describe');
 const TestsHelper = require( "../../../unit-testing/tests-helper")
-const MerkleTreeDBModel = require( "../../../../../src/data-structures/merkle-tree/merkle-tree-db-model")
+const MerkleTreeModel = require( "../../../../../src/data-structures/merkle-tree/merkle-tree-model")
 const CryptoHelper = require( "../../../../../src/helpers/crypto/crypto-helper");
 
 /**
@@ -47,7 +47,7 @@ module.exports = async function run () {
         if (length < 50) {
             await tree.save();
 
-            const newTree4 = new MerkleTreeDBModel(this._scope);
+            const newTree4 = new MerkleTreeModel(this._scope);
             // console.log( newTree4.root.hash().toString('hex') );
             await newTree4.load(tree.id);
             // console.log( newTree4.root.hash().toString('hex') );
@@ -79,12 +79,12 @@ module.exports = async function run () {
         this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex"):"") + (it.children[1] ? it.children[1].hash().toString("hex") : "") ).equals( it.hash() ) ), true);
 
         let obj = tree.toObject();
-        newTree = new MerkleTreeDBModel(this._scope);
+        newTree = new MerkleTreeModel(this._scope);
         newTree.fromObject(obj);
         this.expect( tree.hash(), newTree.hash() );
 
         let buffer = tree.toBuffer();
-        newTree = new MerkleTreeDBModel(this._scope);
+        newTree = new MerkleTreeModel(this._scope);
         newTree.fromBuffer(buffer);
         this.expect( tree.hash(), newTree.hash() );
 
@@ -103,7 +103,7 @@ module.exports = async function run () {
         callbackObject = tree.createMarshalPruningLeavesCallback( [0, 1 ], true);
         prunedJSON = tree.toJSON( undefined, callbackObject );
 
-        const tree2 = new MerkleTreeDBModel(this._scope);
+        const tree2 = new MerkleTreeModel(this._scope);
         const callbackObject2 = tree2.createUnmarshalPruningLeavesCallback([0,1,], true);
         tree2.fromJSON( prunedJSON, callbackObject2 );
 
@@ -112,7 +112,7 @@ module.exports = async function run () {
         callbackObject = tree.createMarshalPruningLeavesCallback( [0, 1, 2, 3, 4 ], true);
         prunedJSON = tree.toJSON( undefined, callbackObject );
 
-        const tree3 = new MerkleTreeDBModel(this._scope);
+        const tree3 = new MerkleTreeModel(this._scope);
         const callbackObject3 = tree2.createUnmarshalPruningLeavesCallback([0, 1, 2, 3, 4 ], true);
         tree3.fromJSON( prunedJSON, callbackObject3 );
 
@@ -124,7 +124,7 @@ module.exports = async function run () {
 
         'Merkle Tree 12': async function () {
             
-            const tree = new MerkleTreeDBModel(this._scope);
+            const tree = new MerkleTreeModel(this._scope);
 
             const length = 12;
             const data = TestsHelper.fillBuffer( length );
@@ -135,7 +135,7 @@ module.exports = async function run () {
 
         'Merkle Tree 8': async function () {
 
-            const tree = new MerkleTreeDBModel(this._scope);
+            const tree = new MerkleTreeModel(this._scope);
 
             const length = 8;
             const data = TestsHelper.fillBuffer( length );
@@ -146,7 +146,7 @@ module.exports = async function run () {
 
         'Merkle Tree Random Length 10000': async function () {
 
-            const tree = new MerkleTreeDBModel(this._scope);
+            const tree = new MerkleTreeModel(this._scope);
 
             const length = TestsHelper.randomNumbers(10, 10000);
             const data = TestsHelper.fillBuffer( length );
@@ -157,7 +157,7 @@ module.exports = async function run () {
 
         'Merkle Tree Random Length and Random Data 1000': async function () {
 
-            const tree = new MerkleTreeDBModel(this._scope);
+            const tree = new MerkleTreeModel(this._scope);
 
             const length = TestsHelper.randomNumbers(10, 1000);
             const data = TestsHelper.randomBuffers( 10, length);

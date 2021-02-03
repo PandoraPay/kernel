@@ -2,9 +2,9 @@ const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 
 const {RadixTreeRootDBSchemaBuilt} = require('./radix-tree-root-db-schema-build')
-const RadixTreeRootDBModel = require('../radix-tree-root-db-model')
+const RadixTreeRootModel = require('../radix-tree-root-model')
 
-class RadixTreeDBSchemaBuild extends DBSchemaBuild {
+class RadixTreeSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}) {
 
@@ -26,7 +26,7 @@ class RadixTreeDBSchemaBuild extends DBSchemaBuild {
                 root: {
                     type: "object",
                     schemaBuiltClass: RadixTreeRootDBSchemaBuilt,
-                    modelClass: RadixTreeRootDBModel,
+                    modelClass: RadixTreeRootModel,
 
                     position: 101,
                 },
@@ -60,6 +60,6 @@ class RadixTreeDBSchemaBuild extends DBSchemaBuild {
 }
 
 module.exports = {
-    RadixTreeDBSchemaBuild,
-    RadixTreeDBSchemaBuilt: new RadixTreeDBSchemaBuild(),
+    RadixTreeSchemaBuild,
+    RadixTreeSchemaBuilt: new RadixTreeSchemaBuild(),
 }

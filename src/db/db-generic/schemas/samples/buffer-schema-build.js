@@ -1,7 +1,7 @@
 const Helper = require( "../../../../helpers/helper");
 const DBSchemaBuild = require( "../db-schema-build");
 
-class BufferDBSchemaBuild extends DBSchemaBuild {
+class BufferSchemaBuild extends DBSchemaBuild {
 
     constructor( options = {} ){
 
@@ -32,6 +32,6 @@ class BufferDBSchemaBuild extends DBSchemaBuild {
 }
 
 module.exports = {
-    BufferDBSchemaBuild,
-    BufferDBSchemaBuilt: new BufferDBSchemaBuild(),
+    BufferSchemaBuild,
+    BufferSchemaBuilt: new BufferSchemaBuild(),
 }

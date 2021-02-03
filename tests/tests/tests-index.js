@@ -23,12 +23,14 @@ module.exports = {
 
         await TestsHashMap(scope);
 
-        await TestsRadixTree(scope);
+        // await TestsRadixTree(scope);
 
         await TestsMerkleTree();
+
         // //
         // // //await TestsRedis();
         //
+
         await TestsHelpers( );
 
         await TestsMarshalData();

@@ -1,8 +1,8 @@
 const Helper = require( "../../helpers/helper");
-const RadixTreeNodeDBModel = require("./radix-tree-node-db-model")
+const RadixTreeNodeModel = require("./radix-tree-node-model")
 const {RadixTreeRootDBSchemaBuilt} = require('./schema/radix-tree-root-db-schema-build')
 
-module.exports = class RadixTreeRootDBModel extends RadixTreeNodeDBModel {
+module.exports = class RadixTreeRootModel extends RadixTreeNodeModel {
 
     constructor(scope, schema = RadixTreeRootDBSchemaBuilt,  data, type, creationOptions ){
 

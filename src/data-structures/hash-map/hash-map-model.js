@@ -2,20 +2,20 @@ const DBModel = require("../../db/db-generic/db-model");
 const Helper = require( "../../helpers/helper");
 const Exception = require("../../helpers/exception");
 
-const {HashMapElementDBSchemaBuilt} = require( "./schema/hash-map-element-db-schema-build")
+const {HashMapElementSchemaBuilt} = require( "./schema/hash-map-element-schema-build")
 
-module.exports = class HashMapDBModel extends DBModel {
+module.exports = class HashMapModel extends DBModel {
 
-    constructor(scope, schema = HashMapElementDBSchemaBuilt, data, type, creationOptions) {
+    constructor(scope, schema = HashMapElementSchemaBuilt, data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
         this._childHashMapSchemaBuilt = schema;
         this._childHashMapModel = undefined;
     }
 
-    _createHashElementChild(id, data, dataType, unmarshalOptions){
+    _createHashElementChild(id, data, dataType, unmarshalOptions = {}){
 
         const obj = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt,
-            "element", data, dataType, unmarshalOptions );
+            "element", data, dataType, undefined,{...unmarshalOptions} );
 
         if (id) obj.id = id;
         return obj;

@@ -136,8 +136,10 @@ class Model extends ModelBase {
             dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue, schemaField );
 
             //avoid processing values ( used in constructor )
-            const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
-            dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
+            if (!creationOptions.skipProcessingConstructionValues) {
+                const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
+                dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
+            }
 
         }
 

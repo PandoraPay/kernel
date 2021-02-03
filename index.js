@@ -33,10 +33,10 @@ const SchemaBuild = require( "./src/marshal/schemas/schema-build");
 
 const DBModel = require( "./src/db/db-generic/db-model");
 const DBSchemaBuild = require( "./src/db/db-generic/schemas/db-schema-build");
-const BufferDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-db-schema-build");
-const BufferUniqueDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-unique-db-schema-build");
-const NumberDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/number-db-schema-build");
-const StringDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/string-db-schema-build");
+const BufferSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-schema-build");
+const BufferUniqueSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-unique-schema-build");
+const NumberSchemaBuild = require( "./src/db/db-generic/schemas/samples/number-schema-build");
+const StringDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/string-schema-build");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
 const DBModelHelper = require( "./src/db/db-generic/db-model-helper");
@@ -50,27 +50,27 @@ const TestsHelper = require( "./tests/tests/unit-testing/tests-helper");
 
 const TestsFiles = require( "./tests/tests/tests-index");
 
-const MerkleTreeDBModel = require( "./src/data-structures/merkle-tree/merkle-tree-db-model");
-const MerkleTreeNodeDBModel = require( "./src/data-structures/merkle-tree/merkle-tree-node-db-model");
+const MerkleTreeModel = require( "./src/data-structures/merkle-tree/merkle-tree-model");
+const MerkleTreeNodeModel = require( "./src/data-structures/merkle-tree/merkle-tree-node-model");
 const MerkleTreeNodeTypeEnum = require( "./src/data-structures/merkle-tree/merkle-tree-node-type-enum");
-const MerkleTreeRootDBModel = require( "./src/data-structures/merkle-tree/merkle-tree-root-db-model");
-const MerkleTreeRootDBSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-root-db-schema-build");
-const MerkleTreeNodeDBSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-node-db-schema-build");
-const MerkleTreeDBSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-db-schema-build");
+const MerkleTreeRootModel = require( "./src/data-structures/merkle-tree/merkle-tree-root-model");
+const MerkleTreeRootSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-root-schema-build");
+const MerkleTreeNodeSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-node-schema-build");
+const MerkleTreeSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-schema-build");
 
-const RadixTree = require( "./src/data-structures/radix-tree/radix-tree-db-model");
-const RadixTreeVirtual3DBModel = require( "./src/data-structures/radix-tree/radix-tree-virtual3-db-model");
-const RadixTreeVirtualDBModel = require( "./src/data-structures/radix-tree/radix-tree-virtual-db-model");
-const RadixTreeNodeDBModel = require( "./src/data-structures/radix-tree/radix-tree-node-db-model");
-const RadixTreeRootDBModel = require( "./src/data-structures/radix-tree/radix-tree-root-db-model");
+const RadixTree = require( "./src/data-structures/radix-tree/radix-tree-model");
+const RadixTreeVirtual3Model = require( "./src/data-structures/radix-tree/radix-tree-virtual3-model");
+const RadixTreeVirtualModel = require( "./src/data-structures/radix-tree/radix-tree-virtual-model");
+const RadixTreeNodeModel = require( "./src/data-structures/radix-tree/radix-tree-node-model");
+const RadixTreeRootModel = require( "./src/data-structures/radix-tree/radix-tree-root-model");
 const RadixTreeNodeTypeEnum = require( "./src/data-structures/radix-tree/radix-tree-node-type-enum");
-const RadixTreeRootDBSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-root-db-schema-build");
-const RadixTreeDBSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-db-schema-build");
-const RadixTreeNodeDBSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-node-db-schema-build");
+const RadixTreeRootSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-root-db-schema-build");
+const RadixTreeSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-schema-build");
+const RadixTreeNodeSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-node-db-schema-build");
 
-const HashMapDBModel = require( "./src/data-structures/hash-map/hash-map-db-model");
-const HashVirtualMapDBModel = require( "./src/data-structures/hash-map/hash-virtual-map-db-model");
-const HashMapElementDBSchemaBuild = require( "./src/data-structures/hash-map/schema/hash-map-element-db-schema-build");
+const HashMapModel = require( "./src/data-structures/hash-map/hash-map-model");
+const HashVirtualMapModel = require( "./src/data-structures/hash-map/hash-virtual-map-model");
+const HashMapElementSchemaBuild = require( "./src/data-structures/hash-map/schema/hash-map-element-schema-build");
 
 const NetworkTypeEnum = require( "./bin/argv/modules/network-type-enum");
 
@@ -122,45 +122,45 @@ const library = {
     },
 
     schemas :{
-        BufferDBSchemaBuild,
+        BufferSchemaBuild,
         StringDBSchemaBuild,
-        NumberDBSchemaBuild,
-        BufferUniqueDBSchemaBuild,
+        NumberSchemaBuild,
+        BufferUniqueSchemaBuild,
     },
 
     dataStructures: {
 
         merkleTree:{
-            MerkleTreeDBModel,
-            MerkleTreeNodeDBModel,
-            MerkleTreeRootDBModel,
+            MerkleTreeModel,
+            MerkleTreeNodeModel,
+            MerkleTreeRootModel,
             MerkleTreeNodeTypeEnum,
             schema:{
-                MerkleTreeRootDBSchemaBuild,
-                MerkleTreeDBSchemaBuild,
-                MerkleTreeNodeDBSchemaBuild,
+                MerkleTreeRootSchemaBuild,
+                MerkleTreeSchemaBuild,
+                MerkleTreeNodeSchemaBuild,
             }
         },
 
         radixTree:{
             RadixTree,
-            RadixTreeVirtual3DBModel,
-            RadixTreeVirtualDBModel,
-            RadixTreeNodeDBModel,
-            RadixTreeRootDBModel,
+            RadixTreeVirtual3Model,
+            RadixTreeVirtualModel,
+            RadixTreeNodeModel,
+            RadixTreeRootModel,
             RadixTreeNodeTypeEnum,
             schema:{
-                RadixTreeRootDBSchemaBuild,
-                RadixTreeDBSchemaBuild,
-                RadixTreeNodeDBSchemaBuild,
+                RadixTreeRootSchemaBuild,
+                RadixTreeSchemaBuild,
+                RadixTreeNodeSchemaBuild,
             },
         },
 
         hashMap:{
-            HashMapDBModel,
-            HashVirtualMapDBModel,
+            HashMapModel,
+            HashVirtualMapModel,
             schema:{
-                HashMapElementDBSchemaBuild
+                HashMapElementSchemaBuild
             }
         }
 

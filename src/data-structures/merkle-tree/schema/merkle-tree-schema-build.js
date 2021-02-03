@@ -1,10 +1,10 @@
 const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 
-const {MerkleTreeRootDBSchemaBuilt} = require('./merkle-tree-root-db-schema-build');
-const MerkleTreeRootDBModel = require('../merkle-tree-root-db-model')
+const {MerkleTreeRootSchemaBuilt} = require('./merkle-tree-root-schema-build');
+const MerkleTreeRootModel = require('../merkle-tree-root-model')
 
-class MerkleTreeDBSchemaBuild extends DBSchemaBuild{
+class MerkleTreeSchemaBuild extends DBSchemaBuild{
 
     constructor(schema = {}) {
         super(Helper.merge({
@@ -41,8 +41,8 @@ class MerkleTreeDBSchemaBuild extends DBSchemaBuild{
 
                 root:{
                     type: "object",
-                    schemaBuiltClass: MerkleTreeRootDBSchemaBuilt,
-                    modelClass: MerkleTreeRootDBModel,
+                    schemaBuiltClass: MerkleTreeRootSchemaBuilt,
+                    modelClass: MerkleTreeRootModel,
 
                     setEvent(root){
                         this._leaves = undefined;
@@ -77,6 +77,6 @@ class MerkleTreeDBSchemaBuild extends DBSchemaBuild{
 }
 
 module.exports = {
-    MerkleTreeDBSchemaBuild: MerkleTreeDBSchemaBuild,
-    MerkleTreeDBSchemaBuilt: new MerkleTreeDBSchemaBuild(),
+    MerkleTreeSchemaBuild,
+    MerkleTreeSchemaBuilt: new MerkleTreeSchemaBuild(),
 }

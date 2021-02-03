@@ -1,11 +1,11 @@
 const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
-const {BufferDBSchemaBuilt} = require( "../../../db/db-generic/schemas/samples/buffer-db-schema-build" );
-const {StringDBSchemaBuilt} = require("../../../db/db-generic/schemas/samples/string-db-schema-build");
+const {BufferSchemaBuilt} = require( "../../../db/db-generic/schemas/samples/buffer-schema-build" );
+const {StringSchemaBuilt} = require("../../../db/db-generic/schemas/samples/string-schema-build");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 const RadixTreeNodeTypeEnum = require('../radix-tree-node-type-enum')
 
-class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
+class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}){
 
@@ -119,7 +119,7 @@ class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
                 childrenLabels: {
 
                     type: "array",
-                    schemaBuiltClass: StringDBSchemaBuilt,
+                    schemaBuiltClass: StringSchemaBuilt,
 
                     fixedBytes(){ return this.childrenCount },
 
@@ -134,7 +134,7 @@ class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
                 childrenHashes:{
 
                     type: "array",
-                    schemaBuiltClass: BufferDBSchemaBuilt,
+                    schemaBuiltClass: BufferSchemaBuilt,
 
                     fixedBytes(){ return this.childrenCount; },
 
@@ -198,6 +198,6 @@ class RadixTreeNodeDBSchemaBuild extends DBSchemaBuild {
 }
 
 module.exports = {
-    RadixTreeNodeDBSchemaBuild,
-    RadixTreeNodeDBSchemaBuilt: new RadixTreeNodeDBSchemaBuild()
+    RadixTreeNodeSchemaBuild,
+    RadixTreeNodeSchemaBuilt: new RadixTreeNodeSchemaBuild()
 }

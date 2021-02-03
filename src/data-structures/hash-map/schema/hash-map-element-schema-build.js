@@ -3,7 +3,7 @@ const Helper = require( "../../../helpers/helper");
 const Exception = require("../../../helpers/exception");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 
-class HashMapElementDBSchemaBuild extends DBSchemaBuild {
+class HashMapElementSchemaBuild extends DBSchemaBuild {
 
     constructor(schema = {}) {
 
@@ -47,6 +47,6 @@ class HashMapElementDBSchemaBuild extends DBSchemaBuild {
 }
 
 module.exports = {
-    HashMapElementDBSchemaBuild: HashMapElementDBSchemaBuild,
-    HashMapElementDBSchemaBuilt: new HashMapElementDBSchemaBuild()
+    HashMapElementSchemaBuild,
+    HashMapElementSchemaBuilt: new HashMapElementSchemaBuild()
 }

@@ -1,12 +1,12 @@
-const MerkleTreeNodeDBModel = require( "./merkle-tree-node-db-model");
+const MerkleTreeNodeModel = require( "./merkle-tree-node-model");
 const MerkleTreeNodeTypeEnum = require( "./merkle-tree-node-type-enum");
-const {MerkleTreeRootDBSchemaBuilt} = require('./schema/merkle-tree-root-db-schema-build')
+const {MerkleTreeRootSchemaBuilt} = require('./schema/merkle-tree-root-schema-build')
 
-MerkleTreeRootDBSchemaBuilt.fields.children.modelClass = MerkleTreeNodeDBModel;
+MerkleTreeRootSchemaBuilt.fields.children.modelClass = MerkleTreeNodeModel;
 
-module.exports = class MerkleTreeRootDBModel extends MerkleTreeNodeDBModel {
+module.exports = class MerkleTreeRootModel extends MerkleTreeNodeModel {
     
-    constructor(scope, schema = MerkleTreeRootDBSchemaBuilt,  data, type, creationOptions ){
+    constructor(scope, schema = MerkleTreeRootSchemaBuilt,  data, type, creationOptions ){
         super(scope, schema, data, type, creationOptions);
     }
     

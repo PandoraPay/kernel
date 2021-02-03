@@ -2,10 +2,10 @@ const DBModel = require("../../db/db-generic/db-model")
 const Model = require('../../marshal/model')
 const Exception = require("../../helpers/exception");
 
-const HashMapDBModel = require("./hash-map-db-model")
+const HashMapModel = require("./hash-map-model")
 const ArrayHelper = require( "../../helpers/array-helper");
 
-module.exports = class HashVirtualMapDBModel extends HashMapDBModel {
+module.exports = class HashVirtualMapModel extends HashMapModel {
 
     constructor(scope, schema, data, type, creationOptions) {
 

@@ -1,9 +1,9 @@
 const describe = require('../../../unit-testing/describe');
 const TestsHelper = require("../../../unit-testing/tests-helper");
 
-const HashMapDBModel = require("../../../../../src/data-structures/hash-map/hash-map-db-model");
+const HashMapModel = require("../../../../../src/data-structures/hash-map/hash-map-model");
 const DBModel = require("../../../../../src/db/db-generic/db-model");
-const {HashMapElementDBSchemaBuild} = require("../../../../../src/data-structures/hash-map/schema/hash-map-element-db-schema-build");
+const {HashMapElementSchemaBuild} = require("../../../../../src/data-structures/hash-map/schema/hash-map-element-schema-build");
 
 /**
  *
@@ -25,7 +25,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
             for (let i=0; i < count; i++){
                 const element = await hashmap.addMap ( ids[i], {data: data[i] } );
                 this.expect( element instanceof DBModel, true );
-                this.expect( element._schema instanceof HashMapElementDBSchemaBuild, true );
+                this.expect( element._schema instanceof HashMapElementSchemaBuild, true );
                 this.expect( element.data, data[i] );
             }
 
@@ -44,7 +44,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
             for (let i=0; i < count; i++) {
                 const element = await hashmap.getMap ( ids[i] );
                 this.expect( element instanceof DBModel, true );
-                this.expect( element._schema instanceof HashMapElementDBSchemaBuild, true );
+                this.expect( element._schema instanceof HashMapElementSchemaBuild, true );
                 this.expect( element.data, data[i] );
             }
 
@@ -61,7 +61,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
             for (let i=0; i < count; i++){
                 const element = promises[i];
                 this.expect( element instanceof DBModel, true );
-                this.expect( element._schema instanceof HashMapElementDBSchemaBuild, true );
+                this.expect( element._schema instanceof HashMapElementSchemaBuild, true );
                 this.expect( element.data, data[i] );
             }
 
@@ -78,7 +78,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
             for (let i=0; i < count; i++) {
                 const element = promises[i];
                 this.expect( element instanceof DBModel, true );
-                this.expect( element._schema instanceof HashMapElementDBSchemaBuild, true );
+                this.expect( element._schema instanceof HashMapElementSchemaBuild, true );
                 this.expect( element.data, newData[i] );
             }
 
@@ -89,7 +89,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
             for (let i=0; i < count; i++) {
                 const element = await hashmap.getMap ( ids[i] );
                 this.expect( element instanceof DBModel, true );
-                this.expect( element._schema instanceof HashMapElementDBSchemaBuild, true );
+                this.expect( element._schema instanceof HashMapElementSchemaBuild, true );
                 this.expect( element.data, newData[i] );
             }
 
@@ -116,7 +116,7 @@ module.exports = async function run (hashmap, name, selectedDB) {
         'Test Hash Map clearHashMap - step 1 ADD': async function () {
 
             const results = await Promise.all(  ids.map( (it, index) => hashmap.addMap ( it, {data: data[index] } )) );
-            await Promise.all(  results.map (it => this.expect( it instanceof DBModel && it._schema instanceof HashMapElementDBSchemaBuild, true)));
+            await Promise.all(  results.map (it => this.expect( it instanceof DBModel && it._schema instanceof HashMapElementSchemaBuild, true)));
 
         },
 
