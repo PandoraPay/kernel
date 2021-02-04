@@ -25,7 +25,6 @@ class RadixTreeSchemaBuild extends DBSchemaBuild {
 
                 root: {
                     type: "object",
-                    schemaBuiltClass: RadixTreeRootDBSchemaBuilt,
                     modelClass: RadixTreeRootModel,
 
                     position: 101,

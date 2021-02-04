@@ -41,7 +41,6 @@ class MerkleTreeSchemaBuild extends DBSchemaBuild{
 
                 root:{
                     type: "object",
-                    schemaBuiltClass: MerkleTreeRootSchemaBuilt,
                     modelClass: MerkleTreeRootModel,
 
                     setEvent(root){

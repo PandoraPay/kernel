@@ -36,7 +36,7 @@ const DBSchemaBuild = require( "./src/db/db-generic/schemas/db-schema-build");
 const BufferSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-schema-build");
 const BufferUniqueSchemaBuild = require( "./src/db/db-generic/schemas/samples/buffer-unique-schema-build");
 const NumberSchemaBuild = require( "./src/db/db-generic/schemas/samples/number-schema-build");
-const StringDBSchemaBuild = require( "./src/db/db-generic/schemas/samples/string-schema-build");
+const StringSchemaBuild = require( "./src/db/db-generic/schemas/samples/string-schema-build");
 
 const ClientsCluster = require( "./src/cluster/clients/clients-cluster");
 const DBModelHelper = require( "./src/db/db-generic/db-model-helper");
@@ -123,7 +123,7 @@ const library = {
 
     schemas :{
         BufferSchemaBuild,
-        StringDBSchemaBuild,
+        StringSchemaBuild,
         NumberSchemaBuild,
         BufferUniqueSchemaBuild,
     },
