@@ -122,6 +122,35 @@ module.exports = async function run () {
 
     describe("Merkle Trees tests", {
 
+        'Merkle Tree 0-9 nodes': async function (){
+
+            for (let length =0; length <= 9; length++){
+
+                const tree = new MerkleTreeModel(this._scope);
+                if (length){
+                    const data = TestsHelper.fillBuffer( length );
+                    tree.fillMerkleTree(data);
+                }
+                this.expect( tree.BFS.reduce( (res, it, index) => res &&  it.height === index, true), true);
+
+                const tree2 = new MerkleTreeModel(this._scope);
+                tree2.fromBuffer(tree.toBuffer());
+
+                this.expect(tree.hash(), tree2.hash());
+                this.expect(tree.count, tree2.count);
+                this.expect( tree2.BFS.reduce( (res, it, index) => res &&  it.height === index, true), true);
+
+                const tree3 = new MerkleTreeModel(this._scope);
+                tree3.fromJSON(tree.toJSON(true));
+
+                this.expect(tree.hash(), tree3.hash());
+                this.expect(tree.count, tree3.count);
+                this.expect( tree3.BFS.reduce( (res, it, index) => res &&  it.height === index, true), true);
+
+            }
+
+        },
+
         'Merkle Tree 12': async function () {
             
             const tree = new MerkleTreeModel(this._scope);

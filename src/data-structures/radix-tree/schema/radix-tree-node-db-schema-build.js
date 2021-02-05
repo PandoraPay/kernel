@@ -150,6 +150,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
                     type: "buffer",
                     fixedBytes: 32,
+                    minSize: 32,
+                    maxSize: 32,
 
                     skipHashing(){ return !this.pruned; },
                     skipMarshal(){ return !this.pruned; },

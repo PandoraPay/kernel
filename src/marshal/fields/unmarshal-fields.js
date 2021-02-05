@@ -116,11 +116,11 @@ module.exports = class UnmarshalFields {
      * BUFFER
      */
     static unmarshal_buffer(input, schemaField, field,  type, ){
-        return MarshalData.unmarshalBuffer( BufferReader.create(input), this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), false, true );
+        return MarshalData.unmarshalBuffer( BufferReader.create(input), this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), this.checkValue( schemaField.specifyLength, "specifyLength"), true );
     }
 
     static unmarshal_buffer_fromBuffer(input, schemaField,  field,  type,){
-        return MarshalData.unmarshalBuffer(input, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), this.checkValue( schemaField.specifyLength, "specifyLength") );
+        return MarshalData.unmarshalBuffer(input, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), this.checkValue( schemaField.specifyLength, "specifyLength"), false );
     }
 
 

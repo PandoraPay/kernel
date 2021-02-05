@@ -48,6 +48,17 @@ class MerkleTreeSchemaBuild extends DBSchemaBuild{
                         this._leavesNonPruned = undefined;
                     },
 
+                    skipSaving(){
+                        return this.count === 0;
+                    },
+
+                    skipMarshal(){
+                        return this.count === 0;
+                    },
+                    skipHashing(){
+                        return this.count === 0;
+                    },
+
                     position: 102,
                 },
 

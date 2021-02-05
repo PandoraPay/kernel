@@ -49,7 +49,7 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
                     },
 
                     skipHashing(){
-                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE || this.__data.pruned;
+                        return this.type === MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE || this.__data.pruned ;
                     },
 
                     skipSaving(){
@@ -95,6 +95,8 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
 
                     type: "buffer",
                     fixedBytes: 32,
+                    minSize: 32,
+                    maxSize: 32,
 
                     skipHashing(){
                         return !this.pruned;

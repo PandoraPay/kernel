@@ -65,6 +65,8 @@ module.exports = class MarshalData{
 
         }
 
+        const array = [];
+
         //let's remove leading zeros
         if (removeLeadingZeros){
 
@@ -81,18 +83,17 @@ module.exports = class MarshalData{
 
             }
 
-            if (specifyLength )
-                b = Buffer.concat( [ MarshalData.marshalNumber(b.length), b]);
-
             //specify how many zeros
-            b = Buffer.concat( [ MarshalData.marshalNumber(it), b]);
+            array.push( MarshalData.marshalNumber(it) );
 
-        } else
-            if (specifyLength )
-                b = Buffer.concat( [ MarshalData.marshalNumber(b.length), b]);
+        }
 
+        if (specifyLength )
+            array.push( MarshalData.marshalNumber(b.length) );
 
-        return b;
+        array.push(b);
+
+        return Buffer.concat(array);
 
     }
 

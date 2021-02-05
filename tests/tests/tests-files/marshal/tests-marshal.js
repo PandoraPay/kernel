@@ -3,6 +3,7 @@ const Model = require("../../../../src/marshal/model");
 const MarshalTests = require("../../tests-files/marshal/marshal-tests")
 const BN = require("bn.js")
 const SchemaBuild = require("../../../../src/marshal/schemas/schema-build");
+const BufferHelper = require("../../../../src/helpers/buffers/buffer-helper")
 
 /**
  *
@@ -66,6 +67,60 @@ module.exports = function run () {
 
         },
 
+        'many buffer tests': async function(){
+            const schema = { fields: {
+                field1: {
+                    type: "buffer",
+                    fixedBytes: 255,
+                },
+                field2: {
+                    type: "buffer",
+                    fixedBytes: 256,
+                    maxSize: 256,
+                },
+                field3: {
+                    type: "buffer",
+                    maxSize: 257,
+                    removeLeadingZeros: true,
+                },
+                field4:{
+                    type: "buffer",
+                    fixedBytes: 255,
+                    removeLeadingZeros: true,
+                },
+                field5:{
+                    type: "buffer",
+                    maxSize: 255,
+                    minSize: 0,
+
+                    removeLeadingZeros: true,
+                },
+                field6:{
+                    type: "buffer",
+                    maxSize: 255,
+                    minSize: 0,
+
+                    removeLeadingZeros: false,
+                }
+            } };
+            const schemaBuilt = new SchemaBuild(schema);
+            for (let i=0; i < 10000; i++){
+                const obj = new Model(this._scope, schemaBuilt, {
+                    field1: BufferHelper.generateRandomBuffer(255),
+                    field2: BufferHelper.generateRandomBuffer(256),
+                    field3: BufferHelper.generateRandomBuffer(i % 5 ? 255: 30),
+                    field4: BufferHelper.generateRandomBuffer(255),
+                    field5: BufferHelper.generateRandomBuffer(i % 5 ? 255: 30),
+                    field6: BufferHelper.generateRandomBuffer(i % 5 ? 255: 30),
+                }, "object", {skipProcessingConstructionValues: true} );
+
+                const obj2 = new Model(this._scope, schemaBuilt);
+                obj2.fromBuffer(obj.toBuffer() );
+
+                const obj3 = new Model(this._scope, schemaBuilt);
+                obj3.fromJSON(obj.toJSON(true));
+            }
+        },
 
         'buffer tests': async function () {
 

@@ -180,7 +180,7 @@ class SchemaBuild {
 
             //maybe min Size
             const minSize = this.checkValue( schemaField.minSize, "minSize" );
-            schemaField.default = defaultValues[schemaField.type].call(this, minSize);
+            schemaField.default = defaultValues[schemaField.type].call( undefined, minSize);
         }
 
     }
