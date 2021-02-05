@@ -9,7 +9,7 @@ module.exports = class Helper{
 
     static _mergeCloned(a, b ){
 
-        let c = {};
+        const c = {};
 
         if (a)
             for (const key in a)
@@ -18,7 +18,7 @@ module.exports = class Helper{
                     if (a[key] && typeof a[key] === "object" && a[key].constructor && a[key].constructor.name === "Object")
                         c[key] = Helper._mergeCloned( {}, a[ key ]) ;
                     else
-                    c[key] = a[key];
+                      c[key] = a[key];
 
                 }
 

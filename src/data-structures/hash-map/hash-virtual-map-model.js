@@ -140,7 +140,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
         }
 
         return false;
-    }element
+    }
 
     /**
      * Update will also create it if it doesn't exist

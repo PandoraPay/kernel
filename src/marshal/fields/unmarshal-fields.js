@@ -26,7 +26,7 @@ module.exports = class UnmarshalFields {
 
     static unmarshal_number_fromBuffer(input, schemaField){
 
-        const fixedBytes = MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes");
+        const fixedBytes = this.checkValue( schemaField.fixedBytes, "fixedBytes");
 
         if ( fixedBytes !== undefined )
             return  MarshalData.unmarshalNumberFixed(input, fixedBytes );
@@ -44,7 +44,7 @@ module.exports = class UnmarshalFields {
      */
     static _unmarshalLengthFromBuffer(input, schemaField){
 
-        const fixedBytes = MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes");
+        const fixedBytes = this.checkValue( schemaField.fixedBytes, "fixedBytes");
 
         if (fixedBytes)
             return fixedBytes;
@@ -57,11 +57,11 @@ module.exports = class UnmarshalFields {
      * STRING
      */
     static unmarshal_string(input, schemaField){
-        return MarshalData.decompressString(  MarshalData.unmarshalBuffer( BufferReader.create( MarshalData.compressString( input )), MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), false, false, true ) );
+        return MarshalData.decompressString(  MarshalData.unmarshalBuffer( BufferReader.create( MarshalData.compressString( input )), this.checkValue( schemaField.fixedBytes, "fixedBytes"), false, false, true ) );
     }
 
     static unmarshal_string_fromBuffer(input, schemaField, field,  type, ){
-        return MarshalData.unmarshalString( input, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call( this, schemaField.specifyLength, "specifyLength") );
+        return MarshalData.unmarshalString( input, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.specifyLength, "specifyLength") );
     }
 
     /**
@@ -85,7 +85,7 @@ module.exports = class UnmarshalFields {
 
     static unmarshal_array_fromBuffer( input, schemaField, field, type, callbackObject, createMarshalObject, unmarshalOptions ){
 
-        if ( MarshalHelper.checkValue.call( this, schemaField.maxSize, "maxSize" ) === 0 && schemaField.checkValue.call( this, schemaField.minSize, "minSize") === 0) return [];
+        if ( this.checkValue( schemaField.maxSize, "maxSize" ) === 0 && this.checkValue( schemaField.minSize, "minSize") === 0) return [];
 
         const array = [], length = UnmarshalFields._unmarshalLengthFromBuffer.call(this, input, schemaField );
         let element;
@@ -116,11 +116,11 @@ module.exports = class UnmarshalFields {
      * BUFFER
      */
     static unmarshal_buffer(input, schemaField, field,  type, ){
-        return MarshalData.unmarshalBuffer( BufferReader.create(input), MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call(this, schemaField.removeLeadingZeros, "removeLeadingZeros"), false, true );
+        return MarshalData.unmarshalBuffer( BufferReader.create(input), this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), false, true );
     }
 
     static unmarshal_buffer_fromBuffer(input, schemaField,  field,  type,){
-        return MarshalData.unmarshalBuffer(input, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call(this, schemaField.removeLeadingZeros, "removeLeadingZeros"), MarshalHelper.checkValue.call( this, schemaField.specifyLength, "specifyLength") );
+        return MarshalData.unmarshalBuffer(input, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), this.checkValue( schemaField.specifyLength, "specifyLength") );
     }
 
 

@@ -24,6 +24,8 @@ class SchemaBuild {
 
     constructor( schema = {} ) {
 
+        this.checkValue = MarshalHelper.checkValue.bind(this);
+
         this.fields = Helper.merge(  {}, schema.fields || {}, true);
         this.options = Helper.merge(  {
 
@@ -183,9 +185,7 @@ class SchemaBuild {
 
     }
 
-    checkValue(...args){
-        return MarshalHelper.checkValue.call(this, ...args);
-    }
+
 
 }
 

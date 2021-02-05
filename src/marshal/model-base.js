@@ -14,6 +14,8 @@ module.exports = class ModelBase {
 
     constructor(scope, schema, data, creationOptions = {}) {
 
+        this.checkValue = MarshalHelper.checkValue.bind(this);
+
         this._scope = {
             ...scope,
             ...creationOptions.scope||{},
@@ -225,11 +227,6 @@ module.exports = class ModelBase {
 
     }
 
-
-    checkValue(...args){
-        return MarshalHelper.checkValue.call(this, ...args);
-    }
-
     checkProperty(propertyName, fieldName ){
 
         const value = this._schema.fields[fieldName][propertyName];
@@ -253,7 +250,7 @@ module.exports = class ModelBase {
 
         if (checkEnabled && !this._schema.options.hashing.enabled) return Buffer.alloc(32);
 
-        const returnSpecificHash = this.checkValue(  this._schema.options.hashing.returnSpecificHash, "returnField");
+        const returnSpecificHash = this.checkValue(  this._schema.options.hashing.returnSpecificHash, "returnSpecificHash");
         if ( returnSpecificHash ) return returnSpecificHash;
 
         if ( !marshalOptions.onlyFields && this.__data.__hash) return this.__data.__hash;

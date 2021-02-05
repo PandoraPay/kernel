@@ -217,7 +217,10 @@ module.exports = class MasterCluster extends AsyncEvents {
                      * Worker aka Slave
                      */
 
-                    process.on("message", data =>  this.receivedData( process, data.msg, data.data ) );
+                    process.on("message", data =>  {
+                        if (data !== "sticky:balance")
+                            this.receivedData( process, data.msg, data.data )
+                    } );
 
                 }
 
@@ -278,6 +281,9 @@ module.exports = class MasterCluster extends AsyncEvents {
     }
 
     async receivedData(worker, message, data){
+
+        if (!data || typeof data !== "object")
+            throw new Exception(this, 'receivedData data is undefined or not an object');
 
         if (message === "confirmation"){
 

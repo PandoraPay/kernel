@@ -27,7 +27,7 @@ module.exports = class MarshalFields {
 
     static marshal_number_toBuffer(data, schemaField, ){
 
-        const fixedBytes = MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes");
+        const fixedBytes = this.checkValue( schemaField.fixedBytes, "fixedBytes");
 
         if (fixedBytes)
             return  MarshalData.marshalNumberFixed( data, fixedBytes );
@@ -43,11 +43,11 @@ module.exports = class MarshalFields {
      */
 
     static marshal_string( data, schemaField, text, callbackObject, type, marshalOptions ){
-        return MarshalData.decompressString(  MarshalData.marshalBuffer( MarshalData.compressString( data ), MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), false, false,  !marshalOptions.skipMarshalTrimming ) );
+        return MarshalData.decompressString(  MarshalData.marshalBuffer( MarshalData.compressString( data ), this.checkValue( schemaField.fixedBytes, "fixedBytes"), false, false,  !marshalOptions.skipMarshalTrimming ) );
     }
 
     static marshal_string_toBuffer( data, schemaField, text, callbackObject, type, marshalOptions  ){
-        return MarshalData.marshalString( data, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing ,  );
+        return MarshalData.marshalString( data, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing ,  );
     }
 
 
@@ -76,7 +76,7 @@ module.exports = class MarshalFields {
 
         const b = Buffer.concat(  MarshalFields.marshal_array(data, schemaField, text, callbackObject, type, marshalOptions ) );
 
-        if ( MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing  )
+        if ( this.checkValue( schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing  )
             return Buffer.concat ([  MarshalFields.marshal_number_toBuffer.call(this, data.length, schemaField, text, callbackObject, type, marshalOptions), b ]);
         else
             return b;
@@ -105,13 +105,13 @@ module.exports = class MarshalFields {
 
     static marshal_buffer(data, schemaField, text, callbackObject, type, marshalOptions = {}){
 
-        data = MarshalData.marshalBuffer(data, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call(this, schemaField.removeLeadingZeros, "removeLeadingZeros"), false, !marshalOptions.skipMarshalTrimming );
+        data = MarshalData.marshalBuffer(data, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), false, !marshalOptions.skipMarshalTrimming );
         return text ? data.toString("hex") : data;
 
     }
 
     static marshal_buffer_toBuffer(data, schemaField, text, callbackObject, type, marshalOptions = {}){
-        return MarshalData.marshalBuffer(data, MarshalHelper.checkValue.call(this, schemaField.fixedBytes, "fixedBytes"), MarshalHelper.checkValue.call(this, schemaField.removeLeadingZeros, "removeLeadingZeros"), MarshalHelper.checkValue.call(this, schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing && !marshalOptions.skipMarshalForHashing, );
+        return MarshalData.marshalBuffer(data, this.checkValue( schemaField.fixedBytes, "fixedBytes"), this.checkValue( schemaField.removeLeadingZeros, "removeLeadingZeros"), this.checkValue( schemaField.specifyLength, "specifyLength") && !marshalOptions.skipMarshalForHashing && !marshalOptions.skipMarshalForHashing, );
     }
 
     /**

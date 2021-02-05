@@ -11,8 +11,8 @@ class MarshalValidation {
 
         if (value.lt( new BN(0) )) throw "Value is less than 0";
 
-        if ( value.lt( MarshalHelper.checkValue.call( this, schemaField.minSize, "minSize") ) ) throw "Value is less than minSize";
-        if ( value.gt( MarshalHelper.checkValue.call( this, schemaField.maxSize, "maxSize") ) ) throw "Value is higher than maxSize";
+        if ( value.lt( this.checkValue( schemaField.minSize, "minSize") ) ) throw "Value is less than minSize";
+        if ( value.gt( this.checkValue( schemaField.maxSize, "maxSize") ) ) throw "Value is higher than maxSize";
 
     }
 
@@ -25,8 +25,8 @@ class MarshalValidation {
         if ( value < 0)throw "Value is less than 0";
         if (value >= Math.MAX_SAFE_INTEGER ) throw "Value is larger than MAX_SAFE_INTEGER";
 
-        if ( value < MarshalHelper.checkValue.call( this, schemaField.minSize, "minSize") ) throw "Value is less than minSize";
-        if ( value > MarshalHelper.checkValue.call( this, schemaField.maxSize, "maxSize") ) throw "Value is higher than maxSize";
+        if ( value < this.checkValue( schemaField.minSize, "minSize") ) throw "Value is less than minSize";
+        if ( value > this.checkValue( schemaField.maxSize, "maxSize") ) throw "Value is higher than maxSize";
 
     }
 
@@ -68,7 +68,7 @@ class MarshalValidation {
     static validate_object(value, schemaField){
 
         if ( !value ) {
-            const emptyAllowed = MarshalHelper.checkValue.call(this, schemaField.emptyAllowed, "emptyAllowed");
+            const emptyAllowed = this.checkValue( schemaField.emptyAllowed, "emptyAllowed");
             if (emptyAllowed) return true;
         }
 
@@ -81,8 +81,8 @@ class MarshalValidation {
 
     static _validateFieldArray(value, schemaField ){
 
-        if ( value.length > MarshalHelper.checkValue.call( this, schemaField.maxSize, "maxSize" ) ) throw "Array length is larger than max value";
-        if ( value.length < MarshalHelper.checkValue.call( this, schemaField.minSize, "minSize" )  && !( MarshalHelper.checkValue.call( this, schemaField.emptyAllowed, "emptyAllowed") && value.length === 0)) throw "Array length is smaller than minvalue";
+        if ( value.length > this.checkValue( schemaField.maxSize, "maxSize" ) ) throw "Array length is larger than max value";
+        if ( value.length < this.checkValue( schemaField.minSize, "minSize" )  && !( this.checkValue( schemaField.emptyAllowed, "emptyAllowed") && value.length === 0)) throw "Array length is smaller than minvalue";
 
     }
 
