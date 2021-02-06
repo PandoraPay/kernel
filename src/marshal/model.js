@@ -67,7 +67,7 @@ class Model extends ModelBase {
 
     _set(field, schemaField, new_value, checkIfValuesAreIdentical, validateEnabled = true, propagateChanges = true ){
 
-        new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value, schemaField);
+        new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value);
 
         if (schemaField._validatePresetSchemaField)
             new_value = schemaField._validatePresetSchemaField.call(this, new_value, schemaField);
@@ -133,7 +133,7 @@ class Model extends ModelBase {
 
         if ( dataValue !== undefined && !(dataValue instanceof Model) ){
 
-            dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue, schemaField );
+            dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue );
 
             //avoid processing values ( used in constructor )
             if (!creationOptions.skipProcessingConstructionValues) {
@@ -259,7 +259,7 @@ class Model extends ModelBase {
                 if (unmarshalOptions.isFieldSkipped )
                     if (!unmarshalOptions.isFieldSkipped.call(this, field, schemaField )) continue;
 
-                const data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ field ] : input, schemaField  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
+                const data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ field ] : input  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 
                 Object.getOwnPropertyDescriptor(this, field).set.call( this, data, false, !unmarshalOptions.loading, false );
 

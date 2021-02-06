@@ -108,7 +108,7 @@ module.exports = class ModelBase {
                 if (StringHelper.isHex(data)) type = "hex";
                 else
                     try {
-                        const object = JSON.parse(data);
+                        data = JSON.parse(data);
                         type = "json";
                     } catch (err) {
 

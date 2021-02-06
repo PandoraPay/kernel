@@ -99,6 +99,8 @@ class SchemaBuild {
 
             schemaField._validateSchemaField = MarshalValidation[`validate_${schemaField.type}`];
             schemaField._validatePreprocessingSchemaField = MarshalValidationPreProcessing[`preprocessing_${schemaField.type}`];
+            if (!schemaField._validatePreprocessingSchemaField)
+                schemaField._validatePreprocessingSchemaField = a => a;
 
             if (MarshalValidationPreSet[`preset_${schemaField.type}`])
                 schemaField._validatePresetSchemaField = MarshalValidationPreSet[`preset_${schemaField.type}`];
