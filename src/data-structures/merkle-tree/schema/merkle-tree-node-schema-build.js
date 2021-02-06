@@ -13,7 +13,8 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
 
                 table: {
                     default: "mNode",
-                    fixedBytes: 5,
+                    minSize: 5,
+                    maxSize: 5,
                 },
 
                 id: {
@@ -94,7 +95,6 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
                 prunedHash: {
 
                     type: "buffer",
-                    fixedBytes: 32,
                     minSize: 32,
                     maxSize: 32,
 

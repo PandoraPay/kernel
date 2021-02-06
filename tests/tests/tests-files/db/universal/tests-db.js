@@ -99,9 +99,13 @@ module.exports = async function run ( dbType ) {
                 fields: {
                     table:{
                         default: "TS1",
+                        minSize: 3,
+                        maxSize: 3,
                     },
                     id:{
                         default: "test_table_1_402",
+                        minSize: 16,
+                        maxSize: 16,
                     },
                 }
             }, true);
@@ -120,7 +124,7 @@ module.exports = async function run ( dbType ) {
 
             obj.id = "test_table_1_403";
 
-            obj.field1 = 777;
+            obj.field1 = 254;
             obj.field2 = "Remember, remember the 5th of November";
             obj.field4 = Buffer.from("0000000001", "hex");
 
@@ -144,9 +148,13 @@ module.exports = async function run ( dbType ) {
                 fields: {
                     table:{
                         default: "TS2",
+                        minSize: 3,
+                        maxSize: 3,
                     },
                     id:{
                         default: "test_table_2_402",
+                        minSize: 16,
+                        maxSize: 16,
                     },
                 }
             }, true);
@@ -184,9 +192,13 @@ module.exports = async function run ( dbType ) {
                 fields: {
                     table:{
                         default: "TS2",
+                        minSize: 3,
+                        maxSize: 3,
                     },
                     id:{
                         default: "test_table_2_402",
+                        minSize: 16,
+                        maxSize: 16,
                     },
                 }
             }, true);
@@ -276,7 +288,19 @@ module.exports = async function run ( dbType ) {
 
             const count = 42;
 
-            const schema = MarshalTests.testBufferSchema;
+            const schema = Helper.merge(  MarshalTests.testBufferSchema, {
+                fields: {
+                    table:{
+                        default: "TS2",
+                        minSize: 3,
+                        maxSize: 3,
+                    },
+                    id:{
+                        minSize: 7,
+                        maxSize: 10,
+                    },
+                }
+            }, true);
             const schemaBuilt = new DBSchemaBuild(schema);
 
             const obj = this.db.createModelInstance( schemaBuilt );

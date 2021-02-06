@@ -12,7 +12,8 @@ const testSimple2Schema = {
                 return Buffer.from("0000000000000000000004200004200004200000000000000000000000000000", "hex");
             },
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             removeLeadingZeros: true,
         },
         field1:{
@@ -21,7 +22,8 @@ const testSimple2Schema = {
                 return Buffer.from("0000000000000000000004200004200004200000000000000000000000000000", "hex");
             },
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             removeLeadingZeros: false,
         },
 
@@ -44,7 +46,8 @@ const testAdvancedSchema = {
 
         field0: {
             type: "buffer",
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             default: Buffer.from("0000000000000000000000AAFF00000000000000000000000000000000000000", "hex"),
         },
         field1: {

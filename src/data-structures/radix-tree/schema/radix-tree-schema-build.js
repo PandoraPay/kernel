@@ -14,12 +14,14 @@ class RadixTreeSchemaBuild extends DBSchemaBuild {
 
                 table: {
                     default: "radix",
-                    fixedBytes: 5,
+                    minSize: 5,
+                    maxSize: 5,
                 },
 
                 id:{
                     default: "radixTree",
-                    fixedBytes: 9,
+                    minSize: 9,
+                    maxSize: 9,
                     position: 100,
                 },
 

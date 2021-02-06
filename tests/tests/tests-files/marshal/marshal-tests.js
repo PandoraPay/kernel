@@ -10,7 +10,8 @@ const testMiniSchema =  {
                 return Buffer.from("0000000000000000000004200004200004200000000000000000000000000000", "hex");
             },
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             removeLeadingZeros: true,
         },
     }
@@ -25,8 +26,8 @@ const testSimpleSchema = {
 
         field1: {
             type: "number",
-            default: 420,
-            fixedBytes: 2,
+            default: 220,
+            maxSize: 255,
         },
 
         field2:{
@@ -50,7 +51,8 @@ const testSimpleSchema = {
             default (){
                 return Buffer.from("0011223344", "hex")
             },
-            fixedBytes: 5,
+            maxSize: 5,
+            minSize: 5,
         },
 
         field5: {
@@ -71,7 +73,7 @@ const testSimpleSchema = {
 
     output: [
         true,
-        420,
+        220,
         "ROOM_237",
         [],
         Buffer.from("0011223344", "hex"),
@@ -85,7 +87,8 @@ const testBufferSchema = {
         field0: {
             type: "buffer",
             default: Buffer.from("0011223344", "hex"),
-            fixedBytes: 5,
+            maxSize: 5,
+            minSize: 5,
         },
 
         field1: {
@@ -128,7 +131,8 @@ const testBufferSchema = {
             type: "buffer",
             default: Buffer.from("000000000000000000000063FF", "hex"),
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
 
             removeLeadingZeros: true,
         },
@@ -137,7 +141,8 @@ const testBufferSchema = {
             type: "buffer",
             default: Buffer.from("000000000000000000000063FF00000000000000000000000000000000000000", "hex"),
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
 
             removeLeadingZeros: true,
             specifyLength: true,
@@ -148,14 +153,16 @@ const testBufferSchema = {
             type: "buffer",
             default: Buffer.from("0000000000000000000000AAFF00000000000000000000000000000000000000", "hex"),
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
         },
 
         field8: {
             type: "buffer",
             default: Buffer.from("0000000000000000000000000000000000000000000100000000000000000000", "hex"),
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             specifyLength: true,
         },
 
@@ -163,7 +170,8 @@ const testBufferSchema = {
             type: "buffer",
             default: Buffer.from("0000000000000000000000000020000000000000000000000000000000000000", "hex"),
 
-            fixedBytes: 32,
+            minSize: 32,
+            maxSize: 32,
             removeLeadingZeros: true,
             specifyLength: true,
         },
@@ -213,21 +221,24 @@ const testStringSchema = {
         field0: {
             type: "string",
             default: '1929 THE GREAT CRASH 儿童游戏',
-            fixedBytes: 25,
+            minSize: 25,
+            maxSize: 25,
             specifyLength: true,
         },
 
         field1: {
             type: "string",
             default: '1929 THE GREAT CRASH 儿童游戏',
-            fixedBytes: 30,
+            minSize: 30,
+            maxSize: 30,
             specifyLength: true,
         },
 
         field2: {
             type: "string",
             default: '1929 THE GREAT CRASH 儿童游戏',
-            fixedBytes: 30,
+            minSize: 30,
+            maxSize: 30,
 
             specifyLength: true,
         },
@@ -256,14 +267,16 @@ const testStringSchema = {
         field6: {
             type: "string",
             default: 'WAS HERE',
-            fixedBytes: 255,
+            minSize: 255,
+            maxSize: 255,
         },
 
         field7: {
             type: "string",
             default: 'GL',
 
-            fixedBytes: 255,
+            minSize: 255,
+            maxSize: 255,
             specifyLength: true,
         },
     },

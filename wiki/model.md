@@ -33,7 +33,8 @@ Example of schema
                 default: 0,
                 negative: false,
                 
-                fixedBytes: 1,
+                minSize: 1,
+                maxSize: 1,
                    
             object:           
                 default: undefined,
@@ -44,10 +45,6 @@ Example of schema
             buffer:
                 default: Buffer.from(0),
                 
-                fixedBytes: 0,
-                
-                OR
-                
                 maxSize: 255,
                 minSize: 0,                                          
                 
@@ -57,10 +54,6 @@ Example of schema
             string:
                 default: '',
                 
-                fixedBytes: 0,
-                
-                OR                
-                
                 maxSize: 255,
                 minSize: 0,                                          
                 
@@ -69,10 +62,6 @@ Example of schema
                        
             array:
                 default: [],
-                
-                fixedBytes: 0,
-                
-                OR                
                 
                 maxSize: 255,
                 minSize: 0,

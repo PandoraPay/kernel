@@ -22,7 +22,6 @@ module.exports = class MarshalValidationPreProcessing{
     static preprocessing_array(value, schemaField){
 
         if (typeof value === "string") value = JSON.parse(value);
-
         return value;
 
     }

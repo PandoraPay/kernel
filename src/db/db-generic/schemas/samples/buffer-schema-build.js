@@ -10,7 +10,6 @@ class BufferSchemaBuild extends DBSchemaBuild {
             fields: {
                 buffer: {
                     type: "buffer",
-                    fixedBytes: 32,
                     minSize: 32,
                     maxSize: 32,
                 }

@@ -13,7 +13,8 @@ class MerkleTreeSchemaBuild extends DBSchemaBuild{
 
                 table: {
                     default: "merkle",
-                    fixedBytes: 6,
+                    minSize: 6,
+                    maxSize: 6,
                 },
 
                 id: {

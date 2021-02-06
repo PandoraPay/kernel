@@ -15,7 +15,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
                 table: {
                     default: "node",
-                    fixedBytes: 4,
+                    minSize: 4,
+                    maxSize: 4,
                 },
 
                 /**
@@ -121,7 +122,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     type: "array",
                     schemaBuiltClass: StringSchemaBuilt,
 
-                    fixedBytes(){ return this.childrenCount },
+                    minSize(){ return this.childrenCount },
+                    maxSize(){ return this.childrenCount },
 
                     skipHashing(){ return this.pruned },
                     skipSaving(){ return this.pruned },
@@ -136,7 +138,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     type: "array",
                     schemaBuiltClass: BufferSchemaBuilt,
 
-                    fixedBytes(){ return this.childrenCount; },
+                    minSize(){ return this.childrenCount; },
+                    maxSize(){ return this.childrenCount; },
 
                     skipHashing(){ return this.pruned },
                     skipSaving(){ return this.pruned },
@@ -149,7 +152,6 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                 prunedHash: {
 
                     type: "buffer",
-                    fixedBytes: 32,
                     minSize: 32,
                     maxSize: 32,
 

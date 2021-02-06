@@ -71,11 +71,12 @@ module.exports = function run () {
             const schema = { fields: {
                 field1: {
                     type: "buffer",
-                    fixedBytes: 255,
+                    minSize: 255,
+                    maxSize: 255,
                 },
                 field2: {
                     type: "buffer",
-                    fixedBytes: 256,
+                    minSize: 256,
                     maxSize: 256,
                 },
                 field3: {
@@ -85,7 +86,8 @@ module.exports = function run () {
                 },
                 field4:{
                     type: "buffer",
-                    fixedBytes: 255,
+                    minSize: 255,
+                    maxSize: 255,
                     removeLeadingZeros: true,
                 },
                 field5:{

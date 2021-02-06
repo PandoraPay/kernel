@@ -13,11 +13,13 @@ class HashMapElementSchemaBuild extends DBSchemaBuild {
 
                 table: {
                     default: "hashmap",
-                    fixedBytes: 7,
+                    minSize: 7,
+                    maxSize: 7,
                 },
 
                 id : {
-                    fixedBytes: 64,
+                    minSize: 64,
+                    maxSize: 64,
                     unique: true,
                 },
 

@@ -22,7 +22,8 @@ schema {
         table: {
             type: "string",
             default: "obj",
-            fixedBytes: 3,    
+            minSize: 3,    
+            maxSize: 3,    
             skipMarshal: true,
             skipSaving: true
         }

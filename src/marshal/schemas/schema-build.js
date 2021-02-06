@@ -1,6 +1,7 @@
 const BN = require('../../../node_modules/bn.js/lib/bn')
 
 const MarshalHelper = require( "../helpers/marshal-helper");
+const Exception  = require( "../../helpers/exception");
 const Helper = require( "../../helpers/helper");
 const MarshalValidation = require( "../fields/marshal-validation");
 const MarshalValidationPreProcessing = require( "../fields/marshal-validation-pre-processing");
@@ -142,18 +143,22 @@ class SchemaBuild {
 
             };
 
-        if (!schemaField.fixedBytes)
-            schemaField.fixedBytes = function () {
+        if (schemaField.fixedBytes)
+            throw new Exception(this, 'schemaField.fixedBytes should not be defined');
 
-                if (schemaField.type === "number")
-                    if ( this.checkValue( schemaField.maxSize, "maxSize") <= 255) return 1;
+        schemaField.fixedBytes = function () {
 
-                if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") {
-                    const minSize = this.checkValue(schemaField.minSize, "minSize");
-                    if ( minSize === this.checkValue(schemaField.maxSize, "maxSize")) return minSize;
-                }
+            if (schemaField.type === "number") {
+                if (this.checkValue(schemaField.maxSize, "maxSize") <= 255) return 1;
+            }
 
-            };
+            if (schemaField.type === "buffer" || schemaField.type === "array" || schemaField.type === "string") {
+                const minSize = this.checkValue(schemaField.minSize, "minSize");
+                const maxSize = this.checkValue(schemaField.maxSize, "maxSize");
+                if ( minSize === maxSize ) return minSize;
+            }
+
+        };
 
         if (!schemaField.specifyLength)
             schemaField.specifyLength = function () {
