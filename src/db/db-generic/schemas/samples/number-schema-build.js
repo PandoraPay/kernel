@@ -10,7 +10,6 @@ class NumberSchemaBuild extends DBSchemaBuild {
             fields: {
                 number: {
                     type: "number",
-                    fixedBytes: 7,
                 }
             },
 
