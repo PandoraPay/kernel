@@ -3,11 +3,7 @@ const StringHelper = require("../string-helper")
 module.exports = class BufferReader{
 
     static create(buffer){
-
-        if (buffer instanceof BufferReader) return buffer;
-
-        return new BufferReader(buffer)
-
+        return buffer instanceof BufferReader ? buffer :  new BufferReader(buffer)
     }
 
     constructor(buffer){
@@ -15,7 +11,10 @@ module.exports = class BufferReader{
         if (typeof buffer === "string"){
             if (StringHelper.isHex(buffer))
                 buffer = Buffer.from(buffer, "hex");
+            else throw "invalid string";
         }
+
+        if (!Buffer.isBuffer(buffer)) throw "invalid buffer input"
 
         this.buffer = buffer;
         this.length = buffer.length;
