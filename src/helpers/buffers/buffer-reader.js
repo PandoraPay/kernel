@@ -9,6 +9,8 @@ module.exports = class BufferReader{
     constructor(buffer){
 
         if (typeof buffer === "string"){
+            if (buffer === "") buffer = Buffer.alloc(0)
+            else
             if (StringHelper.isHex(buffer))
                 buffer = Buffer.from(buffer, "hex");
             else throw "invalid string";
