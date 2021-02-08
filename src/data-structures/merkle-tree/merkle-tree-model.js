@@ -47,7 +47,7 @@ module.exports = class MerkleTreeModel extends DBModel {
 
     }
 
-    fillMerkleTree( data,){
+    fillMerkleTree( data ){
 
         if (!data) throw new Exception(this, "data is invalid");
         if (!Array.isArray(data)) throw new Exception(this, "data is not an Array");
@@ -60,6 +60,7 @@ module.exports = class MerkleTreeModel extends DBModel {
         this.root.fillMerkleTreeNode(data,  0, this.levels );
         this._leaves = undefined;
 
+        return this.count;
     }
 
     resetCount(count = 0){
