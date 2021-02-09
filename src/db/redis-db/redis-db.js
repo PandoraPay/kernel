@@ -33,8 +33,6 @@ module.exports = class RedisDB extends GenericDatabase{
 
     async deleteAll( modelClass = this._scope.model, marshalSchemaBuilt, infix='', table, creationOptions = {} ){
 
-        creationOptions.skipValidation = true;
-
         const models = await this.findAll( modelClass, infix, table, undefined , creationOptions );
         const out = await Promise.all( models.map(  it => it.delete() ));
 

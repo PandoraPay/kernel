@@ -1,7 +1,7 @@
 const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
-const {BufferSchemaBuilt} = require( "../../../db/db-generic/schemas/samples/buffer-schema-build" );
-const {StringSchemaBuilt} = require("../../../db/db-generic/schemas/samples/string-schema-build");
+const {RadixHashBufferSchemaBuilt} = require( "./data/radix-hash-buffer-schema-build" );
+const {RadixLabelStringSchemaBuilt} = require("./data/radix-label-string-schema-build");
 const CryptoHelper = require( "../../../helpers/crypto/crypto-helper");
 const RadixTreeNodeTypeEnum = require('../radix-tree-node-type-enum')
 
@@ -30,7 +30,7 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     maxSize: 40,
 
                     default(){
-                        return this._scope.parent.childrenLabels[this._scope.parentIndex];
+                        return this._scope.parent.childrenLabels[this._scope.parentIndex].string;
                     },
 
                     setEvent(label){
@@ -46,6 +46,19 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     position: 101,
                 },
 
+                type: {
+                    type: "number",
+                    default(){
+                        return this.getType();
+                    },
+
+                    skipHashing: true,
+                    skipSaving: true,
+                    skipMarshal: true,
+
+                    position: 102,
+                },
+
                 id:{
 
                     minSize: 4,
@@ -57,17 +70,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
                     unique: true,
 
-                    position: 102,
-
-                },
-
-                type: {
-                    type: "number",
-                    default(){
-                        return this.getType();
-                    },
-
                     position: 103,
+
                 },
 
                 pruned: {
@@ -86,16 +90,16 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
                     type: "buffer",
                     minSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.pruned ? 1 : 0;
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.__data.pruned ? 1 : 0;
                     },
 
                     maxSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.pruned ? 262143 : 0;
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_LEAF && !this.__data.pruned ? 262143 : 0;
                     },
 
-                    skipHashing(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
-                    skipSaving() { return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
-                    skipMarshal(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.pruned ); },
+                    skipHashing(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.__data.pruned ); },
+                    skipSaving() { return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.__data.pruned ); },
+                    skipMarshal(){ return (this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE || this.__data.pruned ); },
 
                     position: 105,
                 },
@@ -105,49 +109,68 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     type: "number",
 
                     minSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.pruned ? 1 : 0;
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 1 : 0;
                     },
 
                     maxSize(){
-                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.pruned ? 16 : 0;
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 16 : 0;
                     },
 
                     position: 106,
-
                 },
 
 
                 childrenLabels: {
 
                     type: "array",
-                    schemaBuiltClass: StringSchemaBuilt,
+                    schemaBuiltClass: RadixLabelStringSchemaBuilt,
 
-                    minSize(){ return this.childrenCount },
-                    maxSize(){ return this.childrenCount },
+                    default: [],
 
-                    skipHashing(){ return this.pruned },
-                    skipSaving(){ return this.pruned },
-                    skipMarshal(){ return this.pruned },
+                    minSize(){ return this.__data.childrenCount },
+                    maxSize(){ return this.__data.childrenCount },
+
+                    skipHashing(){ return this.__data.pruned },
+                    skipSaving(){ return this.__data.pruned },
+                    skipMarshal(){ return this.__data.pruned },
 
                     position: 107,
 
                 },
 
-                childrenHashes:{
-
+                children: {
                     type: "array",
-                    schemaBuiltClass: BufferSchemaBuilt,
 
-                    minSize(){ return this.childrenCount; },
-                    maxSize(){ return this.childrenCount; },
+                    modelClass: undefined,
 
-                    skipHashing(){ return this.pruned },
-                    skipSaving(){ return this.pruned },
-                    skipMarshal(){ return this.pruned },
+                    default: [],
+
+                    minSize(){ return this.__data.childrenCount },
+                    maxSize(){ return this.__data.childrenCount },
+
+                    skipHashing(){ return this.__data.pruned },
+                    skipSaving(){ return this.__data.pruned },
+                    skipMarshal(){ return this.__data.pruned },
 
                     position: 108,
                 },
 
+                childrenHashes:{
+
+                    type: "array",
+                    schemaBuiltClass: RadixHashBufferSchemaBuilt,
+
+                    default: [],
+
+                    minSize(){ return this.__data.childrenCount; },
+                    maxSize(){ return this.__data.childrenCount; },
+
+                    skipHashing(){ return this.__data.pruned },
+                    skipSaving(){ return this.__data.pruned },
+                    skipMarshal(){ return this.__data.pruned },
+
+                    position: 109,
+                },
 
                 prunedHash: {
 
@@ -155,14 +178,14 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     minSize: 32,
                     maxSize: 32,
 
-                    skipHashing(){ return !this.pruned; },
-                    skipMarshal(){ return !this.pruned; },
+                    skipHashing(){ return !this.__data.pruned; },
+                    skipMarshal(){ return !this.__data.pruned; },
 
                     getter(){
-                        return this.pruned ? this.__data.prunedHash : this.hash();
+                        return this.__data.pruned ? this.__data.__data.prunedHash : this.hash();
                     },
 
-                    position: 109,
+                    position: 110,
                 },
 
 
@@ -176,7 +199,7 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     parentHashingPropagation: true,
 
                     returnSpecificHash(){
-                        return this.pruned ? this.__data.prunedHash : undefined ;
+                        return this.__data.pruned ? this.__data.prunedHash : undefined ;
                     },
 
                     fct: CryptoHelper.sha256

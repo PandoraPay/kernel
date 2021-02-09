@@ -1,7 +1,6 @@
 const DBSchemaBuild = require('../../../db/db-generic/schemas/db-schema-build')
 const Helper = require ('../../../helpers/helper')
 
-const {RadixTreeRootDBSchemaBuilt} = require('./radix-tree-root-db-schema-build')
 const RadixTreeRootModel = require('../radix-tree-root-model')
 
 class RadixTreeSchemaBuild extends DBSchemaBuild {

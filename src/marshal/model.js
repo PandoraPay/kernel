@@ -77,7 +77,7 @@ class Model extends ModelBase {
         return this.__data[field];
     }
 
-    _set(field, schemaField, new_value, checkIfValuesAreIdentical, validateEnabled = true, propagateChanges = true ){
+    _set(field, schemaField, new_value, checkIfValuesAreIdentical = true, validateEnabled = true, propagateChanges = true ){
 
         new_value = schemaField._validatePreprocessingSchemaField.call( this, new_value);
 

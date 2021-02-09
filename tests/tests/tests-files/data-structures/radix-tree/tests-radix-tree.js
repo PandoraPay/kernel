@@ -13,6 +13,7 @@ module.exports = async function run () {
 
     const radixTestDemo = [ "romane", "romanus", "romulus", "rubens", "ruber","rubicon","rubicundus", "rubicundo", "rubicundua"];
     let radixTest = radixTestDemo.slice(0);
+
     radixTest = radixTest.map( it => Buffer.from(it, "ascii") );
     radixTest = radixTest.map( it => Buffer.concat( [ it, Buffer.alloc(20 - it.length) ] ).toString("hex") );
 
@@ -147,7 +148,7 @@ module.exports = async function run () {
 
         "RadixTree wikipedia clearTree & check": async function (){
 
-            const tree = new RadixTree(this._scope);
+            const tree = new RadixTrelaceChile(this._scope);
             await tree.clearTree();
 
             for (const label of radixTest){

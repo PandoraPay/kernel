@@ -54,20 +54,6 @@ module.exports = class DBModel extends Marshal{
 
         await Promise.all( promises );
 
-        //deleting additional
-        if (this.savingAdditional){
-
-            const promises = [];
-
-            const objects = this.savingAdditional();
-
-            for (const object of objects)
-                promises.push(  object.delete( `${infix}${ object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : '' }`, undefined, undefined, db ) );
-
-            const out = await Promise.all(promises);
-
-        }
-
         return id||this.id;
     }
 
@@ -203,18 +189,6 @@ module.exports = class DBModel extends Marshal{
         }
 
         await multi.execAsync();
-
-        if (this.savingAdditional){
-
-            const promises = [];
-
-            const objects = this.savingAdditional();
-            for (const object of objects)
-                promises.push( object.save( `${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions, willSaveItself ) );
-
-            await Promise.all(promises);
-
-        }
 
         if (willSaveItself)
             this._saved();

@@ -1,14 +1,19 @@
-const Helper = require( "../../helpers/helper");
 const RadixTreeNodeModel = require("./radix-tree-node-model")
-const {RadixTreeRootDBSchemaBuilt} = require('./schema/radix-tree-root-db-schema-build')
+const {RadixTreeRootSchemaBuilt} = require('./schema/radix-tree-root-schema-build')
+
+RadixTreeRootSchemaBuilt.fields.children.modelClass = RadixTreeNodeModel;
 
 module.exports = class RadixTreeRootModel extends RadixTreeNodeModel {
 
-    constructor(scope, schema = RadixTreeRootDBSchemaBuilt,  data, type, creationOptions ){
+    constructor(scope, schema = RadixTreeRootSchemaBuilt,  data, type, creationOptions ){
 
         super(scope, schema, data, type, creationOptions);
         this.rootLoaded = false;
 
+    }
+
+    getNewId(){
+        return this._scope.parent.id + ":root";
     }
 
     onLoaded(){

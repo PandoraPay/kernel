@@ -11,7 +11,7 @@ module.exports ={
      */
 
     selectedDB: BROWSER ? "pouch" : "couch",
-    //selectedDB: "pouch" ,
+    // selectedDB: "pouch" ,
 
     create: true,
 

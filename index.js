@@ -59,14 +59,13 @@ const MerkleTreeNodeSchemaBuild = require( "./src/data-structures/merkle-tree/sc
 const MerkleTreeSchemaBuild = require( "./src/data-structures/merkle-tree/schema/merkle-tree-schema-build");
 
 const RadixTree = require( "./src/data-structures/radix-tree/radix-tree-model");
-const RadixTreeVirtual3Model = require( "./src/data-structures/radix-tree/radix-tree-virtual3-model");
 const RadixTreeVirtualModel = require( "./src/data-structures/radix-tree/radix-tree-virtual-model");
 const RadixTreeNodeModel = require( "./src/data-structures/radix-tree/radix-tree-node-model");
 const RadixTreeRootModel = require( "./src/data-structures/radix-tree/radix-tree-root-model");
 const RadixTreeNodeTypeEnum = require( "./src/data-structures/radix-tree/radix-tree-node-type-enum");
-const RadixTreeRootSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-root-db-schema-build");
+const RadixTreeRootSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-root-schema-build");
 const RadixTreeSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-schema-build");
-const RadixTreeNodeSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-node-db-schema-build");
+const RadixTreeNodeSchemaBuild = require( "./src/data-structures/radix-tree/schema/radix-tree-node-schema-build");
 
 const HashMapModel = require( "./src/data-structures/hash-map/hash-map-model");
 const HashVirtualMapModel = require( "./src/data-structures/hash-map/hash-virtual-map-model");
@@ -144,7 +143,6 @@ const library = {
 
         radixTree:{
             RadixTree,
-            RadixTreeVirtual3Model,
             RadixTreeVirtualModel,
             RadixTreeNodeModel,
             RadixTreeRootModel,
