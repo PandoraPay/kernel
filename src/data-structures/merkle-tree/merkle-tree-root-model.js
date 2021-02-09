@@ -15,7 +15,7 @@ module.exports = class MerkleTreeRootModel extends MerkleTreeNodeModel {
         this.level = 0;
         this.height = 0;
 
-        if (this.tree.count === 0 )
+        if (this.tree.__data.count === 0 )
             this.type = MerkleTreeNodeTypeEnum.MERKLE_TREE_EMPTY_ROOT_LEAF;
         else
             this.type = MerkleTreeNodeTypeEnum.MERKLE_TREE_NODE;
@@ -23,7 +23,7 @@ module.exports = class MerkleTreeRootModel extends MerkleTreeNodeModel {
 
     leaves(levels) {
 
-        if (this.children.length === 0) return [];
+        if (this.__data.children.length === 0) return [];
 
         return super.leaves.call(this, levels);
 

@@ -17,6 +17,18 @@ const MarshalHelper = require( "./helpers/marshal-helper");
  *
  */
 
+const defaultValues = {
+
+    number: minSize => minSize,
+    bigNumber: minSize => new BN( minSize ),
+    string:  minSize => Array( minSize + 1 ).join('X') ,
+    buffer:  minSize => Buffer.alloc( minSize ),
+    array:  () =>[] ,
+    boolean: () => false,
+    object: () => undefined,
+
+};
+
 
 class Model extends ModelBase {
 
@@ -135,7 +147,7 @@ class Model extends ModelBase {
 
             dataValue = schemaField._validatePreprocessingSchemaField.call( this, dataValue );
 
-            //avoid processing values ( used in constructor )
+            //avoid processindataValueg values ( used in constructor )
             if (!creationOptions.skipProcessingConstructionValues) {
                 const fct = dataType === "buffer" ? '_unmarshalSchemaFieldFromBuffer' : '_unmarshalSchemaField';
                 dataValue = schemaField[fct].call(this, dataValue, schemaField, field, dataType, undefined, this._createModelObject.bind(this), MarshalHelper.constructOptionsCreation(creationOptions, field));
@@ -148,6 +160,12 @@ class Model extends ModelBase {
         if (dataValue === undefined || ( this._schema.options.returnOnlyField && this._schema.options.returnOnlyField !== field ) ) {
 
             dataValue = schemaField.default;
+            if (dataValue === undefined){
+                //maybe min Size
+                const minSize = this.checkValue( schemaField.minSize, "minSize" );
+                dataValue = defaultValues[schemaField.type].call( undefined, minSize);
+            }
+
             if (typeof dataValue === "function") dataValue = dataValue.call(this, schemaField);
             else if ( !dataValue && schemaField.type === "object" && !this.checkValue(schemaField.emptyAllowed, "emptyAllowed"))
                 dataValue = this._createModelObject({}, "object", field, schemaField, undefined, 0, MarshalHelper.constructOptionsCreation(creationOptions, field));
@@ -302,6 +320,8 @@ class Model extends ModelBase {
 
         Object.getOwnPropertyDescriptor(this, fieldName).set.call( this, array, false, true, true );
 
+        for (let i=position; i < array.length; i++)
+            array[i].parentIndex = i;
 
     }
 

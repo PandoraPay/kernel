@@ -8,9 +8,6 @@ const RedisDB = BROWSER ? undefined : require( "./redis-db/redis-db" );
 class DBConstructor{
 
     constructor(){
-
-        this._schemas = {};
-
     }
 
 

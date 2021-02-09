@@ -63,6 +63,7 @@ class MerkleTreeNodeModel extends DBModel {
     addChild(child){
 
         child._scope.parent = this;
+        child._scope.parentIndex = this.__data.children.length;
         this.children = [...this.__data.children, child];
 
     }
@@ -72,14 +73,14 @@ class MerkleTreeNodeModel extends DBModel {
         if (this.level === levels)
             return [this];
 
-        if (this.children.length === 0)
+        if (this.__data.children.length === 0)
             return [];
 
-        if (this.children.length === 1)
-            return this.children[0].leaves(levels);
+        if (this.__data.children.length === 1)
+            return this.__data.children[0].leaves(levels);
 
-        if (this.children.length === 2)
-            return this.children[0].leaves(levels).concat ( this.children[1].leaves(levels) )
+        if (this.__data.children.length === 2)
+            return this.__data.children[0].leaves(levels).concat ( this.__data.children[1].leaves(levels) )
 
         throw new Exception(this, "children as more than 2 children!!!");
 
@@ -101,14 +102,14 @@ class MerkleTreeNodeModel extends DBModel {
     }
 
     DFS(){
-        if (this.children.length === 0)
+        if (this.__data.children.length === 0)
             return [this];
         else
-        if (this.children.length === 1)
-            return this.children[0].DFS().concat ( this );
+        if (this.__data.children.length === 1)
+            return this.__data.children[0].DFS().concat ( this );
         else
-        if (this.children.length === 2)
-            return this.children[0].DFS().concat ( this.children[1].DFS() , this);
+        if (this.__data.children.length === 2)
+            return this.__data.children[0].DFS().concat ( this.__data.children[1].DFS() , this);
     }
     
 }

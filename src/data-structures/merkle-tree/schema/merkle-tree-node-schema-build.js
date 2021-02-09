@@ -22,7 +22,7 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
                         return this.height.toString();
                     },
                     minSize: 0,
-                    maxSize: 15,
+                    maxSize: 8,
 
                     unique: true,
                 },
@@ -99,14 +99,14 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
                     maxSize: 32,
 
                     skipHashing(){
-                        return !this.pruned;
+                        return !this.__data.pruned;
                     },
                     skipMarshal(){
-                        return !this.pruned;
+                        return !this.__data.pruned;
                     },
 
                     getter(){
-                        return this.pruned ? this.__data.prunedHash : this.hash();
+                        return this.__data.pruned ? this.__data.prunedHash : this.hash();
                     },
 
                     position: 1000,
@@ -124,7 +124,7 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
                     parentHashingPropagation: true,
 
                     returnSpecificHash(){
-                        return this.pruned ? this.prunedHash : undefined;
+                        return this.__data.pruned ? this.__data.prunedHash : undefined;
                     },
 
                     fct: CryptoHelper.sha256,

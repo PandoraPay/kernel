@@ -29,7 +29,7 @@ module.exports = class MerkleTreeModel extends DBModel {
     /**
      * counts per level used to calculate the height of a node by doing DFS creation
      */
-    _calculateLevelsCounts(count = this.count){
+    _calculateLevelsCounts(count = this.__data.count){
 
         let level = this.levels, c = count, lengths = [ 1 ];
         do{
@@ -60,37 +60,37 @@ module.exports = class MerkleTreeModel extends DBModel {
         this.root.fillMerkleTreeNode(data,  0, this.levels );
         this._leaves = undefined;
 
-        return this.count;
+        return this.__data.count;
     }
 
     resetCount(count = 0){
-        this.count = count;
+        this.__data.count = count;
         this._setCount(count);
     }
 
     leaves(){
         if (this._leaves) return this._leaves;
 
-        if (this.root.children.length === 0) return [];
+        if (this.__data.root.children.length === 0) return [];
 
-        this._leaves = this.root.leaves( this.levels );
+        this._leaves = this.__data.root.leaves( this.levels );
         return this._leaves;
     }
 
     leavesNonPruned(){
         if (this._leavesNonPruned) return this._leavesNonPruned;
 
-        if (this.root.children.length === 0) return [];
+        if (this.__data.root.children.length === 0) return [];
 
-        this._leavesNonPruned = this.root.leaves( this.levels );
-        this._leavesNonPruned.filter( it => !it.pruned );
+        this._leavesNonPruned = this.__data.root.leaves( this.levels );
+        this._leavesNonPruned.filter( it => !it.__data.pruned );
 
         return this._leavesNonPruned;
     }
 
     get totalNodes(){
 
-        let size =0 , c = this.count;
+        let size =0 , c = this.__data.count;
         while (c > 1){
             size += c ;
             c = Math.round( c /2 );
@@ -100,17 +100,17 @@ module.exports = class MerkleTreeModel extends DBModel {
     }
 
     get BFS(){
-        return this.root.BFS();
+        return this.__data.root.BFS();
     }
 
     get DFS(){
-        return this.root.DFS();
+        return this.__data.root.DFS();
     }
 
     printLeafNodes(){
         const leaves = this.leaves();
 
-        const text = leaves.map ( it => it.data.toString("hex") );
+        const text = leaves.map ( it => it.__data.data.toString("hex") );
 
         console.log( text.join(" , ") );
     }
@@ -132,7 +132,7 @@ module.exports = class MerkleTreeModel extends DBModel {
         prunedLeaves.map( it => prunedLeavesMap[it] = true );
 
         const height = this.levelsCounts[this.levelsCounts.length-2];
-        for (let i=0; i < this.count; i ++) {
+        for (let i=0; i < this.__data.count; i ++) {
 
             if (prunedLeavesMap[i])
                 prunedHeightsMap[i + height] = true;
@@ -234,7 +234,7 @@ module.exports = class MerkleTreeModel extends DBModel {
 
         const newCallback = function ( obj, marshalOptions, type, text ) {
 
-            const prevPruned = obj.pruned;
+            const prevPruned = obj.__data.pruned;
             if (prunedHeights[obj.height] && !prevPruned){
                 const hash = obj.hash();
                 obj.pruned = true;
@@ -310,7 +310,7 @@ module.exports = class MerkleTreeModel extends DBModel {
         const leaves = this.leaves();
 
         //Verify number of leaves
-        if ( leaves.length !== this.count)
+        if ( leaves.length !== this.__data.count)
             throw new Exception(this, "Number of leaves is incorrect");
 
         // TODO verify heights

@@ -50,14 +50,14 @@ class MerkleTreeSchemaBuild extends DBSchemaBuild{
                     },
 
                     skipSaving(){
-                        return this.count === 0;
+                        return this.__data.count === 0;
                     },
 
                     skipMarshal(){
-                        return this.count === 0;
+                        return this.__data.count === 0;
                     },
                     skipHashing(){
-                        return this.count === 0;
+                        return this.__data.count === 0;
                     },
 
                     position: 102,

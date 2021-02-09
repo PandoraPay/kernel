@@ -9,17 +9,7 @@ const MarshalValidationPreSet = require( "../fields/marshal-validation-pre-set")
 const MarshalFields = require( "../fields/marshal-fields");
 const UnmarshalFields = require( "../fields/unmarshal-fields");
 
-const defaultValues = {
 
-    number: minSize => minSize,
-    bigNumber: minSize => new BN( minSize ),
-    string:  minSize => Array( minSize + 1 ).join('X') ,
-    buffer:  minSize => Buffer.alloc( minSize ),
-    array:  () =>[] ,
-    boolean: () => false,
-    object: () => undefined,
-
-};
 
 class SchemaBuild {
 
@@ -181,14 +171,6 @@ class SchemaBuild {
                     if (this.checkValue( schemaField.minSize, "minSize") === 0 && this.checkValue( schemaField.maxSize, "maxSize") === 0) return true;
 
             };
-
-        //mapping default values
-        if (!schemaField.default) {
-
-            //maybe min Size
-            const minSize = this.checkValue( schemaField.minSize, "minSize" );
-            schemaField.default = defaultValues[schemaField.type].call( undefined, minSize);
-        }
 
     }
 
