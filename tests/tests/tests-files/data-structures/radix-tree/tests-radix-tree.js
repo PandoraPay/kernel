@@ -111,15 +111,12 @@ module.exports = async function run () {
 
                 await tree.addRadix(label, data );
 
-                tree.validateVirtualMap();
-
                 const find = await tree.findRadix( label );
                 this.expect(find.result, true);
 
                 let find2 = await tree.findRadixLeaf(label);
                 this.expect( !!find2, true);
             }
-            tree.validateVirtualMap();
 
             await tree.saveTree();
 
@@ -132,7 +129,6 @@ module.exports = async function run () {
                 let find2 = await tree.findRadixLeaf(label);
                 this.expect( !!find2, true);
             }
-            tree.validateVirtualMap();
 
             tree = new RadixTree(this._scope);
             for (const label of radixTest){

@@ -60,8 +60,6 @@ module.exports = async function run (selectedDB) {
                 this.expect( find.data, it.data );
             }
 
-            tree.validateVirtualMap();
-
             await tree.saveTree();
 
         },
@@ -93,9 +91,9 @@ module.exports = async function run (selectedDB) {
                 randomDataDeleted[del] = true;
 
                 try{
+
                     await tree.deleteRadix( randomLabels[del] );
 
-                    tree.validateVirtualMap();
                 }catch(err){
                     console.log("i", i);
                     throw err;
@@ -105,8 +103,6 @@ module.exports = async function run (selectedDB) {
                 this.expect( find, undefined );
 
             }
-
-            tree.validateVirtualMap();
 
             for (let i=0; i < randomData.length; i++){
                 let find = await tree.findRadixLeaf( randomLabels[i] );
@@ -167,8 +163,6 @@ module.exports = async function run (selectedDB) {
             for (const it of randomDatum)
                 await tree.addRadix( it.label, it.data );
 
-            tree.validateVirtualMap();
-
             await tree.saveTree();
 
         },
@@ -197,8 +191,6 @@ module.exports = async function run (selectedDB) {
                 this.expect( !!find22, false );
 
             }
-
-            tree.validateVirtualMap();
 
             await tree.saveTree();
 

@@ -145,6 +145,7 @@ module.exports = class RadixTreeModel extends DBModel {
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
+            childrenCount: 0,
             children: [],
         });
 
@@ -196,7 +197,7 @@ module.exports = class RadixTreeModel extends DBModel {
 
             //toDeleteParent had 2 children, but now it will have 0
             if (save)
-                await this._deleteNode(toDeleteParent);
+                await this._deleteNode( toDeleteParent );
 
         } else {
             node.parent.removeChild(node);
@@ -204,7 +205,7 @@ module.exports = class RadixTreeModel extends DBModel {
 
 
         if (save){
-            await this._deleteNode(node);
+            await this._deleteNode( node );
             await this._saveNode( this.root );
         }
 
@@ -218,9 +219,7 @@ module.exports = class RadixTreeModel extends DBModel {
 
         try{
 
-            const obj = this.root._createModelObject(  {
-                label,
-            }, "object", "children" );
+            const obj = this.root._createSimpleModelObject(  this.root._schema.childrenModelClass, undefined, "children", {}, "object", undefined, {loading: true} );
 
             obj.label = label;
 
@@ -309,9 +308,24 @@ module.exports = class RadixTreeModel extends DBModel {
         return out.node;
     }
 
+    createEmptyChild(  parent, position){
+        return parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
+    }
+
+    createDataChild( parent, data, position){
+
+        const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", data, "object", position, );
+        child.children = data.children;
+        for (let i=0; i < child.children.length; i++)
+            if (child.children[i])
+                child.children[i].parent = child;
+
+        return child;
+    }
+
     async loadNodeChild(label, position, parent){
 
-        const child = parent.createEmptyChild( position);
+        const child = this.createEmptyChild( parent, position);
 
         await child.load( parent.id + label );
 

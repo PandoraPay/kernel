@@ -34,14 +34,6 @@ class RadixTreeNodeModel extends DBModel {
         return this._scope.parent.id.length - this.tree.root.id.length + this.label.length === 40  ? RadixTreeNodeTypeEnum.RADIX_TREE_LEAF : RadixTreeNodeTypeEnum.RADIX_TREE_NODE;
     }
 
-    createEmptyChild(  position){
-        return this._createSimpleModelObject( this._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
-    }
-
-    createDataChild( data, position){
-        return this._createSimpleModelObject( this._schema.childrenModelClass, undefined,  "children", data, "object", position, undefined, );
-    }
-
     //insert it lexicographically by keeping it sorted
     addChild(label, data ){
 
@@ -53,8 +45,7 @@ class RadixTreeNodeModel extends DBModel {
 
         this.pushArray("childrenLabels", { string: label }, "object", undefined, i);
 
-        const child = this.createDataChild( data, i );
-        child.children = data.children;
+        const child = this.tree.createDataChild( this, data, i );
 
         this.pushArray("childrenHashes", { buffer: child.hash() }, "object", undefined, i);
 
@@ -113,7 +104,7 @@ class RadixTreeNodeModel extends DBModel {
         newLabels.splice(i2, 0, newLabelObject );
         this.childrenLabels = newLabels;
 
-        const newChild = this.createDataChild( newChildData, i2 );
+        const newChild = this.tree.createDataChild( this, newChildData, i2 );
         newChildren.splice(i2, 0, newChild );
         this.children = newChildren;
 
