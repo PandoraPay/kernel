@@ -201,16 +201,14 @@ module.exports = class MerkleTreeModel extends DBModel {
 
         unmarshalOptions.isFieldSkipped = function ( field, schema ) {
 
-            if (!prunedHeights[this.height]) return true;
+            if (!prunedHeights[this.height]) return;
 
             if (field === "pruned" ) {
                 this.pruned = true;
-                return false;
+                return true;
             }
 
-            if (field === "children") return false;
-
-            return true;
+            if (field === "children") return true;
 
         };
 

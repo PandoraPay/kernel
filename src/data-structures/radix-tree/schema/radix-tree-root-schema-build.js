@@ -12,19 +12,19 @@ class RadixTreeRootSchemaBuild extends RadixTreeNodeSchemaBuild {
 
                 label: {
                     minSize: 0,
-                    maxSize: 0,
+                    maxSize: 40,
                     default: '',
                 },
 
-                type: {
-                    default: RadixTreeNodeTypeEnum.RADIX_TREE_NODE,
+                childrenCount:{
+                    minSize(){
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 0 : 0;
+                    },
+
+                    maxSize(){
+                        return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 16 : 0;
+                    },
                 },
-
-                data: undefined,
-
-                childrenCount: {
-                    minSize: 0,
-                }
 
             },
 

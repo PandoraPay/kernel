@@ -71,11 +71,9 @@ module.exports = async function run (selectedDB) {
             const tree = new RadixTree(this._scope);
 
             for (let i=0; i < randomData.length; i++){
-
                 let find = await tree.findRadixLeaf( randomLabels[i] );
                 this.expect( !!find, true );
                 this.expect( find.data, MarshalData.marshalNumber(i) );
-
             }
 
         },

@@ -23,7 +23,7 @@ const defaultValues = {
     bigNumber: minSize => new BN( minSize ),
     string:  minSize => Array( minSize + 1 ).join('X') ,
     buffer:  minSize => Buffer.alloc( minSize ),
-    array:  () =>[] ,
+    array:  minSize =>Array(minSize),
     boolean: () => false,
     object: () => undefined,
 
@@ -275,7 +275,7 @@ class Model extends ModelBase {
                 const schemaField = this._schema.fields[field];
 
                 if (unmarshalOptions.isFieldSkipped )
-                    if (!unmarshalOptions.isFieldSkipped.call(this, field, schemaField )) continue;
+                    if (unmarshalOptions.isFieldSkipped.call(this, field, schemaField )) continue;
 
                 const data =  schemaField[fct].call( this, schemaField._validatePreprocessingSchemaField.call( this, isObject && typeof input === "object" ? input[ field ] : input  ) , schemaField, field, type, callbackObject, this._createModelObject.bind(this), MarshalHelper.constructOptionsUnmarshaling(unmarshalOptions, field)  );
 

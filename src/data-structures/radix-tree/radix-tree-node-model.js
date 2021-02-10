@@ -8,6 +8,18 @@ class RadixTreeNodeModel extends DBModel {
 
     constructor(scope, schema = RadixTreeNodeSchemaBuilt,  data, type, creationOptions){
         super(scope, schema, data, type, creationOptions);
+        this.children = [];
+    }
+
+    savingAdditional(){
+
+        const array = [];
+        for (let child in this.children)
+            if (this.children[child])
+                array.push(this.children[child]);
+
+        return array;
+
     }
 
     init(data){
@@ -22,6 +34,14 @@ class RadixTreeNodeModel extends DBModel {
         return this._scope.parent.id.length - this.tree.root.id.length + this.label.length === 40  ? RadixTreeNodeTypeEnum.RADIX_TREE_LEAF : RadixTreeNodeTypeEnum.RADIX_TREE_NODE;
     }
 
+    createEmptyChild(  position){
+        return this._createSimpleModelObject( this._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
+    }
+
+    createDataChild( data, position){
+        return this._createSimpleModelObject( this._schema.childrenModelClass, undefined,  "children", data, "object", position, undefined, );
+    }
+
     //insert it lexicographically by keeping it sorted
     addChild(label, data ){
 
@@ -32,8 +52,20 @@ class RadixTreeNodeModel extends DBModel {
         this.childrenCount = this.__data.childrenCount + 1;
 
         this.pushArray("childrenLabels", { string: label }, "object", undefined, i);
-        const child = this.pushArray("children", data, "object", undefined, i);
+
+        const child = this.createDataChild( data, i );
+        child.children = data.children;
+
         this.pushArray("childrenHashes", { buffer: child.hash() }, "object", undefined, i);
+
+        if ( i < this.children.length ) this.children.splice( i, 0, child );
+        else this.children[i] = child;
+
+        for (let j = Math.max(i-1, 0); j < this.__data.childrenCount; j++)
+            if (this.children[j]){
+                this.children[j].parent = this;
+                this.children[j].parentIndex = j;
+            }
 
         return child;
     }
@@ -46,9 +78,13 @@ class RadixTreeNodeModel extends DBModel {
 
         this.removeArray("childrenLabels", i);
         this.removeArray("childrenHashes", i);
-        this.removeArray("children", i);
+
+        this.children.splice(i, 1);
+        for (let j = Math.max(i-1, 0); j < this.__data.childrenCount; j++)
+            if (this.children[j]) this.children[j].parentIndex = j;
 
         child.parent = null;
+        child.parentIndex = null;
 
         return true;
     }
@@ -64,7 +100,7 @@ class RadixTreeNodeModel extends DBModel {
         const newHashes = this.__data.childrenHashes.slice();
         newHashes.splice(i, 1);
 
-        const newChildren = this.__data.children.slice();
+        const newChildren = this.children.slice();
         newChildren.splice(i, 1);
 
         //add
@@ -77,7 +113,7 @@ class RadixTreeNodeModel extends DBModel {
         newLabels.splice(i2, 0, newLabelObject );
         this.childrenLabels = newLabels;
 
-        const newChild = this._createModelObject( newChildData, "object", "children", undefined,  undefined, i2 );
+        const newChild = this.createDataChild( newChildData, i2 );
         newChildren.splice(i2, 0, newChild );
         this.children = newChildren;
 
@@ -89,7 +125,7 @@ class RadixTreeNodeModel extends DBModel {
         for (let j = Math.max(0, Math.min( i-1, i2-1 )); j < this.__data.childrenCount; j++) {
             this.__data.childrenLabels[j].parentIndex = j;
             this.__data.childrenHashes[j].parentIndex = j;
-            if (this.__data.children[j]) this.__data.children[j].parentIndex = j;
+            if (this.children[j]) this.children[j].parentIndex = j;
         }
 
         return newChild;
@@ -115,15 +151,15 @@ class RadixTreeNodeModel extends DBModel {
 
         if ( position === undefined) throw new Exception(this, "Child not found", label);
 
-        if (this.__data.children[position])
-            return this.__data.children[position];
+        if (this.children[position])
+            return this.children[position];
 
         const child = await this.tree.loadNodeChild(label, position, this );
 
         if (!child)
             throw new Exception(this, "Child was not loaded");
 
-        this.__data.children[position] = child;
+        this.children[position] = child;
         child.parentIndex = position;
 
         return child;
@@ -133,7 +169,7 @@ class RadixTreeNodeModel extends DBModel {
 
         const promises = [];
         for (let i = 0; i < this.__data.childrenCount; i++)
-            if (!this.__data.children[i])
+            if (!this.children[i])
                 promises.push(this.loadChild(this.__data.childrenLabels[i].string, i));
 
         return Promise.all(promises);
@@ -175,7 +211,7 @@ class RadixTreeNodeModel extends DBModel {
             await this.loadChildren();
 
         const promises = [];
-        for (const child of this.__data.children)
+        for (const child of this.children)
             promises.push( child.leaves(loadChildren) );
         const out = await Promise.all(promises);
 
@@ -199,7 +235,7 @@ class RadixTreeNodeModel extends DBModel {
             await this.loadChildren();
 
         const promises = [];
-        for (const child of this.__data.children)
+        for (const child of this.children)
             promises.push ( child.DFS(loadChildren) );
         const out = await Promise.all(promises);
 
@@ -225,7 +261,7 @@ class RadixTreeNodeModel extends DBModel {
             await this.loadChildren();
 
         const promises = [];
-        for (const child of this.__data.children)
+        for (const child of this.children)
             promises.push( child.BFS(loadChildren) );
         const out = await Promise.all(promises);
 
@@ -252,6 +288,6 @@ class RadixTreeNodeModel extends DBModel {
 
 }
 
-RadixTreeNodeSchemaBuilt.fields.children.modelClass = RadixTreeNodeModel;
+RadixTreeNodeSchemaBuilt.childrenModelClass = RadixTreeNodeModel;
 
 module.exports = RadixTreeNodeModel;

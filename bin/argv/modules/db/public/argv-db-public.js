@@ -10,8 +10,8 @@ module.exports ={
      * REDIS is not supported as it is not memory intensive
      */
 
-    selectedDB: BROWSER ? "pouch" : "couch",
-    // selectedDB: "pouch" ,
+    //selectedDB: BROWSER ? "pouch" : "couch",
+    selectedDB: "pouch" ,
 
     create: true,
 

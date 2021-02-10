@@ -30,6 +30,7 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     maxSize: 40,
 
                     default(){
+                        if (!this._scope.parent.childrenLabels[this._scope.parentIndex]) return '';
                         return this._scope.parent.childrenLabels[this._scope.parentIndex].string;
                     },
 
@@ -125,8 +126,6 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     type: "array",
                     schemaBuiltClass: RadixLabelStringSchemaBuilt,
 
-                    default: [],
-
                     minSize(){ return this.__data.childrenCount },
                     maxSize(){ return this.__data.childrenCount },
 
@@ -138,29 +137,10 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
 
                 },
 
-                children: {
-                    type: "array",
-
-                    modelClass: undefined,
-
-                    default: [],
-
-                    minSize(){ return this.__data.childrenCount },
-                    maxSize(){ return this.__data.childrenCount },
-
-                    skipHashing(){ return this.__data.pruned },
-                    skipSaving(){ return this.__data.pruned },
-                    skipMarshal(){ return this.__data.pruned },
-
-                    position: 108,
-                },
-
                 childrenHashes:{
 
                     type: "array",
                     schemaBuiltClass: RadixHashBufferSchemaBuilt,
-
-                    default: [],
 
                     minSize(){ return this.__data.childrenCount; },
                     maxSize(){ return this.__data.childrenCount; },
@@ -182,7 +162,7 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     skipMarshal(){ return !this.__data.pruned; },
 
                     getter(){
-                        return this.__data.pruned ? this.__data.__data.prunedHash : this.hash();
+                        return this.__data.pruned ? this.__data.prunedHash : this.hash();
                     },
 
                     position: 110,

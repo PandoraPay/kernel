@@ -5,7 +5,6 @@ const Model = require( "../../marshal/model");
 const DBModel = require("../../db/db-generic/db-model");
 const RadixTreeRootModel = require( "./radix-tree-root-model")
 const RadixTreeNodeTypeEnum = require( "./radix-tree-node-type-enum" );
-const RadixTreeNodeModel = require( "./radix-tree-node-model");
 const {RadixTreeSchemaBuilt} = require('./schema/radix-tree-schema-build')
 
 module.exports = class RadixTreeModel extends DBModel {
@@ -103,7 +102,7 @@ module.exports = class RadixTreeModel extends DBModel {
             const nodeChildrenCount = node.__data.childrenCount;
             const nodeChildrenLabels = node.__data.childrenLabels;
             const nodeChildrenHashes = node.__data.childrenHashes;
-            const nodeChildren = node.__data.children;
+            const nodeChildren = node.children;
 
             //will be common node
             node.label = common;
@@ -115,13 +114,13 @@ module.exports = class RadixTreeModel extends DBModel {
                 node.data = Buffer.alloc(0);
             else
             if (node._schema.fields.data.type === "object")
-                node.data = null; // node._createModelObject({}, "object", "data" );
+                node.data = null;
 
             //__data can be used because addChild will update its changes
             node.__data.childrenCount = 0;
             node.__data.childrenLabels = [];
             node.__data.childrenHashes = [];
-            node.__data.children = [];
+            node.children = [];
 
             const newNode = node.addChild(remainingLabel, {
                 label: remainingLabel,
@@ -132,12 +131,6 @@ module.exports = class RadixTreeModel extends DBModel {
                 childrenHashes: nodeChildrenHashes,
                 children: nodeChildren,
             } );
-
-            for (let i=0; i < newNode.children.length; i++)
-                if (newNode.__data.children[i]) {
-                    newNode.__data.children[i].parent = newNode;
-                    newNode.__data.children[i].parentIndex = i;
-                }
 
             //update parent to common
             node.parent.childrenLabels[ node.parentIndex ].string = common;
@@ -152,9 +145,9 @@ module.exports = class RadixTreeModel extends DBModel {
             label: newLabel,
             data: data,
             type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
+            children: [],
         });
 
-        //calculate new hash
         if (save)
             await this._saveNode( this.root );
 
@@ -169,11 +162,12 @@ module.exports = class RadixTreeModel extends DBModel {
 
         const find = await this.findRadix( label );
 
-        //nothing found7
+        //nothing found
         if (!find.result)
-            return undefined;
+            return;
 
-        let node = find.node;
+        let node = find.node, toSave;
+
         if (!(node.parent instanceof RadixTreeRootModel) && node.parent.__data.childrenCount === 2){
 
             const toDeleteParent = node.parent;
@@ -195,7 +189,7 @@ module.exports = class RadixTreeModel extends DBModel {
             } );
 
             toDeleteParent.parent = undefined;
-            toDeleteParent.__data.children = []; //make sure it will not delete its children
+            toDeleteParent.children = []; //make sure it will not delete its children
             toDeleteParent.__data.childrenCount = 0; //make sure it will not delete its children
             toDeleteParent.__data.childrenLabels = []; //make sure it will not delete its children
             toDeleteParent.__data.childrenHashes = []; //make sure it will not delete its children
@@ -211,7 +205,7 @@ module.exports = class RadixTreeModel extends DBModel {
 
         if (save){
             await this._deleteNode(node);
-            await this._saveNode(this.root);
+            await this._saveNode( this.root );
         }
 
         return node
@@ -225,11 +219,14 @@ module.exports = class RadixTreeModel extends DBModel {
         try{
 
             const obj = this.root._createModelObject(  {
-                label: label,
-                type: RadixTreeNodeTypeEnum.RADIX_TREE_LEAF,
-            }, "object", "children",);
+                label,
+            }, "object", "children" );
 
-            await obj.load( this.root.id + label );
+            obj.label = label;
+
+            await obj.load( this.root.id + label, undefined, undefined, undefined, undefined, undefined, undefined, {
+                isFieldSkipped: (field) => field === "label",
+            } );
 
             return obj;
 
@@ -241,30 +238,22 @@ module.exports = class RadixTreeModel extends DBModel {
     async _loadRoot(){
         if ( !this.root.rootLoaded )
             try{
-                await this.root.load(  );
+                await this.root.load( );
             } catch (err) {
 
             }
     }
 
-    async findRadix( label, prevFind ){
+    async findRadix( label ){
 
         label = this.processLeafLabel(label);
 
-        let queue = [], labelOffset = 0;
+        let labelOffset = 0;
 
-        if (prevFind){
-
-            queue = [prevFind.node];
-            labelOffset = prevFind.labelOffset - prevFind.match;
-
-        } else {
-
+        if (!this.root.rootLoaded)
             await this._loadRoot();
 
-            queue = [this.root];
-
-        }
+        const queue = [this.root];
 
         let i=0, match = 0;
         while ( i < queue.length && labelOffset !== label.length){
@@ -322,11 +311,10 @@ module.exports = class RadixTreeModel extends DBModel {
 
     async loadNodeChild(label, position, parent){
 
-        const child = parent._createModelObject(  {
-            label: label,
-        }, "object", "children", undefined,undefined, position, );
+        const child = parent.createEmptyChild( position);
 
         await child.load( parent.id + label );
+
         return child;
     }
 

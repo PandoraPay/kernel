@@ -148,7 +148,7 @@ module.exports = async function run () {
 
         "RadixTree wikipedia clearTree & check": async function (){
 
-            const tree = new RadixTrelaceChile(this._scope);
+            const tree = new RadixTree(this._scope);
             await tree.clearTree();
 
             for (const label of radixTest){
