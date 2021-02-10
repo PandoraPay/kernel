@@ -98,7 +98,7 @@ module.exports = class ModelBase {
 
         if (!type) {
 
-            if (Buffer.isBuffer(data) || data instanceof BufferReader )
+            if (Buffer.isBuffer(data) || data.__isBufferReader )
                 type = "buffer";
             else
             if (typeof data === "string") {

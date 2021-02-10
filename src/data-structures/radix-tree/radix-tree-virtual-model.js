@@ -24,10 +24,23 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
         return super[method].bind(this);
     }
 
-    createEmptyChild(  parent, position){
+    async _loadRoot(){
 
-        const child = super.createEmptyChild(parent, position);
+        if ( this.root.rootLoaded ) return this.root;
 
+        if (this._fallback) {
+            const root = await this._fallback._loadRoot();
+            this.root = this.createDataChild(this.tree, root, undefined);
+            this.root.rootLoaded = true;
+            return this.root;
+        }
+        return super._loadRoot();
+
+    }
+
+    async loadNodeChild(label, position, parent){
+        const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
+        await child.load( parent.id + label );
         this._maps[child.labelCompleteFast() ] = {
             type: "created",
             node: child,
@@ -38,6 +51,7 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
     createDataChild( parent, data, position){
 
         const child = super.createDataChild(parent, data, position);
+
         this._maps[child.labelCompleteFast() ] = {
             type: "created",
             node: child,
@@ -62,8 +76,6 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
     }
 
     /**
-     * Find Radix should not be changed !!!
-     * It will load the matching node. The memory nodes are updated
      * @param label
      * @returns {Promise<*>}
      */
@@ -104,8 +116,8 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
     async clearTree(){
 
         await this._clearDeletedElements();
+        return super.clearTree();
 
-        return this._getFallback('clearTree')();
     }
 
     resetTree(){

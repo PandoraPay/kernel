@@ -21,6 +21,7 @@ module.exports = class BufferReader{
         this.buffer = buffer;
         this.length = buffer.length;
         this.offset = 0;
+        this.__isBufferReader = true;
 
     }
 

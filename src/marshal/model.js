@@ -1,5 +1,6 @@
 const Exception = require( "../helpers/exception");
 const Helper = require( "../helpers/helper");
+const BN = require('bn.js');
 
 const ModelBase = require( "./model-base");
 
@@ -25,7 +26,7 @@ const defaultValues = {
     buffer:  minSize => Buffer.alloc( minSize ),
     array:  minSize =>Array(minSize),
     boolean: () => false,
-    object: () => undefined,
+    object: () => null,
 
 };
 
@@ -43,7 +44,7 @@ class Model extends ModelBase {
 
         if (!this._schema.fields) throw "schema.fields is not defined";
 
-        if (data && !this._schema.options.returnOnlyField)  {
+        if (data )  {
             const out = this._convertDataType(data, undefined);
             data = out.data;
             type = out.type;
@@ -137,7 +138,7 @@ class Model extends ModelBase {
 
         });
 
-        if (dataType === "object" && dataValue )
+        if (dataType === "object" && dataValue && !Buffer.isBuffer(dataValue) && !dataValue.__isBufferReader  )
             dataValue = dataValue[field];
 
         if ( this.checkProperty( "skipMarshal", field) )

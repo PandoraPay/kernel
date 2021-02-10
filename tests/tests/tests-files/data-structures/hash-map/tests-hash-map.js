@@ -1,7 +1,6 @@
 const describe = require('../../../unit-testing/describe');
 const TestsHelper = require("../../../unit-testing/tests-helper");
 
-const HashMapModel = require("../../../../../src/data-structures/hash-map/hash-map-model");
 const DBModel = require("../../../../../src/db/db-generic/db-model");
 const {HashMapElementSchemaBuild} = require("../../../../../src/data-structures/hash-map/schema/hash-map-element-schema-build");
 

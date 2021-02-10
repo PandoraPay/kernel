@@ -96,7 +96,6 @@ module.exports = class RadixTreeModel extends DBModel {
             //update label
             const remainingLabel = node.__data.label.substr( found.match );
 
-            const nodePrevLabel = node.__data.label;
             const nodeData = node.__data.data;
             const nodeType = node.__data.type;
             const nodeChildrenCount = node.__data.childrenCount;
@@ -235,12 +234,15 @@ module.exports = class RadixTreeModel extends DBModel {
     }
 
     async _loadRoot(){
-        if ( !this.root.rootLoaded )
-            try{
-                await this.root.load( );
-            } catch (err) {
+        if ( this.root.rootLoaded ) return this.root;
 
-            }
+        try{
+            await this.root.load( );
+            this.root.rootLoaded = true;
+            return this.root;
+        } catch (err) {
+
+        }
     }
 
     async findRadix( label ){
@@ -300,18 +302,6 @@ module.exports = class RadixTreeModel extends DBModel {
 
     }
 
-    async getRadix(label){
-
-        const out = await this.findRadix(label);
-        if (!out.result) return;
-
-        return out.node;
-    }
-
-    createEmptyChild(  parent, position){
-        return parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
-    }
-
     createDataChild( parent, data, position){
 
         const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", data, "object", position, );
@@ -324,11 +314,8 @@ module.exports = class RadixTreeModel extends DBModel {
     }
 
     async loadNodeChild(label, position, parent){
-
-        const child = this.createEmptyChild( parent, position);
-
+        const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
         await child.load( parent.id + label );
-
         return child;
     }
 

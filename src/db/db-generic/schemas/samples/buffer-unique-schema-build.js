@@ -10,8 +10,8 @@ class BufferUniqueSchemaBuild extends BufferSchemaBuild {
             fields: {
 
                 id: {
-                    minSize: 32,
-                    maxSize: 32,
+                    minSize: 64,
+                    maxSize: 64,
                     unique: true,
                 },
 
