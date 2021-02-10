@@ -103,7 +103,7 @@ module.exports = class HttpServer {
 
                 const isDebugging = this._scope.argv.debug.enabled || this._scope.argv.tests.isEnabled();
 
-                if (isDebugging && process.env.SLAVE_INDEX)
+                if (isDebugging && process.env.SLAVE_INDEX !== undefined)
                     port += Number.parseInt(process.env.SLAVE_INDEX ) + 1;
 
                 if (this._scope.argv.masterCluster.createClusters && ( !isDebugging || process.env.SLAVE_INDEX === undefined ) ){
@@ -117,12 +117,9 @@ module.exports = class HttpServer {
                             disabled: this._scope.argv.debug.enabled ,
                         });
 
-                    if (stickyOut.type === "master"){
-                        this._scope.logger.log(`Http`, `HTTP${ssl ? 'S':''} Server listens on port ${this._scope.argv.masterCluster.serverCluster.httpServer.port} ${cluster.isMaster ? "Master" : "Slave"}`);
-                        resolve(stickyOut )
-                    } else {
-                        resolve( stickyOut );
-                    }
+                    this._scope.logger.log(`Http`, `HTTP${ssl ? 'S':''} Server listens on port ${this._scope.argv.masterCluster.serverCluster.httpServer.port} ${cluster.isMaster ? "Master" : "Slave"}`);
+
+                    resolve( stickyOut );
 
 
                 } else {
