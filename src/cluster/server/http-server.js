@@ -101,7 +101,7 @@ module.exports = class HttpServer {
 
                 let port = this._scope.argv.masterCluster.serverCluster.httpServer.port ;
 
-                const isDebugging = this._scope.argv.debug.enabled || this._scope.tests.isEnabled();
+                const isDebugging = this._scope.argv.debug.enabled || this._scope.argv.tests.isEnabled();
 
                 if (isDebugging && process.env.SLAVE_INDEX)
                     port += Number.parseInt(process.env.SLAVE_INDEX ) + 1;
