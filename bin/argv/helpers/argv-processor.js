@@ -114,7 +114,10 @@ module.exports = class ArgvProcessor {
                     if (defintion.name === arg2){
 
                         let newValue = params;
-                        if (defintion.type === Boolean && params.length === 0) newValue = [true];
+                        if (defintion.type === Boolean){
+                            const option = params[0].toLowerCase();
+                            newValue = [ option === '1' || option === 'true' ];
+                        }
 
                         //console.info(`argv: ${defintion.name} argv of type ${typeof defintion.type} with new value ${defintion.type( ...newValue )}`);
 
