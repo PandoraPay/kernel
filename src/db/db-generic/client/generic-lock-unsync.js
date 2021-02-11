@@ -28,35 +28,25 @@ class GenericLock {
 
     }
 
-    async _acquireLock( lockName, timeout = 10000, retryDelay = -1) {
-
-        if (timeout === -1) timeout = 24*60*60*1000;
+    async _acquireLock( lockName, timeout, retryTimes, retryDelay ) {
 
         let resolve;
         const promise = new Promise( async promiseResolve =>{
             resolve = promiseResolve;
         });
 
-        const retry = () => setTimeout( check.bind(this), retryDelay);
-
-
         const check = () => {
 
-            const lockTimeoutTime = Date.now() + timeout + 1;
-
-            try {
-
-
-                if ( this._check(lockName, timeout) )
-                    return resolve(lockTimeoutTime);
-
-
-            } catch (err) {
-
+            if ( this._check(lockName, timeout) ) {
+                const lockTimeoutTime = Date.now() + timeout + 1;
+                return resolve(lockTimeoutTime);
             }
 
-            if (retryDelay === -1) return resolve(undefined);
-            else return retry();
+            if (retryTimes === 0) return resolve(undefined);
+            else{
+                retryTimes -= 1;
+                return setTimeout( check.bind(this), retryDelay)
+            }
 
         };
 
@@ -78,11 +68,12 @@ class GenericLock {
 
     }
 
-    async lock ( lockName, timeout = 10000, retryDelay = 50){
+    async lock ( lockName, timeout = 10000, retryTimes = 2, retryDelay = 50, ){
 
         if (!lockName) throw new Exception(this, "lockName is not specified.");
+        if (timeout === -1) timeout = 365*24*60*60*1000;
 
-        const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryDelay);
+        const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryTimes, retryDelay );
 
         let  lockRemoval = undefined;
 

@@ -220,8 +220,8 @@ module.exports = class RadixTreeModel extends DBModel {
 
             const obj = this.root._createSimpleModelObject(  this.root._schema.childrenModelClass, undefined, "children", {}, "object", undefined, {loading: true} );
 
-            obj.__data.label = label;
-            obj.__data.id = this.root.id + label;
+            obj.label = label;
+            obj.id = this.root.id + label;
 
             await obj.load( undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
                 isFieldSkipped: (field) => field === "label",

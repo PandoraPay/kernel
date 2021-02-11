@@ -362,10 +362,10 @@ module.exports = class DBModel extends Marshal{
      * @param db
      * @returns {*|Promise<Function>|Promise<*>}
      */
-    lock(timeout, retryDelay, infix='', table, db = this._scope.db){
+    lock(timeout, retryTimes, retryDelay, infix='', table, db = this._scope.db){
 
         if (infix && infix[infix.length-1] !== ':') infix += ":";
-        return db.client.lock( `${infix}${ this._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  this._schema.saving.saveInfixParentId ? this.id + ":" : '' }`, timeout, retryDelay );
+        return db.client.lock( `${infix}${ this._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : '' }${  this._schema.saving.saveInfixParentId ? this.id + ":" : '' }`, timeout, retryTimes, retryDelay );
 
     }
 

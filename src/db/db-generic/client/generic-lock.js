@@ -25,7 +25,7 @@ class GenericLock {
 
     }
 
-    async _acquireLock( lockName, timeout, retryDelay = -1) {
+    async _acquireLock( lockName, timeout, retryTimes, retryDelay ) {
 
         let resolve;
         const promise = new Promise( async promiseResolve =>{
@@ -34,21 +34,16 @@ class GenericLock {
 
         const check = async () => {
 
-            const lockTimeoutTime = Date.now() + timeout + 1;
-
-            try {
-
-
-                if ( await this._check(lockName, timeout) )
-                    return resolve(lockTimeoutTime);
-
-
-            } catch (err) {
-
+            if ( await this._check(lockName, timeout) ) {
+                const lockTimeoutTime = Date.now() + timeout + 1;
+                return resolve(lockTimeoutTime);
             }
 
-            if (retryDelay === -1) return resolve(undefined);
-            else return setTimeout( check.bind(this), retryDelay)
+            if (retryTimes === 0) return resolve(undefined);
+            else{
+                retryTimes -= 1;
+                return setTimeout( check.bind(this), retryDelay)
+            }
 
         };
 
@@ -79,9 +74,10 @@ class GenericLock {
 
     }
 
-    async lock ( lockName, timeout = 10000, retryDelay = 50){
+    async lock ( lockName, timeout = 10000, retryTimes = 2, retryDelay = 50, ){
 
         if (!lockName) throw new Exception(this, "lockName is not specified.");
+        if (timeout === -1) timeout = 365*24*60*60*1000;
 
         const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryDelay);
 

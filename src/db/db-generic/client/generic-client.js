@@ -101,8 +101,8 @@ module.exports = class GenericClient{
     /**
      * Used to create a deadlock to avoid two different instances to do the same task twice.
      */
-    async lock(lockName, timeout, retryDelay){
-        return this._lock.lock(lockName, timeout, retryDelay);
+    async lock(lockName, timeout, retryTimes, retryDelay){
+        return this._lock.lock(lockName, timeout, retryTimes, retryDelay);
     }
 
     lockDeleteAll(){

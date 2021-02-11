@@ -39,7 +39,7 @@ module.exports = async function run ( dbType ) {
 
         'deadlock creation': async function () {
 
-            const lock1 = await this.db.client.lock("lock1", 5000, -1);
+            const lock1 = await this.db.client.lock("lock1", 5000, 0, );
 
             this.expect( lock1 === undefined, false);
             this.expect( typeof lock1, "function");
@@ -49,7 +49,7 @@ module.exports = async function run ( dbType ) {
             //release the deadlock, it should be free now
             await lock1();
 
-            const lock1_copy = await this.db.client.lock("lock1", 5000, -1);
+            const lock1_copy = await this.db.client.lock("lock1", 5000, 0);
 
             this.expect( lock1_copy === undefined, false);
             this.expect( typeof lock1_copy, "function");
@@ -59,7 +59,7 @@ module.exports = async function run ( dbType ) {
 
         'deadlock wait 2 sec and create again': async function (){
 
-            const lock1 = await this.db.client.lock("lock1", 50000, -1);
+            const lock1 = await this.db.client.lock("lock1", 50000, 0);
             this.expect( lock1 === undefined, false);
             this.expect( typeof lock1, "function");
 
@@ -67,14 +67,14 @@ module.exports = async function run ( dbType ) {
 
             //lock1 should be busy
 
-            const lock1_copy = await this.db.client.lock("lock1", 5000, -1);
+            const lock1_copy = await this.db.client.lock("lock1", 5000, 0);
             this.expect( lock1_copy , undefined);
             this.expect( typeof lock1_copy , "undefined");
 
             await lock1();
 
 
-            let lock1_copy2 = await this.db.client.lock("lock1", 5000, -1);
+            let lock1_copy2 = await this.db.client.lock("lock1", 5000, 0);
             this.expect( lock1 === undefined, false);
             this.expect( typeof lock1, "function");
 
