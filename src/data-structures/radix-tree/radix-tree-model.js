@@ -220,9 +220,10 @@ module.exports = class RadixTreeModel extends DBModel {
 
             const obj = this.root._createSimpleModelObject(  this.root._schema.childrenModelClass, undefined, "children", {}, "object", undefined, {loading: true} );
 
-            obj.label = label;
+            obj.__data.label = label;
+            obj.__data.id = this.root.id + label;
 
-            await obj.load( this.root.id + label, undefined, undefined, undefined, undefined, undefined, undefined, {
+            await obj.load( undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
                 isFieldSkipped: (field) => field === "label",
             } );
 
@@ -234,15 +235,10 @@ module.exports = class RadixTreeModel extends DBModel {
     }
 
     async _loadRoot(){
+
         if ( this.root.rootLoaded ) return this.root;
-
-        try{
-            await this.root.load( );
-            this.root.rootLoaded = true;
-            return this.root;
-        } catch (err) {
-
-        }
+        await this.root._checkRootLoaded();
+        return this.root;
     }
 
     async findRadix( label ){
@@ -315,7 +311,8 @@ module.exports = class RadixTreeModel extends DBModel {
 
     async loadNodeChild(label, position, parent){
         const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
-        await child.load( parent.id + label );
+        child.__data.id = parent.id + label;
+        await child.load(  );
         return child;
     }
 

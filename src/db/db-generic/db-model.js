@@ -109,15 +109,11 @@ module.exports = class DBModel extends Marshal{
     /**
      * Save the model in Database. Moreover, it stores and validates the unique fields as well. The method should be overwritten by Database schema connector.
      */
-    async save( infix='', table, id, db, saveType, saveText, multi, marshalOptions = {}, willSaveItself ){
+    async save( infix='', table, id, db, saveType, saveText, multi, marshalOptions = {} ){
 
         if (!this._schema.saving.enabled) return undefined;
-        // if (!this.isChanged() )
-        //     console.log(this.id, 'not saved')
 
-        if ( !this.isChanged() && !table && !id ) return { _id: id ||this.id };
-
-        if (!infix && !table && !id) willSaveItself = true;
+        if ( !this.__changed ) return { _id: id ||this.id };
 
         marshalOptions.saving = true;
 
@@ -153,7 +149,7 @@ module.exports = class DBModel extends Marshal{
                     //saving only field
                     if (object._schema.options.returnOnlyField) {
                         const out = object.toType( saveType, saveText );
-                        if (willSaveItself) object._saved();
+                        object._saved();
                         return out;
                     } //in case the data was not loaded
                     else {
@@ -161,12 +157,12 @@ module.exports = class DBModel extends Marshal{
                         if (object._schema.saving.storeDataNotId) {
 
                             const out = object.toType(saveType, saveText, undefined );
-                            if (willSaveItself) object._saved();
+                            object._saved();
                             return out;
 
                         } else {
 
-                            const promise =  object.save(`${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions, willSaveItself);
+                            const promise =  object.save(`${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions);
                             promises.push( promise );
 
                             return object.id;
@@ -202,15 +198,13 @@ module.exports = class DBModel extends Marshal{
         if (this.savingAdditional){
 
             const objects = this.savingAdditional();
-            const promises = objects.map( object => object.save( `${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions, willSaveItself ) );
+            const promises = objects.map( object => object.save( `${infix}${object._schema.saving.saveInfixParentTable ? (table || this.table) + ":" : ''}${object._schema.saving.saveInfixParentId ? (id || this.id) + ":" : ''}`, undefined, undefined, db, saveType, saveText, undefined, marshalOptions ) );
 
             await Promise.all(promises);
 
         }
 
-
-        if (willSaveItself)
-            this._saved();
+        this._saved();
 
         if (this.onSaved) this.onSaved();
 
@@ -296,12 +290,16 @@ module.exports = class DBModel extends Marshal{
     }
 
     _loaded(willLoadItself){
-        if (willLoadItself) this.__changes = {};
+        if (willLoadItself) {
+            this.__changes = {};
+            this.__changed = false;
+        }
         delete this.__data.__hash;
     }
 
     _saved(){
         this.__changes = {};
+        this.__changed = false;
     }
 
     /**

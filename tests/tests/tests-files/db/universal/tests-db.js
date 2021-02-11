@@ -291,12 +291,12 @@ module.exports = async function run ( dbType ) {
             const schema = Helper.merge(  MarshalTests.testBufferSchema, {
                 fields: {
                     table:{
-                        default: "TS2",
-                        minSize: 3,
-                        maxSize: 3,
+                        default: "TS4_DELETE_ALL",
+                        minSize: 14,
+                        maxSize: 14,
                     },
                     id:{
-                        minSize: 7,
+                        minSize: 8,
                         maxSize: 10,
                     },
                 }
@@ -307,12 +307,14 @@ module.exports = async function run ( dbType ) {
 
             await this.expect( await this.db.client.existsAny("TS4_DELETE_ALL") , false );
 
-            for (let i=0; i<count; i++)
-                await obj.save("TS4_DELETE_ALL", undefined, `object_${i}`);
+            for (let i=0; i<count; i++) {
+                obj.id = `object_${i}`;
+                await obj.save();
+            }
 
             await this.expect( await this.db.client.countAny("TS4_DELETE_ALL"),  count);
 
-            await obj.deleteAllSiblings("TS4_DELETE_ALL");
+            await obj.deleteAllSiblings();
 
             await this.expect( await this.db.client.countAny("TS4_DELETE_ALL"),  0);
 

@@ -123,6 +123,7 @@ class Model extends ModelBase {
             this._propagateChanges(field);
         } else {
             this.__changes[field] = true;
+            this.__changed = true;
         }
 
     }
@@ -384,15 +385,6 @@ class Model extends ModelBase {
 
     get getModelClass(){
         return Model;
-    }
-
-    isChanged(){
-
-        for (const key in this.__changes)
-            if (this.__changes[key])
-                return true;
-
-        return false;
     }
 
 }

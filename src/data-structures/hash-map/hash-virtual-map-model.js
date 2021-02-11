@@ -71,16 +71,12 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
         if (!(data instanceof DBModel))
             element = this._createHashElementChild(id, data, dataType);
 
-        this._addCache(id, "add", element);
-
-        return element;
+        return this._addCache(id, "add", element);
     }
 
     async deleteMap( id ){
-
         this._addCache(id, "del")
         return id;
-
     }
 
     async getMap ( id ){
@@ -97,7 +93,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
         if (out) {
             const element = this._createHashElementChild( id, out, "object"); //data is provided
-            this._addCache(id, "view", element)
+            return this._addCache(id, "view", element)
         }
 
     }
@@ -121,17 +117,15 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
      * @param data
      * @returns {Promise<*>}
      */
-    async updateMap (id, data, dataType){
+    async updateMap (id, data, dataType, unmarshalOptions){
 
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
         let element = data;
         if (!(data instanceof DBModel))
-            element = this._createHashElementChild( id, data, dataType); //data is provided
+            element = this._createHashElementChild( id, data, dataType, unmarshalOptions); //data is provided
 
-        this._addCache(id, "add", element);
-
-        return element;
+        return this._addCache(id, "add", element);
     }
 
     async saveVirtualMap(resetVirtualMap = true){
@@ -165,7 +159,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
     _addCache(id, type, element){
         this._virtual[id] = {
-            type: "view",
+            type,
             element
         };
         return element;

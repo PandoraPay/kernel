@@ -40,7 +40,8 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
 
     async loadNodeChild(label, position, parent){
         const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
-        await child.load( parent.id + label );
+        child.__data.id = parent.id + label;
+        await child.load(  );
         this._maps[child.labelCompleteFast() ] = {
             type: "created",
             node: child,

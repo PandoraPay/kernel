@@ -36,6 +36,7 @@ module.exports = class ModelBase {
         this.__default = { };
         
         this.__changes = { };
+        this.__changed = false;
 
         /**
          * call init constructor
@@ -300,6 +301,7 @@ module.exports = class ModelBase {
 
         if (this.__changes[field]) return;
         this.__changes[field] = true;
+        this.__changed = true;
 
         if (this._scope.parent){
 

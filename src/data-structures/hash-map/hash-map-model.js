@@ -17,7 +17,7 @@ module.exports = class HashMapModel extends DBModel {
         const obj = this._createSimpleModelObject( this._childHashMapModel, this._childHashMapSchemaBuilt,
             "element", data, dataType, undefined, unmarshalOptions );
 
-        if (id) obj.id = id;
+        if (id) obj.__data.id = id;
         return obj;
     }
 
@@ -125,7 +125,7 @@ module.exports = class HashMapModel extends DBModel {
      * @param data
      * @returns {Promise<*>}
      */
-    async updateMap (id, data, dataType ){
+    async updateMap (id, data, dataType, unmarshalOptions ){
 
         const element = await this.getMap(id);
         if (element) {
@@ -135,7 +135,7 @@ module.exports = class HashMapModel extends DBModel {
 
         }
 
-        return this.addMap(id, data, dataType);
+        return this.addMap(id, data, dataType, unmarshalOptions);
 
     }
 
