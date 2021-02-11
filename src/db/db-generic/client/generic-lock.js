@@ -41,7 +41,7 @@ class GenericLock {
 
             if (retryTimes === 0) return resolve(undefined);
             else{
-                retryTimes -= 1;
+                retryTimes = Math.max(-1, retryTimes-1);
                 return setTimeout( check.bind(this), retryDelay)
             }
 
@@ -79,7 +79,7 @@ class GenericLock {
         if (!lockName) throw new Exception(this, "lockName is not specified.");
         if (timeout === -1) timeout = 365*24*60*60*1000;
 
-        const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryDelay);
+        const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryTimes, retryDelay);
 
         let  lockRemoval = undefined;
 

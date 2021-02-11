@@ -44,7 +44,7 @@ class GenericLock {
 
             if (retryTimes === 0) return resolve(undefined);
             else{
-                retryTimes -= 1;
+                retryTimes = Math.max(-1, retryTimes-1);
                 return setTimeout( check.bind(this), retryDelay)
             }
 
