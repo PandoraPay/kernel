@@ -43,11 +43,9 @@ class RadixTreeSchemaBuild extends DBSchemaBuild {
             },
 
             saving: {
-
+                saveInfixParentTable: true,
                 saveInfixParentId: true,
-
             }
-
 
         }, schema, true));
 

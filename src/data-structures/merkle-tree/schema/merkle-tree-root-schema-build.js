@@ -7,10 +7,7 @@ class MerkleTreeRootSchemaBuild extends MerkleTreeNodeSchemaBuild {
         super(Helper.merge({
 
             saving: {
-
-                saveInfixParentTable: true,
                 saveInfixParentId: true,
-
             }
 
         }, schema, true));

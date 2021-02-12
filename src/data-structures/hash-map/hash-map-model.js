@@ -1,14 +1,13 @@
 const DBModel = require("../../db/db-generic/db-model");
-const Helper = require( "../../helpers/helper");
-const Exception = require("../../helpers/exception");
 
 const {HashMapElementSchemaBuilt} = require( "./schema/hash-map-element-schema-build")
+const {HashMapSchemaBuilt} = require('./schema/hash-map-schema-build')
 
 module.exports = class HashMapModel extends DBModel {
 
-    constructor(scope, schema = HashMapElementSchemaBuilt, data, type, creationOptions) {
+    constructor(scope, schema = HashMapSchemaBuilt, data, type, creationOptions) {
         super(scope, schema, data, type, creationOptions);
-        this._childHashMapSchemaBuilt = schema;
+        this._childHashMapSchemaBuilt = HashMapElementSchemaBuilt;
         this._childHashMapModel = undefined;
     }
 

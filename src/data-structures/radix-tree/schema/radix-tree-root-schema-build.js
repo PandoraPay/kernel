@@ -29,7 +29,6 @@ class RadixTreeRootSchemaBuild extends RadixTreeNodeSchemaBuild {
             },
 
             saving: {
-                saveInfixParentTable: true,
                 saveInfixParentId: true,
             }
 

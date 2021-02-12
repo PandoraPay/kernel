@@ -163,6 +163,7 @@ module.exports = class GenericDatabase{
      */
     async deleteAll( modelClass = this._scope.model, marshalSchemaBuilt, infix, table, creationOptions = {} ){
 
+        creationOptions.loading = true;
         const models = await this.findAll( modelClass, marshalSchemaBuilt, infix, table, undefined, creationOptions );
         return Promise.all( models.map(  it => it.delete() ));
 
