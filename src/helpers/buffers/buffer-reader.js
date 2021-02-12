@@ -33,7 +33,10 @@ module.exports = class BufferReader{
         this.buffer.copy( output,   0, this.offset,        this.offset += noBytes );
 
         return output;
+    }
 
+    readRemaining(){
+        return this.read(this.buffer.length - this.offset);
     }
 
     fillZerosAndRead(noZeros, noBytes){

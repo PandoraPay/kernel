@@ -40,9 +40,9 @@ module.exports = async function run () {
         //     console.log(it.hash().toString("hex"), CryptoHelper.sha256(it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex") : "") + (it.children[1] ? it.children[1].hash().toString("hex") : "")).toString("hex") );
         // }
 
-        this.expect(  CryptoHelper.sha256( tree.root.data.toString("hex") + tree.root.children[0].hash().toString("hex") + tree.root.children[1].hash().toString("hex") ), tree.hash() );
+        this.expect(  CryptoHelper.sha256( Buffer.concat([ tree.root.data, tree.root.children[0].hash(),  tree.root.children[1].hash() ] ) ), tree.hash() );
 
-        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex"):"") + (it.children[1] ? it.children[1].hash().toString("hex") : "") ).equals( it.hash() ) ), true);
+        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( Buffer.concat( [ it.data, it.children[0] ? it.children[0].hash() : Buffer.alloc(0),  it.children[1] ? it.children[1].hash() : Buffer.alloc(0) ] ) ).equals( it.hash() ) ), true);
 
         if (length < 50) {
             await tree.save();
@@ -64,8 +64,8 @@ module.exports = async function run () {
         leaves[5].data = data[5];
 
         this.expect( prevHash.equals( tree.hash() ) , false);
-        this.expect(  CryptoHelper.sha256( tree.root.data.toString("hex") + tree.root.children[0].hash().toString("hex") + tree.root.children[1].hash().toString("hex") ), tree.hash() );
-        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex"):"") + (it.children[1] ? it.children[1].hash().toString("hex") : "") ).equals( it.hash() ) ), true);
+        this.expect(  CryptoHelper.sha256( Buffer.concat( [ tree.root.data, tree.root.children[0].hash(), tree.root.children[1].hash() ] ) ), tree.hash() );
+        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( Buffer.concat( [ it.data, it.children[0] ? it.children[0].hash() : Buffer.alloc(0), it.children[1] ? it.children[1].hash() : Buffer.alloc(0) ] ) ).equals( it.hash() ) ), true);
 
         //change one random leaf
 
@@ -75,8 +75,8 @@ module.exports = async function run () {
         leaves[index].data = data[index];
 
         this.expect( prevHash.equals( tree.hash() ) , false);
-        this.expect(  CryptoHelper.sha256( tree.root.data.toString("hex") + tree.root.children[0].hash().toString("hex") + tree.root.children[1].hash().toString("hex") ), tree.hash() );
-        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( it.data.toString("hex") + (it.children[0] ? it.children[0].hash().toString("hex"):"") + (it.children[1] ? it.children[1].hash().toString("hex") : "") ).equals( it.hash() ) ), true);
+        this.expect(  CryptoHelper.sha256( Buffer.concat( [ tree.root.data, tree.root.children[0].hash(), tree.root.children[1].hash() ] ) ), tree.hash() );
+        this.expect( BFS.reduce( (res, it, index) => res &&  CryptoHelper.sha256( Buffer.concat( [ it.data, it.children[0] ? it.children[0].hash() : Buffer.alloc(0), it.children[1] ? it.children[1].hash() : Buffer.alloc(0) ] ) ).equals( it.hash() ) ), true);
 
         let obj = tree.toObject();
         newTree = new MerkleTreeModel(this._scope);

@@ -75,6 +75,12 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
     }
 
     async deleteMap( id ){
+
+        if (this._virtual[id]) {
+            this._virtual[id].type = "del";
+            return id;
+        }
+
         this._addCache(id, "del")
         return id;
     }
@@ -84,7 +90,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
         if (Buffer.isBuffer(id)) id = id.toString("hex");
 
         if (this._virtual[id]) {
-            if (this._virtual[id].type === "del") return undefined;
+            if (this._virtual[id].type === "del") return;
             if (this._virtual[id].type === "add" ) return this._virtual[id].element;
             if (this._virtual[id].type === "view") return this._virtual[id].element; //updating importance
         }
@@ -128,7 +134,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
         return this._addCache(id, "add", element);
     }
 
-    async saveVirtualMap(resetVirtualMap = true){
+    async saveVirtualMap(resetVirtualMap = false){
 
         const promises = [];
 
@@ -146,14 +152,16 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
         await Promise.all(promises);
 
         if (resetVirtualMap)
-            this.resetHashMap();
-        else {
+            return this.resetHashMap();
 
-            for (const id in this._virtual)
-                if (this._virtual[id].type === "add")
-                    this._virtual[id].type = "view";
+        for (const id in this._virtual) {
 
+            const {type} = this._virtual[id].type;
+
+            if (type === "del") delete this._virtual[id];
+            else if (type === "add") this._virtual[id].type = "view";
         }
+
 
     }
 
