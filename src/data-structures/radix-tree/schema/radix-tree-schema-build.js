@@ -35,13 +35,9 @@ class RadixTreeSchemaBuild extends DBSchemaBuild {
 
             options: {
                 hashing: {
-                    enabled: true,
-                    parentHashingPropagation: true,
-
                     /**
-                     * Disable Hashing function to avoid hashing the root hash
+                     * Disable Hashing to avoid hashing the root hash twice
                      */
-
                     fct: b => b,
                 },
             },

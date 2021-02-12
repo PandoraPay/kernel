@@ -13,7 +13,5 @@ This is an implementation of core functionality used by PandoraPay blockchain or
 
 ### To Dos
 
-TODO: Disable: `this._schema.options.hashing.fct` for most models Cryptography and Blockchain to avoid double hashing
-
 TODO: CouchDB doesn't support `lock` so node.js cluster locking system was used
 

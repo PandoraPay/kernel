@@ -8,8 +8,7 @@ const MarshalValidationPreProcessing = require( "../fields/marshal-validation-pr
 const MarshalValidationPreSet = require( "../fields/marshal-validation-pre-set");
 const MarshalFields = require( "../fields/marshal-fields");
 const UnmarshalFields = require( "../fields/unmarshal-fields");
-
-
+const CryptoHelper = require( "../../helpers/crypto/crypto-helper");
 
 class SchemaBuild {
 
@@ -21,10 +20,9 @@ class SchemaBuild {
         this.options = Helper.merge(  {
 
             hashing:{
-                //enabled: false
-                //parentHashingPropagation: false
-                //fct: keccak
-                //returnSpecificHash: undefined
+                enabled: true,
+                parentHashingPropagation: true,
+                fct: CryptoHelper.sha256
             },
 
             //returnOnlyField

@@ -117,20 +117,11 @@ class MerkleTreeNodeSchemaBuild extends DBSchemaBuild {
             },
 
             options: {
-
                 hashing: {
-
-                    enabled: true,
-                    parentHashingPropagation: true,
-
                     returnSpecificHash(){
                         return this.__data.pruned ? this.__data.prunedHash : undefined;
                     },
-
-                    fct: CryptoHelper.sha256,
-
                 },
-
             },
 
             saving: {

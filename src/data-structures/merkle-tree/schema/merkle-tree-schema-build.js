@@ -66,14 +66,12 @@ class MerkleTreeSchemaBuild extends DBSchemaBuild{
             },
 
             options: {
-
                 hashing: {
-                    enabled: true,
+                    /**
+                     * Disable Hashing to avoid hashing the root hash twice
+                     */
                     fct: b => b,
-
-                    parentHashingPropagation: true,
                 },
-
             },
 
             saving: {

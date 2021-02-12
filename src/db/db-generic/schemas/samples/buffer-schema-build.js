@@ -17,11 +17,7 @@ class BufferSchemaBuild extends DBSchemaBuild {
 
             options:{
                 returnOnlyField: "buffer",
-
                 hashing: {
-                    enabled: true,
-                    parentHashingPropagation: true,
-
                     fct: a => a,
                 }
             },

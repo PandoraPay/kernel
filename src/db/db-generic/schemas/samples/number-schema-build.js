@@ -15,11 +15,7 @@ class NumberSchemaBuild extends DBSchemaBuild {
 
             options:{
                 returnOnlyField: "number",
-
                 hashing: {
-                    enabled: true,
-                    parentHashingPropagation: true,
-
                     fct: a => a,
                 }
             },

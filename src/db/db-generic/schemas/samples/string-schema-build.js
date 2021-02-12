@@ -17,14 +17,8 @@ class StringSchemaBuild extends DBSchemaBuild {
 
             options:{
                 returnOnlyField: "string",
-
                 hashing: {
-
-                    enabled: true,
-                    parentHashingPropagation: true,
-
                     fct: a => a,
-
                 },
             }
         },  schema, true) );

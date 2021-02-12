@@ -36,9 +36,7 @@ class HashMapElementSchemaBuild extends DBSchemaBuild {
 
             options:{
                 hashing:{
-                    enabled: true,
                     parentHashingPropagation: false,
-                    fct: CryptoHelper.sha256
                 },
             },
 
