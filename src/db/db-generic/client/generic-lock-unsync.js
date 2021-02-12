@@ -71,7 +71,7 @@ class GenericLock {
     async lock ( lockName, timeout = 10000, retryTimes = 2, retryDelay = 50, ){
 
         if (!lockName) throw new Exception(this, "lockName is not specified.");
-        if (timeout === -1) timeout = 365*24*60*60*1000;
+        if (timeout === -1) timeout = 2147483647;
 
         const lockTimeoutTime = await this._acquireLock(lockName, timeout, retryTimes, retryDelay );
 
