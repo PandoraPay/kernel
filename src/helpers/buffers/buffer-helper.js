@@ -5,9 +5,7 @@ if (isArrayBuffer.default) isArrayBuffer = isArrayBuffer.default;
 class BufferHelper{
 
     generateRandomBuffer(length){
-
         return randomBytes(length);
-
     }
 
     isBufferOnlyZero(b){

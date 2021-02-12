@@ -113,15 +113,22 @@ module.exports = class ArgvProcessor {
                 for (const defintion of options)
                     if (defintion.name === arg2){
 
-                        let newValue = params;
-                        if (defintion.type === Boolean){
-                            const option = params[0].toLowerCase();
-                            newValue = [ option === '1' || option === 'true' ];
+                        try{
+
+                            let newValue = params;
+                            if (defintion.type === Boolean){
+                                const option = params[0].toLowerCase();
+                                newValue = [ option === '1' || option === 'true' ];
+                            }
+
+                            //console.info(`argv: ${defintion.name} argv of type ${typeof defintion.type} with new value ${defintion.type( ...newValue )}`);
+
+                            defintion.setValue(defintion.type( ...newValue ));
+                        }catch(err){
+                            console.error(`Invalid argument for --${defintion.name} of type ${defintion.typeName}`);
+                            console.error(`Received "${params}"`);
+                            process.exit(0);
                         }
-
-                        //console.info(`argv: ${defintion.name} argv of type ${typeof defintion.type} with new value ${defintion.type( ...newValue )}`);
-
-                        defintion.setValue(defintion.type( ...newValue ));
                         found = true;
                         break;
                     }
