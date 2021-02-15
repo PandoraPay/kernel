@@ -319,7 +319,7 @@ module.exports = class RadixTreeModel extends DBModel {
     processLeafLabel(label){
 
         if (Buffer.isBuffer(label)) label = label.toString("hex");
-        if (typeof label !== "string" || label.length !== 40) throw "label is not leaf";
+        if (typeof label !== "string" || label.length !== 40) throw Error("label is not leaf");
 
         return label;
     }

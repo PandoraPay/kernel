@@ -49,7 +49,7 @@ module.exports = class CommandLineInterface {
             return out;
 
         }else {
-            throw "Ask Input Not implemented";
+            throw Error("Ask Input Not implemented");
         }
     }
 
@@ -61,7 +61,7 @@ module.exports = class CommandLineInterface {
             return out;
 
         } else {
-            throw "Ask Confirmation Not implemented";
+            throw Error("Ask Confirmation Not implemented");
         }
     }
   

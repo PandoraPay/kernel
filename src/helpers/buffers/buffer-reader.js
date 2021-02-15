@@ -13,10 +13,10 @@ module.exports = class BufferReader{
             else
             if (StringHelper.isHex(buffer))
                 buffer = Buffer.from(buffer, "hex");
-            else throw "invalid string";
+            else throw Error("invalid string");
         }
 
-        if (!Buffer.isBuffer(buffer)) throw "invalid buffer input"
+        if (!Buffer.isBuffer(buffer)) throw Error("invalid buffer input")
 
         this.buffer = buffer;
         this.length = buffer.length;

@@ -7,36 +7,36 @@ class MarshalValidation {
 
     static validate_bigNumber(value, schemaField){
 
-        if (value instanceof BN === false) throw "Value is not a BigNumber";
+        if (value instanceof BN === false) throw Error("Value is not a BigNumber");
 
-        if (value.lt( new BN(0) )) throw "Value is less than 0";
+        if (value.lt( new BN(0) )) throw Error("Value is less than 0");
 
-        if ( value.lt( this.checkValue( schemaField.minSize, "minSize") ) ) throw "Value is less than minSize";
-        if ( value.gt( this.checkValue( schemaField.maxSize, "maxSize") ) ) throw "Value is higher than maxSize";
+        if ( value.lt( this.checkValue( schemaField.minSize, "minSize") ) ) throw Error("Value is less than minSize");
+        if ( value.gt( this.checkValue( schemaField.maxSize, "maxSize") ) ) throw Error("Value is higher than maxSize");
 
     }
 
     static validate_number(value, schemaField){
 
-        if (typeof value !== "number") throw "Value is not a number";
+        if (typeof value !== "number") throw Error("Value is not a number");
 
-        if (!MarshalValidation.isInt(value)) throw "Value is not integer";
+        if (!MarshalValidation.isInt(value)) throw Error("Value is not integer");
 
-        if ( value < 0)throw "Value is less than 0";
-        if (value >= Math.MAX_SAFE_INTEGER ) throw "Value is larger than MAX_SAFE_INTEGER";
+        if ( value < 0)throw Error("Value is less than 0");
+        if (value >= Math.MAX_SAFE_INTEGER ) throw Error("Value is larger than MAX_SAFE_INTEGER");
 
-        if ( value < this.checkValue( schemaField.minSize, "minSize") ) throw "Value is less than minSize";
-        if ( value > this.checkValue( schemaField.maxSize, "maxSize") ) throw "Value is higher than maxSize";
+        if ( value < this.checkValue( schemaField.minSize, "minSize") ) throw Error("Value is less than minSize");
+        if ( value > this.checkValue( schemaField.maxSize, "maxSize") ) throw Error("Value is higher than maxSize");
 
     }
 
     static validate_array(value, schemaField){
 
-        if ( !Array.isArray(value) ) throw "Value is not an array";
+        if ( !Array.isArray(value) ) throw Error("Value is not an array");
 
         for (let it=0; it<value.length; it++ ) {
-            if (typeof value[it] !== "object" || !value[it].__isModel) throw "Object in array is not a marshaling object"
-            if (! value[it].validate() ) throw "Object in array is not valid";
+            if (typeof value[it] !== "object" || !value[it].__isModel) throw Error("Object in array is not a marshaling object")
+            if (! value[it].validate() ) throw Error("Object in array is not valid");
         }
 
         MarshalValidation._validateFieldArray.call( this, value, schemaField );
@@ -45,7 +45,7 @@ class MarshalValidation {
 
     static validate_string(value, schemaField){
 
-        if (typeof value !== "string") throw "Value is not a string";
+        if (typeof value !== "string") throw Error("Value is not a string");
 
         MarshalValidation._validateFieldArray.call( this, value, schemaField );
 
@@ -53,13 +53,13 @@ class MarshalValidation {
 
     static validate_boolean(value, schemaField){
 
-        if (typeof value !== "boolean") throw "Value is not a boolean";
+        if (typeof value !== "boolean") throw Error("Value is not a boolean");
 
     }
 
     static validate_buffer(value, schemaField){
 
-        if ( !Buffer.isBuffer(value) ) throw "Type is not a Buffer";
+        if ( !Buffer.isBuffer(value) ) throw Error("Type is not a Buffer");
 
         MarshalValidation._validateFieldArray.call( this, value, schemaField);
 
@@ -72,8 +72,8 @@ class MarshalValidation {
             if (emptyAllowed) return true;
         }
 
-        if (typeof value !== "object" || !value.__isModel) throw "Object is not a marshaling object";
-        if (! value.validate()) throw "Object was not validated";
+        if (typeof value !== "object" || !value.__isModel) throw Error("Object is not a marshaling object");
+        if (! value.validate()) throw Error("Object was not validated");
     }
 
 
@@ -81,8 +81,8 @@ class MarshalValidation {
 
     static _validateFieldArray(value, schemaField ){
 
-        if ( value.length > this.checkValue( schemaField.maxSize, "maxSize" ) ) throw "Array length is larger than max value";
-        if ( value.length < this.checkValue( schemaField.minSize, "minSize" )  && !( this.checkValue( schemaField.emptyAllowed, "emptyAllowed") && value.length === 0)) throw "Array length is smaller than minvalue";
+        if ( value.length > this.checkValue( schemaField.maxSize, "maxSize" ) ) throw Error("Array length is larger than max value");
+        if ( value.length < this.checkValue( schemaField.minSize, "minSize" )  && !( this.checkValue( schemaField.emptyAllowed, "emptyAllowed") && value.length === 0)) throw Error("Array length is smaller than minvalue");
 
     }
 

@@ -214,8 +214,8 @@ module.exports = class MarshalData{
 
     static marshalNumberFixed( num, length){
 
-        if (length > 7) throw "marshalNumberFixed length is way too big";
-        if (!length) throw "marshalNumberFixed length is not specified";
+        if (length > 7) throw Error("marshalNumberFixed length is way too big");
+        if (!length) throw Error("marshalNumberFixed length is not specified");
 
         const b = Buffer.alloc(length);
 
@@ -234,8 +234,8 @@ module.exports = class MarshalData{
 
     static unmarshalNumberFixed(b, length){
 
-        if (length > 7) throw "unmarshalNumberFixed length is way too big";
-        if (!length) throw "marshalNumberFixed length is not specified";
+        if (length > 7) throw Error("unmarshalNumberFixed length is way too big");
+        if (!length) throw Error("marshalNumberFixed length is not specified");
 
         let number = 0, power = 1;
 
@@ -299,7 +299,7 @@ module.exports = class MarshalData{
         if (typeof opts === 'string') {
 
             if (opts !== 'mpint')
-                throw 'Unsupported Buffer representation';
+                throw Error('Unsupported Buffer representation');
 
             buf = abs.toBuffer({ size: 1, endian: 'big' });
             len = buf.length === 1 && buf[0] === 0 ? 0 : buf.length;
@@ -343,7 +343,7 @@ module.exports = class MarshalData{
             'big';
 
         if (hex.charAt(0) === '-')
-            throw new Error('Converting negative numbers to Buffers not supported yet');
+            throw Error('Converting negative numbers to Buffers not supported yet');
 
 
         const size =

@@ -23,7 +23,7 @@ module.exports = class ModelBase {
 
         this.__isModel = true;
 
-        if (!schema || !(schema instanceof SchemaBuild) ) throw "schema is not defined or invalid";
+        if (!schema || !(schema instanceof SchemaBuild) ) throw Error("schema is not defined or invalid");
 
         this._schema = schema;
 
@@ -87,7 +87,7 @@ module.exports = class ModelBase {
         if ( saveType === "json") return JSON.stringify( this.toJSON( true, callbackObject) );
         if ( saveType === "object") return this.toObject(saveText, callbackObject);
 
-        throw "Saving raised an error. Type is not specified";
+        throw Error("Saving raised an error. Type is not specified");
     }
 
 
@@ -121,7 +121,7 @@ module.exports = class ModelBase {
         }
 
         if (!type)
-            throw "fromType raised an error. Type is not specified";
+            throw Error("fromType raised an error. Type is not specified");
 
         if (type === "json") {
             if (typeof data === "string") data = JSON.parse(data);
@@ -173,7 +173,7 @@ module.exports = class ModelBase {
 
     fromType(data, type, callbackObject, unmarshalOptions) {
 
-        if ( data === undefined) throw "fromType raised an error. Data is not specified";
+        if ( data === undefined) throw Error("fromType raised an error. Data is not specified");
 
         const out = this._convertDataType(data, type);
         type = out.type;
@@ -220,12 +220,11 @@ module.exports = class ModelBase {
         if (!schemaField) schemaField = this._schema.fields[name];
 
         if (!schemaField || typeof schemaField !== "object")
-            throw "Schema was not found";
+            throw Error("Schema was not found");
 
         //validate its type
         if (!schemaField.type || !defaultValuesExist[schemaField.type])
-            throw "Type is invalid";
-
+            throw Error("Type is invalid");
     }
 
     checkProperty(propertyName, fieldName ){
