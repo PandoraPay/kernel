@@ -57,6 +57,8 @@ module.exports = class HashMapModel extends DBModel {
 
     async addMap ( id, data, dataType ){
 
+        if (Buffer.isBuffer(id)) id = id.toString("hex");
+
         let element = data;
         if (!(data instanceof DBModel))
             element = this._createHashElementChild( id, data, dataType);
@@ -71,10 +73,9 @@ module.exports = class HashMapModel extends DBModel {
 
         try{
 
-            let element = id;
-            if (!(id instanceof DBModel))
-                element = await this.getMap(id);
+            if (Buffer.isBuffer(id)) id = id.toString("hex");
 
+            let element = await this.getMap(id);
             await element.delete();
 
             return element.id;
@@ -126,13 +127,12 @@ module.exports = class HashMapModel extends DBModel {
      */
     async updateMap (id, data, dataType, unmarshalOptions ){
 
+        if (Buffer.isBuffer(id)) id = id.toString("hex");
+
+        //delete is necessary because a more complex object could be spanned
         const element = await this.getMap(id);
-        if (element) {
-
-            //delete is necessary because a more complex object could be spanned
+        if (element)
             await element.delete();
-
-        }
 
         return this.addMap(id, data, dataType, unmarshalOptions);
 

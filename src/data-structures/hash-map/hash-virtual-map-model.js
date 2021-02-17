@@ -30,10 +30,8 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
             const {type, element} = this._virtual[id];
 
-            if (type === "add" || type === "view")
-                promises.push( element.delete() );
-            else if (type === "del")
-                promises.push( element ? element.delete() : this._getFallback('deleteMap')(id) );
+            if (type === "add" || type === "view" || type === "del")
+                promises.push( this._getFallback('deleteMap')(id) );
 
         }
 
@@ -75,12 +73,6 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
     }
 
     async deleteMap( id ){
-
-        if (this._virtual[id]) {
-            this._virtual[id].type = "del";
-            return id;
-        }
-
         this._addCache(id, "del")
         return id;
     }
@@ -135,20 +127,20 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
     async saveVirtualMap(resetVirtualMap = false){
 
-        const promises = [];
+        const promises1 = [], promises2 = [];
 
         for (const id in this._virtual){
 
             const {type, element} = this._virtual[id];
 
-            if (type === "add" || type === "view")
-                promises.push( element ? element.save() : undefined );
-            else if (type === "del")
-                promises.push( element ? element.delete() : this._getFallback('deleteMap')(id) );
+            if (type === "add" || type === "view" || type === "del")
+                promises1.push( this._getFallback('deleteMap')(id) );
 
+            if (element) promises2.push( element.save() );
         }
 
-        await Promise.all(promises);
+        await Promise.all(promises1);
+        await Promise.all(promises2);
 
         if (resetVirtualMap)
             return this.resetHashMap();
