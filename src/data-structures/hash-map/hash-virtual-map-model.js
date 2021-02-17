@@ -91,16 +91,15 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
         if (this._virtual[id]) {
             if (this._virtual[id].type === "del") return;
-            if (this._virtual[id].type === "add" ) return this._virtual[id].element;
-            if (this._virtual[id].type === "view") return this._virtual[id].element; //updating importance
+            if (this._virtual[id].type === "add" || this._virtual[id].type === "view" ) return this._virtual[id].element;
         }
 
-        const out = await this._getFallback('getMap')(id);
+        let out = await this._getFallback('getMap')(id);
 
-        if (out) {
-            const element = this._createHashElementChild( id, out, "object"); //data is provided
-            return this._addCache(id, "view", element)
-        }
+        if (out)
+            out = this._createHashElementChild( id, out, "object"); //data is provided
+
+        return this._addCache(id, "view", out )
 
     }
 
@@ -110,11 +109,11 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
 
         if (this._virtual[id]) {
             if (this._virtual[id].type === "del") return false;
-            if (this._virtual[id].type === "add" || this._virtual[id].type === "view") return true;
+            if (this._virtual[id].type === "add" || this._virtual[id].type === "view" || this._virtual[id].type === "exists"  ) return !!this._virtual[id].element;
         }
 
-        return this._getFallback('existsMap')(id);
-
+        const out = await this._getFallback('existsMap')(id);
+        return this._addCache(id, "exists", out)
     }
 
     /**
@@ -143,7 +142,7 @@ module.exports = class HashVirtualMapModel extends HashMapModel {
             const {type, element} = this._virtual[id];
 
             if (type === "add" || type === "view")
-                promises.push( element.save() );
+                promises.push( element ? element.save() : undefined );
             else if (type === "del")
                 promises.push( element ? element.delete() : this._getFallback('deleteMap')(id) );
 

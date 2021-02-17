@@ -232,13 +232,13 @@ const library = {
 
 
 if (typeof window !== "undefined") {
-    window.library = library;
+    window.PandoraLibrary = library;
     window.PandoraPay = window.app = library.app;
     window.kernel = library;
 }
 
 if (typeof global !== "undefined"){
-    global.library = library;
+    global.PandoraLibrary = library;
     global.PandoraPay = global.app = library.app;
     global.kernel = library;
 }

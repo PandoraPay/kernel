@@ -38,8 +38,6 @@ module.exports = class App{
 
     setAdditionalEvents(){
 
-        
-
     }
 
     async _onKillProcess(error){

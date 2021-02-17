@@ -41,7 +41,7 @@ class HashMapElementSchemaBuild extends DBSchemaBuild {
             },
 
 
-        }, schema, false));
+        }, schema, true ));
     }
 
 }

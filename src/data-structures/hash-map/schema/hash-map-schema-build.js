@@ -33,7 +33,7 @@ class HashMapSchemaBuild extends DBSchemaBuild {
                 saveInfixParentId: true,
             }
 
-        }, schema, false));
+        }, schema, true));
     }
 
 }
