@@ -413,7 +413,12 @@ module.exports = class MasterCluster extends AsyncEvents {
 
         }
 
-        const finalOutput = await Promise.all(output);
+        let finalOutput = await Promise.all(output);
+
+        //workers get the answer from masterCluster as an array
+        if ( !this.isMaster && finalOutput.length === 2 && Array.isArray(finalOutput[0]) )
+            finalOutput = [...finalOutput[0], ...finalOutput.splice(1) ];
+
         if (finalOutput.length === 1) return finalOutput[0];
         if (finalOutput.length > 1) return finalOutput;
         return undefined;
