@@ -31,14 +31,15 @@ module.exports = class MerkleTreeModel extends DBModel {
      */
     _calculateLevelsCounts(count = this.__data.count){
 
-        let level = this.levels, c = count, lengths = [ 1 ];
+        const lengths = [ 1 ];
+        let level = this.levels, c = count;
         do{
             lengths[level] = c ;
             c = c - Math.floor( c / 2 );
             level--;
         } while ( c > 1 );
 
-        let counts = [0];
+        const counts = [0];
 
         for (let i=1; i < lengths.length; i++)
             counts[i] =  lengths[i-1] + counts[i-1];
@@ -118,10 +119,9 @@ module.exports = class MerkleTreeModel extends DBModel {
     unmarshal(input, type = "buffer", callbackObject, unmarshalOptions = {}) {
 
         const out = super.unmarshal(input, type, callbackObject, unmarshalOptions);
-
         this._calculateLevelsCounts();
-
         return out;
+
     }
 
 
@@ -166,36 +166,30 @@ module.exports = class MerkleTreeModel extends DBModel {
 
     }
 
-    createUnmarshalPruningLeavesCallback( prunedLeaves, removeParents, callbackObject){
+    createUnmarshalPruningLeavesCallback( prunedLeaves, removeParents){
 
         const prunedHeightsMap = this._pruningLeaves(prunedLeaves, removeParents);
-        return this.createUnmarshalHeightsCallback(prunedHeightsMap, callbackObject);
+        return this._createUnmarshalHeightsCallback(prunedHeightsMap);
 
     }
 
-    createUnmarshalHeightsCallback(prunedHeights, callbackObject ){
+    _createUnmarshalHeightsCallback(prunedHeights ){
 
         prunedHeights = this._pruningHeight(prunedHeights);
 
-        if (!callbackObject)
-            callbackObject = (obj, unmarshalOptions, data, type) => obj.unmarshal( data, type, undefined, unmarshalOptions );
-
-        const newCallback = function ( obj, unmarshalOptions, data, type ) {
+        return function ( obj, unmarshalOptions, data, type ) {
 
             if (prunedHeights[obj.height])
                 obj.pruned = true;
 
-            callbackObject( obj, unmarshalOptions, data, type);
-
+            obj.unmarshal( data, type, undefined, unmarshalOptions )
             return obj;
 
         };
 
-        return newCallback;
-
     }
 
-    createUnmarshalOptionsHeights(prunedHeights, unmarshalOptions = {} ){
+    _createUnmarshalOptionsHeights(prunedHeights, unmarshalOptions = {} ){
 
         prunedHeights = this._pruningHeight(prunedHeights);
 
@@ -271,7 +265,7 @@ module.exports = class MerkleTreeModel extends DBModel {
             this._pruningLeaves(prunedLeaves, removeParents, prunedHeightsMap)
         };
 
-        unmarshalOptions = this.createUnmarshalOptionsHeights( prunedHeightsMap, unmarshalOptions);
+        unmarshalOptions = this._createUnmarshalOptionsHeights( prunedHeightsMap, unmarshalOptions);
         return this.load( id, infix, table, db, type, input, multi, unmarshalOptions, callbackObject );
 
     }
@@ -287,7 +281,7 @@ module.exports = class MerkleTreeModel extends DBModel {
             this._pruningLeaves(prunedLeaves, removeParents, prunedHeightsMap)
         };
 
-        unmarshalOptions = this.createUnmarshalOptionsHeights( prunedHeightsMap, unmarshalOptions);
+        unmarshalOptions = this._createUnmarshalOptionsHeights( prunedHeightsMap, unmarshalOptions);
         return this.load( id, infix, table, db, type, input, multi, unmarshalOptions, callbackObject );
 
     }
@@ -298,7 +292,7 @@ module.exports = class MerkleTreeModel extends DBModel {
      */
     loadPruningHeights( prunedHeights, id, infix, table, db, type, input, multi, unmarshalOptions = {}, callbackObject ){
 
-        unmarshalOptions = this.createUnmarshalOptionsHeights( prunedHeights, unmarshalOptions);
+        unmarshalOptions = this._createUnmarshalOptionsHeights( prunedHeights, unmarshalOptions);
         return this.load( id, infix, table, db, type, input, multi, unmarshalOptions, callbackObject );
 
     }
