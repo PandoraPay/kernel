@@ -12,14 +12,7 @@ class RadixTreeNodeModel extends DBModel {
     }
 
     savingAdditional(){
-
-        const array = [];
-        for (let child in this.children)
-            if (this.children[child])
-                array.push(this.children[child]);
-
-        return array;
-
+        return this.children.filter( it => !!it );
     }
 
     init(data){
@@ -145,7 +138,7 @@ class RadixTreeNodeModel extends DBModel {
         if (this.children[position])
             return this.children[position];
 
-        const child = await this.tree.loadNodeChild(label, position, this );
+        const child = await this.tree.loadNodeChild(this, label, position );
 
         if (!child)
             throw new Exception(this, "Child was not loaded");

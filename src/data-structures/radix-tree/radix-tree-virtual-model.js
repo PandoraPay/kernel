@@ -38,10 +38,8 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
 
     }
 
-    async loadNodeChild(label, position, parent){
-        const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
-        child.__data.id = parent.id + label;
-        await child.load(  );
+    async loadNodeChild(parent, label, position){
+        const child = await super.loadNodeChild(parent, label, position);
         this._maps[child.labelCompleteFast() ] = {
             type: "created",
             node: child,
@@ -98,8 +96,8 @@ module.exports = class RadixTreeVirtualModel extends RadixTreeModel {
     }
 
 
-    async loadNodeChild(label, position, parent){
-        return this._getFallback('loadNodeChild')(label, position, parent);
+    async loadNodeChild(parent, label, position){
+        return this._getFallback('loadNodeChild')(parent, label, position);
     }
 
     async _clearDeletedElements(){

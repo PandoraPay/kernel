@@ -35,10 +35,8 @@ module.exports = class RadixTreeModel extends DBModel {
     }
 
     createNewRoot(){
-
         const newRoot = this._createModelObject( {},"object","root" );
-        this.root = newRoot;
-        return newRoot;
+        return this.root = newRoot;
     }
     
     loadTree(){
@@ -301,15 +299,17 @@ module.exports = class RadixTreeModel extends DBModel {
     createDataChild( parent, data, position){
 
         const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", data, "object", position, );
-        child.children = data.children;
-        for (let i=0; i < child.children.length; i++)
-            if (child.children[i])
-                child.children[i].parent = child;
+        if (data.children) {
+            child.children = data.children;
+            for (let i = 0; i < child.children.length; i++)
+                if (child.children[i])
+                    child.children[i].parent = child;
+        }
 
         return child;
     }
 
-    async loadNodeChild(label, position, parent){
+    async loadNodeChild(parent, label, position){
         const child = parent._createSimpleModelObject( this.root._schema.childrenModelClass, undefined,  "children", {}, "object", position, {loading: true}, );
         child.__data.id = parent.id + label;
         await child.load(  );

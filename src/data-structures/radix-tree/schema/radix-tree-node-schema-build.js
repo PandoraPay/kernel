@@ -35,10 +35,8 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     },
 
                     setEvent(label){
-
                         if (this.type !== undefined) this.type = this.getType();
                         if (this.id) this.id = this.getNewId();
-
                     },
 
                     skipHashing: true,
@@ -112,7 +110,6 @@ class RadixTreeNodeSchemaBuild extends DBSchemaBuild {
                     minSize(){
                         return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 1 : 0;
                     },
-
                     maxSize(){
                         return this.type === RadixTreeNodeTypeEnum.RADIX_TREE_NODE && !this.__data.pruned ? 16 : 0;
                     },

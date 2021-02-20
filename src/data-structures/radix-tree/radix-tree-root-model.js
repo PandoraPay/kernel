@@ -2,8 +2,6 @@ const RadixTreeNodeModel = require("./radix-tree-node-model")
 const {RadixTreeRootSchemaBuilt} = require('./schema/radix-tree-root-schema-build')
 const RadixTreeNodeTypeEnum = require('./radix-tree-node-type-enum')
 
-RadixTreeRootSchemaBuilt.childrenModelClass = RadixTreeNodeModel;
-
 module.exports = class RadixTreeRootModel extends RadixTreeNodeModel {
 
     constructor(scope, schema = RadixTreeRootSchemaBuilt,  data, type, creationOptions ){
@@ -67,4 +65,4 @@ module.exports = class RadixTreeRootModel extends RadixTreeNodeModel {
 
 }
 
-
+RadixTreeRootSchemaBuilt.childrenModelClass = RadixTreeNodeModel;
